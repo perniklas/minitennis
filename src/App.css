@@ -44,6 +44,10 @@
   width: 95.5%;
 }
 
+#header_logo {
+  max-width: 80px;
+}
+
 #header_title {
   /*margin-left: 1em;*/
   color: #ffd3e2;
