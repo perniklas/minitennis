@@ -37,20 +37,30 @@
 /**   HEADER    **/
 #header {
   display: flex;
-  flex-grow: 1;
   flex-direction: row;
   justify-content: space-between;
   margin: auto 1.5% auto 3%;
   width: 95.5%;
+  position: absolute;
+  top: 0;
+  padding-bottom: 0.3em;
+  border-bottom: solid #b896a2;
+}
+
+#header_container {
+  display: flex;
+  flex-direction: row;
 }
 
 #header_logo {
-  max-width: 80px;
+  margin-top: 1em;
+  max-height: 3rem;
 }
 
 #header_title {
-  /*margin-left: 1em;*/
+  margin: 0.75em 0 0 0.5em;
   color: #ffd3e2;
+  font-size: 2.2rem;
 }
 
 #header_menu_button {
@@ -72,15 +82,30 @@
 }
 
 #header_menu_content ul li:not(:first-child), #header_menu_content ul li:not(:last-child) {
-  margin: 2em auto;
+  margin: 1em auto;
 }
 
 #header_menu_content ul li a {
   color: beige;
   text-decoration: none;
   font-size: 1.3em;
-  
 }
+
+@media only screen and (min-width: 600px) {
+  #header_title {
+    font-size: 1.2em;
+  }
+  
+  #header {
+    padding-bottom: 0.5em;
+  }
+
+  #header_menu_content ul li a {
+    font-size: 0.8em;
+  }
+}
+
+/*** /HEADER ***/
 
 .App-link {
   color: #61dafb;

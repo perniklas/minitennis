@@ -1,12 +1,13 @@
 import Menu from "./HeaderMenu";
+import logo from '../assets/colored.png';
 
 const Header = () => {
 
 
   return (
     <header id="header">
-      <div>
-        <img src="../assets/colored.png" alt="ping pong logo" id="header_logo"/>
+      <div id="header_container">
+        <img src={logo} alt="ping pong logo" id="header_logo"/>
         <h1 id="header_title">
           minitennis
         </h1>
