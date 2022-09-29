@@ -8,9 +8,14 @@ const Menu = () => {
 
   const setShowMenu = () => {
     const elem = document.getElementById('header_menu_content');
-    const show = elem?.classList.contains('hidden') ?? false;
+    const show = !elem?.classList.contains('shown') ?? false;
+    console.log(elem, show);
     if (elem) {
-      elem!.style.right = show ? "0" : "-70%";
+      if (show) {
+        elem!.classList.remove("shown");
+      } else {
+        elem!.classList.add("shown");
+      }
     }
     ctx.showMenu = show;
     setDisplayMenu(show);
@@ -23,9 +28,16 @@ const Menu = () => {
           id="header_menu_button"
           onClick={() => setShowMenu()}
           className="button">
-          <Hamburger></Hamburger>
+            ☰
+          {/* <Hamburger></Hamburger> */}
         </button>
-        <div id="header_menu_content" className={ctx.showMenu ? "" : "hidden"}>
+        <div id="header_menu_content" className={ctx.showMenu ? "shown" : ""}>
+          <button 
+            id="header_menu_content_close"
+            onClick={() => setShowMenu()}
+            className="button">
+              ✕
+          </button>
           <ul>
             <li>
               <a href="#">Menu item</a>

@@ -1,0 +1,37 @@
+.login__header {
+  height: 10vh;
+  margin: 0 2em;
+  bottom: 0;
+}
+
+.login__header h1 {
+  margin: 1em auto;
+}
+
+.login__container {
+  width: 100vw;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+
+.login__textBox, .login__btn {
+  width: 80%;
+  margin: 1em auto;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 10px 7px 7px #ce94a6;
+}
+
+.login__btn:first-child {
+  margin-top: 2em;
+}
+
+.login__btn {
+  background-color: #e99ccb;
+  box-shadow: 10px 7px 7px #c66081;
+  width: fit-content;
+  min-width: 200px;
+  font-weight: bold;
+}

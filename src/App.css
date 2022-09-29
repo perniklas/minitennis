@@ -39,8 +39,8 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: auto 1.5% auto 3%;
-  width: 95.5%;
+  margin: auto 0.5em auto 0.5em;
+  width: calc(100vw - 1em);
   position: absolute;
   top: 0;
   padding-bottom: 0.3em;
@@ -64,16 +64,35 @@
 }
 
 #header_menu_button {
-  margin-top: 1.7em;
-  padding: 0;
+  margin-top: 1rem;
+  padding: 5px;
+  font-size: 2.5rem;
+  cursor: pointer;
 }
 
 #header_menu_content {
   position: absolute;
-  right: -70%;
-  background: rgba(0,0,0,0.5);
-  padding: 2em;
-  transition: ease 0.5s;
+  right: -100%;
+  top: 0;
+  background: #2a171d;
+  box-shadow: 20px 2px 5px 10px #61404b;
+  padding: 0.75em;
+  min-width: 300px;
+  width: 25%;
+  transition: ease-out 0.65s;
+}
+
+#header_menu_content_close {
+  float: right;
+  margin-top: 0.75rem;
+  padding: 5px;
+  font-size: 2rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#header_menu_content.shown {
+  right: -0.5em;
 }
 
 #header_menu_content ul {
