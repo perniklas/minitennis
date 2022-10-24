@@ -1,0 +1,83 @@
+@import url('../../App.css');
+
+.login__header {
+  height: 10vh;
+  margin: 0 2em;
+  bottom: 0;
+  color: var(--dark);
+}
+
+.login__header h1 {
+  margin: 1em auto;
+}
+
+.login__container {
+  width: 90vw;
+  margin: auto;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+
+.login__container__buttons {
+  display: flex;
+  flex-direction: column;
+  margin: 1em auto 3em auto;
+}
+
+.login__container__actions {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.login__textBox, .login__btn {
+  width: 88%;
+  margin: 1em auto;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 10px 13px 17px #626262;
+  transition: ease 0.2s;
+}
+
+.login__btn {
+  background-color: var(--gray);
+  color: white;
+  box-shadow: 10px 13px 17px #626262;
+  width: fit-content;
+  min-width: 200px;
+  font-weight: bold;
+}
+
+.login__btn:not(.disabled):hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: ease 0.2s;
+  background-color: var(--dark);
+}
+
+.login__btn.disabled {
+  color: gray;
+  background-color: #cfcfcf;
+  border: solid 2px #999999;
+  box-shadow: 10px 13px 17px #d3d3d3;
+}
+
+.register {
+  text-align: right;
+}
+
+@media screen and (min-width: 600px) {
+  .login__container {
+    justify-content: center;
+    width: 50%;
+    max-width: 600px;
+    margin: auto;
+    font-size: 1.1rem;
+  }
+
+  .register {
+    margin-right: 1em;
+  }
+}

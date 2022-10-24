@@ -1,5 +1,5 @@
 import Menu from "./HeaderMenu";
-import logo from '../assets/colored.png';
+import logo from '../../assets/colored.png';
 
 const Header = () => {
   return (

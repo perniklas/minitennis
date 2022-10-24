@@ -1,6 +1,6 @@
 import Hamburger from 'hamburger-react';
 import { useContext, useState } from 'react';
-import UserContext from '../Context';
+import UserContext from '../../Context';
 
 const Menu = () => {
   const ctx = useContext(UserContext);
