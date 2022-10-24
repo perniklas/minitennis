@@ -12,9 +12,10 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route exact-path="/register" element={<Register />} />
-          <Route exact-path="/reset" element={<Reset />} />
-          <Route exact-path="/dashboard" element={<Header />} />
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/register" element={<Register />} />
+          <Route path="/reset" element={<Reset />} />
+          <Route path="/dashboard" element={<Header />} />
         </Routes>
       </Router>
     </div>

@@ -1,7 +1,11 @@
 import Menu from "./HeaderMenu";
 import logo from '../../assets/colored.png';
+import { useContext } from "react";
+import { Context } from './Provider';
 
 const Header = () => {
+  const value = useContext(Context);
+
   return (
     <header id="header">
       <div id="header_container">

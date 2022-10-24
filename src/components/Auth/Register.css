@@ -1,17 +1,17 @@
 @import url('../../App.css');
 
-.login__header {
+.register__header {
   height: 10vh;
   margin: 0 2em;
   bottom: 0;
   color: var(--blue);
 }
 
-.login__header h1 {
+.register__header h1 {
   margin: 1em auto;
 }
 
-.login__container {
+.register__container {
   width: 90vw;
   margin: auto;
   height: 80vh;
@@ -20,19 +20,19 @@
   justify-content: end;
 }
 
-.login__container__buttons {
+.register__container__buttons {
   display: flex;
   flex-direction: column;
   margin: 1em auto 3em auto;
 }
 
-.login__container__actions {
+.register__container__actions {
   display: flex;
   width: 100%;
   justify-content: space-between;
 }
 
-.login__textBox, .login__btn {
+.register__textBox, .register__btn {
   width: 88%;
   margin: 1em auto;
   padding: 1em;
@@ -41,12 +41,12 @@
   transition: ease 0.2s;
 }
 
-.login__textBox:focus {
+.register__textBox:focus {
   outline: none;
   border: solid 2px var(--lightblue);
 }
 
-.login__btn {
+.register__btn {
   background-color: var(--blue);
   color: white;
   box-shadow: 10px 13px 17px #626262;
@@ -55,14 +55,14 @@
   font-weight: bold;
 }
 
-.login__btn:not(.disabled):hover {
+.register__btn:not(.disabled):hover {
   cursor: pointer;
   transform: scale(1.1);
   transition: ease 0.2s;
   background-color: var(--lightblue);
 }
 
-.login__btn.disabled {
+.register__btn.disabled {
   color: gray;
   background-color: #cfcfcf;
   border: solid 2px #999999;
@@ -70,11 +70,11 @@
 }
 
 .login__register {
-  text-align: right;
+    text-align: right;
 }
 
 @media screen and (min-width: 600px) {
-  .login__container {
+  .register__container {
     justify-content: center;
     width: 50%;
     max-width: 600px;
