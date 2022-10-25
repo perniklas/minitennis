@@ -1,10 +1,10 @@
 import Menu from "./HeaderMenu";
-import logo from '../../assets/colored.png';
-import { useContext } from "react";
-import { Context } from './Provider';
+import logo from '../../assets/black.svg';
+// import { useContext } from "react";
+// import { AuthContext } from "../../Context/Auth.context";
 
 const Header = () => {
-  const value = useContext(Context);
+  // const auth = useContext(AuthContext);
 
   return (
     <header id="header">

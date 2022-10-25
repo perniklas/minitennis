@@ -1,0 +1,74 @@
+#dashboard__top {
+    width: 95%;
+    margin: 2em auto;
+    table-layout: fixed;
+    background: -webkit-linear-gradient(bottom left, #0e5a7d, #03153d);
+    background: linear-gradient(to bottom right, var(--blue), var(--dark));
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    border-radius: 1em;
+}
+
+#dashboard__top h1 {
+    text-align: center;
+    padding-top: 1rem;
+}
+
+.users {
+    width: 100%;
+}
+
+.tbl-header {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    font-size: 30px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.tbl-content {
+    max-height: 500px;
+    overflow-x: auto;
+    margin-top: 0px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.users th {
+    padding: 20px 15px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 1.3rem;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.users td {
+    padding: 15px;
+    text-align: left;
+    vertical-align: middle;
+    font-weight: 300;
+    color: #fff;
+    border-bottom: solid 1px rgba(255, 255, 255, 0.1);
+}
+
+
+/* demo styles */
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
+
+/* for custom scrollbar for webkit browser*/
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}

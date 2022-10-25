@@ -1,91 +1,67 @@
+@import url('../../App.css');
+
 /**   HEADER    **/
 #header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: auto 0.5em auto 0.5em;
-    width: calc(100vw - 1em);
-    position: absolute;
-    top: 0;
-    padding-bottom: 0.3em;
-    border-bottom: solid #b896a2;
-  }
-  
-  #header_container {
-    display: flex;
-    flex-direction: row;
-  }
-  
-  #header_logo {
-    margin-top: 1em;
-    max-height: 3rem;
-  }
-  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: auto 0.5em auto 0.5em;
+  width: calc(100vw - 1em);
+  /* position: absolute; */
+  /* top: 0; */
+  padding-bottom: 0.3em;
+  border-bottom: solid var(--blue);
+}
+
+#header_container {
+  display: flex;
+  flex-direction: row;
+}
+
+#header_logo {
+  margin-top: 1em;
+  max-height: 3rem;
+  filter: invert(11%) sepia(37%) saturate(3123%) hue-rotate(212deg) brightness(90%) contrast(100%);
+}
+
+#header_title {
+  margin: 0.75em 0 0 0.5em;
+  color: var(--blue);
+  font-size: 2.2rem;
+}
+
+#header_menu_content.shown {
+  right: -0.5em;
+}
+
+#header_menu_content ul {
+  list-style: none;
+  padding-left: 0.2em;
+}
+
+#header_menu_content ul li:not(:first-child),
+#header_menu_content ul li:not(:last-child) {
+  margin: 1em auto;
+}
+
+#header_menu_content ul li a {
+  color: beige;
+  text-decoration: none;
+  font-size: 1.3em;
+}
+
+@media only screen and (min-width: 600px) {
   #header_title {
-    margin: 0.75em 0 0 0.5em;
-    color: #ffd3e2;
-    font-size: 2.2rem;
+    font-size: 1.2em;
   }
-  
-  #header_menu_button {
-    margin-top: 1rem;
-    padding: 5px;
-    font-size: 2.5rem;
-    cursor: pointer;
+
+  #header {
+    padding-bottom: 0.5em;
   }
-  
-  #header_menu_content {
-    position: absolute;
-    right: -100%;
-    top: 0;
-    background: #2a171d;
-    box-shadow: 20px 2px 5px 10px #61404b;
-    padding: 0.75em;
-    min-width: 300px;
-    width: 25%;
-    transition: ease-out 0.65s;
-  }
-  
-  #header_menu_content_close {
-    float: right;
-    margin-top: 0.75rem;
-    padding: 5px;
-    font-size: 2rem;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  #header_menu_content.shown {
-    right: -0.5em;
-  }
-  
-  #header_menu_content ul {
-    list-style: none;
-    padding-left: 0.2em;
-  }
-  
-  #header_menu_content ul li:not(:first-child), #header_menu_content ul li:not(:last-child) {
-    margin: 1em auto;
-  }
-  
+
   #header_menu_content ul li a {
-    color: beige;
-    text-decoration: none;
-    font-size: 1.3em;
+    font-size: 0.8em;
   }
-  
-  @media only screen and (min-width: 600px) {
-    #header_title {
-      font-size: 1.2em;
-    }
-    
-    #header {
-      padding-bottom: 0.5em;
-    }
-  
-    #header_menu_content ul li a {
-      font-size: 0.8em;
-    }
-  }
-  
-  /*** /HEADER ***/
+}
+
+/*** /HEADER ***/

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { logInWithEmailAndPassword } from '../helpers/firebase';
-
-export const AuthContext = React.createContext(null);
+import { logInWithEmailAndPassword, logOutUser } from '../helpers/firebase';
 
 const initialState = {
   isLoggedIn: false,
@@ -9,19 +7,21 @@ const initialState = {
   loginError: null
 }
 
-export const ContextProvider = props => {
+export const AuthContext = React.createContext(initialState);
+
+export const AuthContextProvider = props => {
   const [state, setState] = useState(initialState);
 
-  const setLoginPending = (isLoginPending) => setState({isLoginPending});
-  const setLoginSuccess = (isLoggedIn) => setState({isLoggedIn});
-  const setLoginError = (loginError) => setState({loginError});
+  const setLoginPending = (isLoginPending) => setState({ isLoginPending });
+  const setLoginSuccess = (isLoggedIn) => setState({ isLoggedIn });
+  const setLoginError = (loginError) => setState({ loginError });
 
   const login = (email, password) => {
     setLoginPending(true);
     setLoginSuccess(false);
     setLoginError(null);
 
-    fetchLogin( email, password, error => {
+    fetchLogin(email, password, error => {
       setLoginPending(false);
 
       if (!error) {
@@ -36,6 +36,7 @@ export const ContextProvider = props => {
     setLoginPending(false);
     setLoginSuccess(false);
     setLoginError(null);
+    logOutUser();
   }
 
   return (
@@ -53,8 +54,8 @@ export const ContextProvider = props => {
 
 // fake login
 const fetchLogin = async (email, password, callback) => {
-    await logInWithEmailAndPassword(email, password);
+  await logInWithEmailAndPassword(email, password);
 
-    if (callback)
-        callback();
+  if (callback)
+    callback();
 };

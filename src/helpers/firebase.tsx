@@ -59,7 +59,7 @@ const signInWithGoogle = async () => {
   }
 };
 
-const logInWithEmailAndPassword = async (email:string, password:string) => {
+const logInWithEmailAndPassword = async (email: string, password: string) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
@@ -70,7 +70,7 @@ const logInWithEmailAndPassword = async (email:string, password:string) => {
   }
 };
 
-const registerWithEmailAndPassword = async (name:string, email:string, password:string) => {
+const registerWithEmailAndPassword = async (name: string, email: string, password: string) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
@@ -88,7 +88,7 @@ const registerWithEmailAndPassword = async (name:string, email:string, password:
   }
 };
 
-const sendPasswordReset = async (email:string) => {
+const sendPasswordReset = async (email: string) => {
   try {
     await sendPasswordResetEmail(auth, email);
     alert("Password reset link sent!");
@@ -100,8 +100,11 @@ const sendPasswordReset = async (email:string) => {
   }
 };
 
-const logout = () => {
-  signOut(auth);
+const logOutUser = async () => {
+  console.log(auth);
+  await signOut(auth);
+  await auth.signOut().then(a => console.log(a));
+  console.log(auth);
 };
 
 export {
@@ -111,5 +114,5 @@ export {
   logInWithEmailAndPassword,
   registerWithEmailAndPassword,
   sendPasswordReset,
-  logout,
+  logOutUser,
 };

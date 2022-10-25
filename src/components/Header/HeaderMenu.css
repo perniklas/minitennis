@@ -1,0 +1,41 @@
+#button__login {
+    color: var(--lightblue);
+    font-size: 2rem;
+}
+
+#header_menu_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 5;
+    position: absolute;
+    right: -100%;
+    top: 0;
+    background: var(--dark);
+    padding: 0.75em;
+    min-width: 300px;
+    min-height: calc(100% - 1.5em);
+    width: 25%;
+    transition: ease-out 0.65s;
+}
+
+#header_menu_button {
+    margin-top: 1rem;
+    padding: 5px;
+    font-size: 2.5rem;
+    cursor: pointer;
+}
+
+#header_menu_content_close {
+    float: right;
+    margin-right: 1rem;
+    padding: 5px;
+    font-size: 2rem;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--lightblue);
+    position: absolute;
+    z-index: 10;
+    top: 0.8rem;
+    right: 0.8rem;
+}

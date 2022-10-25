@@ -1,0 +1,14 @@
+.loading__container {
+    position: absolute;
+    width: fit-content;
+    max-width: 300px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@media screen and (min-width: 600px) {
+    .loading__container {
+        max-width: 600px;
+    }
+}
