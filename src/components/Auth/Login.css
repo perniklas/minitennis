@@ -11,7 +11,7 @@
   margin: 1em auto;
 }
 
-.login__container {
+#login__container {
   width: 90vw;
   margin: auto;
   height: 80vh;

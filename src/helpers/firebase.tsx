@@ -101,10 +101,8 @@ const sendPasswordReset = async (email: string) => {
 };
 
 const logOutUser = async () => {
-  console.log(auth);
   await signOut(auth);
   await auth.signOut().then(a => console.log(a));
-  console.log(auth);
 };
 
 export {

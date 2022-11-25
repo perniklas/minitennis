@@ -17,8 +17,6 @@ const getUsers = async () => {
         user.losses = user.losses ?? 0;
         user.rating = user.rating ?? 0;
 
-        console.log(user);
-
         users.push(user)
     });
 

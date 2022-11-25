@@ -1,0 +1,17 @@
+.card {
+    width: 95%;
+    margin: 1em auto;
+    table-layout: fixed;
+    background: -webkit-linear-gradient(bottom left, #0e5a7d, #03153d);
+    background: linear-gradient(to bottom right, var(--blue), var(--dark));
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    border-radius: 1em;
+    box-shadow: 5px 10px 20px var(--dark);
+}
+
+.card h1 {
+    text-align: center;
+    padding-top: 1rem;
+    font-size: 1.76rem;
+}

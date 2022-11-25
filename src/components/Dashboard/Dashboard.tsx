@@ -1,29 +1,14 @@
 import { getDashboardOverview } from '../../helpers/firestore';
 import { useEffect, useState } from 'react';
+import { User } from '../../interfaces/User';
+import { Match } from '../../interfaces/Match';
+import { Tournament } from '../../interfaces/Tournament';
 import './Dashboard.css';
 import Loading from '../Loading/Loading';
 import DataContext from '../../Context/Data.context';
-
-interface User {
-    name: string,
-    wins?: number,
-    losses?: number,
-    rating?: number
-};
-
-interface Match {
-    participants: Array<User>;
-    winner?: User;
-    timestamp?: Date;
-}
-
-interface Tournament {
-    participants: Array<User>;
-    brackets?: Array<Match>;
-    matches?: Array<Match>;
-    winner?: User;
-    timestamp?: Date;
-}
+import Card from '../Cards/Card';
+import Leaderboard from '../Leaderboard/Leaderboard';
+import LatestMatches from '../LatestMatches/LatestMatches';
 
 const Dashboard = () => {
     const [users, setUsers] = useState<Array<User>>([]);
@@ -32,7 +17,7 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
 
     let data: any = {};
-    
+
     useEffect(() => {
         getDashboardOverview().then(response => {
             const { loadedUsers, loadedMatches, loadedTournaments } = response;
@@ -54,60 +39,18 @@ const Dashboard = () => {
         });
     }, []);
 
-    const truncateName = (name: string) => {
-        if (name.length > 10) {
-            let names = name.split(" ");
-            let firstName = names[0];
-            let lastNames = names.map((lName, index) => {
-                if (index > 0) {
-                    return lName.substring(0, 1) + ".";
-                }
-            }).join("");
-
-            if (firstName.length > 10) {
-                return firstName.substring(0, 10) + "...";
-            }
-
-            return firstName + " " + lastNames;
-        }
-
-        return name;
-    }
-
     if (loading) {
         return <Loading message="Loading users..."></Loading>;
     }
 
+    const leaderboardUsers = users.sort((a: User, b: User) => (a.rating ?? 0) > (b.rating ?? 0) ? -1 : 1).slice(0, 7);
+    const latestMatches = matches.filter((m: Match) => m.timestamp).sort((a: Match, b: Match) => a.timestamp! > b.timestamp! ? -1 : 1);
+
     return (
         <DataContext.Provider value={data}>
             <div id="dashboard">
-                <section id="dashboard__top">
-                    <h1>Top players</h1>
-                    <table className="users">
-                        <thead className="tbl-header">
-                            <tr>
-                                <th>Name</th>
-                                <th>W</th>
-                                <th>L</th>
-                            </tr>
-                        </thead>
-                        <tbody className="tbl-content">
-                            {users.map(user => (
-                                <tr key={user.name + "-" + user.wins + "-" + user.losses}>
-                                    <td>
-                                        {truncateName(user.name)}
-                                    </td>
-                                    <td>
-                                        {user.wins}
-                                    </td>
-                                    <td>
-                                        {user.losses}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </section>
+                <Card title="Top Players" child={<Leaderboard users={leaderboardUsers} />}/>
+                <Card title="Latest Matches" child={(<LatestMatches matches={latestMatches}/>)}/>
             </div>
         </DataContext.Provider>
     );

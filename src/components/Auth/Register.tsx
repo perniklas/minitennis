@@ -15,7 +15,9 @@ function Register() {
   const navigate = useNavigate();
 
   const register = () => {
-    if (!name) alert("Please enter name");
+    if (!verifyInputs(name, email, password)) {
+      return;
+    }
     registerWithEmailAndPassword(name, email, password);
   };
 
@@ -71,6 +73,35 @@ function Register() {
       </div>
     </div>
   );
+}
+
+function verifyInputs(name:string, email:string, password:string) {
+  let whatsWrong = '';
+  let valid = true;
+  const emailRegex = /[\S]+\@[\S]+\.[\S]+/;
+
+  if (name.length < 4) {
+    whatsWrong += 'Your name has to be at least 4 letters long.\n';
+    valid = false;
+  }
+
+  if (!emailRegex.test(email)) {
+    whatsWrong += 'Your email isn\'t valid.\n';
+    valid = false;
+  }
+
+  if (password.length < 5) {
+    whatsWrong += 'Your password is too short.\n';
+    valid = false;
+  }
+
+  if (!valid) {
+    alert(whatsWrong);
+  }
+
+  console.log(whatsWrong);
+
+  return valid;
 }
 
 export default Register;

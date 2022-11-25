@@ -37,7 +37,10 @@ function Login() {
           Login
         </h1>
       </div>
-      <div className="login__container">
+      <form id="login__container" onSubmit={(e) => {
+        e.preventDefault();
+        logInWithEmailAndPassword(email, password);
+      }}>
         <div className="login__container__textinputs">
           <input
             type="text"
@@ -74,7 +77,7 @@ function Login() {
             </span>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

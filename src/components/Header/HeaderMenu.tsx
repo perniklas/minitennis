@@ -1,14 +1,14 @@
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import Hamburger from 'hamburger-react';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext, AuthContextProvider } from '../../Context/Auth.context';
 import UserContext from '../../Context/UserSettings.context';
-import { logOutUser } from '../../helpers/firebase';
+import { auth, logOutUser } from '../../helpers/firebase';
 import "./HeaderMenu.css";
 
 const Menu = () => {
   const userContext = useContext(UserContext);
-  const authContext = useContext(AuthContext);
+  const [signedIn, setSignedIn] = useState(false);
   const [displayMenu, setDisplayMenu] = useState(false);
   const navigate = useNavigate();
 
@@ -33,7 +33,28 @@ const Menu = () => {
     await logOutUser();
   };
 
-  console.log(authContext);
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      console.log('authstate changed');
+      if (user) {
+        setSignedIn(true);
+      } else {
+        setSignedIn(false);
+      }
+    });
+  });
+  
+  const signInComp = (
+    <button className="button" id="button__login" onClick={(e) => navigate("/login")}>
+      ♕ Log in
+    </button>
+  );
+
+  const signOutComp = (
+    <button className="button" id="button__login" onClick={(e) => handleLogOut()}>
+      ♕ Log out
+    </button>
+  )
 
   return (
     <UserContext.Provider value={{ showMenu: userContext.showMenu }}>
@@ -66,18 +87,9 @@ const Menu = () => {
               <a href="#">Benu bitem b3</a>
             </li>
           </ul>
-          <AuthContextProvider value={{ isLoggedIn: authContext.isLoggedIn }}>
-            {authContext.isLoggedIn ?
-              <div>
-                <button className="button" id="button__login" onClick={(e) => navigate("/login")}>
-                  ♕ Log in
-                </button>
-              </div> :
-              <button className="button" id="button__login" onClick={(e) => handleLogOut()}>
-                ♕ Log out
-              </button>
-            }
-          </AuthContextProvider>
+          <div>
+            {signedIn ? signOutComp : signInComp}
+          </div>
         </div>
       </div>
     </UserContext.Provider>
