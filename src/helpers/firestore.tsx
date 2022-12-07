@@ -6,17 +6,23 @@ import {
     orderBy,
     QueryDocumentSnapshot,
 } from "firebase/firestore";
+import { User } from "../interfaces/User";
+
+var users: Array<User> = [];
 
 const getUsers = async () => {
-    const users: Array<any> = [];
+    users = [];
     const userQuery = query(collection(db, "users"));
     const userDocs = await getDocs(userQuery);
     userDocs.forEach((snapshot: QueryDocumentSnapshot) => {
-        const user = snapshot.data();
-        user.id = user.uid;
-        user.wins = user.wins ?? 0;
-        user.losses = user.losses ?? 0;
-        user.rating = user.rating ?? 0;
+        var userData = snapshot.data();
+        var user: User = {
+            id: userData.uid,
+            name: userData.name,
+            wins: userData.wins ?? 0,
+            losses: userData.losses ?? 0,
+            rating: userData.rating ?? -1
+        };
 
         users.push(user);
     });
@@ -25,27 +31,27 @@ const getUsers = async () => {
 }
 
 const getMatches = async () => {
-    const users: Array<any> = [];
-    const userQuery = query(collection(db, "matches"));
-    const userDocs = await getDocs(userQuery);
-    userDocs.forEach((snapshot: QueryDocumentSnapshot) => {
-        const user = snapshot.data();
-        users.push(user)
+    const matches: Array<any> = [];
+    const matchQuery = query(collection(db, "matches"));
+    const matchDocs = await getDocs(matchQuery);
+    matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
+        const match = snapshot.data();
+        matches.push(match)
     });
 
-    return users;
+    return matches;
 }
 
 const getTournaments = async () => {
-    const users: Array<any> = [];
-    const userQuery = query(collection(db, "tournaments"));
-    const userDocs = await getDocs(userQuery);
-    userDocs.forEach((snapshot: QueryDocumentSnapshot) => {
-        const user = snapshot.data();
-        users.push(user)
+    const tourneys: Array<any> = [];
+    const tQuery = query(collection(db, "tournaments"));
+    const tDocs = await getDocs(tQuery);
+    tDocs.forEach((snapshot: QueryDocumentSnapshot) => {
+        const tourney = snapshot.data();
+        tourneys.push(tourney)
     });
 
-    return users;
+    return tourneys;
 }
 
 const getDashboardOverview = async () => {
@@ -60,9 +66,14 @@ const getDashboardOverview = async () => {
     };
 };
 
+const createMatch = async () => {
+    
+};
+
 export {
     getDashboardOverview,
     getUsers,
     getMatches,
-    getTournaments
+    getTournaments,
+    createMatch
 }
