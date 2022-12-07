@@ -1,5 +1,3 @@
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import Hamburger from 'hamburger-react';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../../Context/UserSettings.context';
@@ -35,7 +33,7 @@ const Menu = () => {
 
   useEffect(() => {
     auth.onAuthStateChanged(user => {
-      console.log('authstate changed');
+      console.log('authstate changed, signed in? ', signedIn);
       if (user) {
         setSignedIn(true);
       } else {

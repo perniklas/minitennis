@@ -6,6 +6,11 @@
   GRØN:   #4A7856
 */
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
 :root {
   --bg: #f8f8f8;
   --gray: #41414E;

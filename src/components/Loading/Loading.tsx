@@ -6,7 +6,7 @@ interface Props {
 
 const Loading = (props?: Props) => {
     return (
-        <div className="loading__container">
+        <div className="loading__container home">
             <h2>
                 {props?.message ?? "Loading"}
             </h2>

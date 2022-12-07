@@ -1,11 +1,8 @@
 import Menu from "./HeaderMenu";
 import logo from '../../assets/black.svg';
-// import { useContext } from "react";
-// import { AuthContext } from "../../Context/Auth.context";
+import './Header.css';
 
 const Header = () => {
-  // const auth = useContext(AuthContext);
-
   return (
     <header id="header">
       <div id="header_container">

@@ -1,26 +1,23 @@
-import { faTableTennis } from '@fortawesome/free-solid-svg-icons';
-import { TbTournament, TbPlus } from "react-icons/tb";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ReactNode } from 'react';
+
 import './BottomNavigationBar.css';
 
-const BottomNavigationBar = () => {
+interface customNavigationButtonProps {
+    firstButton: ReactNode;
+    secondButton: ReactNode;
+}
+
+const BottomNavigationBar = (props: customNavigationButtonProps) => {
     function handleBarClick(e: Event) {
         
     }
 
+    const { firstButton, secondButton } = props;
+
     return (
         <div id="bottom_navigation_bar">
             <div className="bottom_navigation_bar__item">
-                <a href="newtournament">
-                    <div>
-                        <TbTournament style={{margin: '0 auto'}} />
-                        <TbPlus></TbPlus>
-                    </div>
-                    <span>
-                        New tournament
-                    </span>
-                </a>
-                
+                {firstButton}
             </div>
             {/* <div className="bottom_navigation_bar__item">
                 <a href="matches">
@@ -31,15 +28,7 @@ const BottomNavigationBar = () => {
                 </a>
             </div> */}
             <div className="bottom_navigation_bar__item">
-                <a href="newgame">
-                    <div>
-                        <FontAwesomeIcon icon={faTableTennis} />
-                        <TbPlus style={{margin: 'auto'}}></TbPlus>
-                    </div>
-                    <span>
-                        New game
-                    </span>
-                </a>
+                {secondButton}
             </div>
         </div>
     )

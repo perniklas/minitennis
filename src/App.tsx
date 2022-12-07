@@ -1,5 +1,4 @@
 import './App.css';
-import './components/Header/Header.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from './components/Home/Home';
 import Login from "./components/Auth/Login";
