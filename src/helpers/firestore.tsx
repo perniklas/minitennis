@@ -13,11 +13,12 @@ const getUsers = async () => {
     const userDocs = await getDocs(userQuery);
     userDocs.forEach((snapshot: QueryDocumentSnapshot) => {
         const user = snapshot.data();
+        user.id = user.uid;
         user.wins = user.wins ?? 0;
         user.losses = user.losses ?? 0;
         user.rating = user.rating ?? 0;
 
-        users.push(user)
+        users.push(user);
     });
 
     return users;

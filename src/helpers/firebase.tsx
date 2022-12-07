@@ -13,6 +13,7 @@ import {
   query,
   getDocs,
   collection,
+  doc,
   where,
   addDoc,
 } from "firebase/firestore";

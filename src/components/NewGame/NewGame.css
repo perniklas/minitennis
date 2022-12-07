@@ -24,15 +24,36 @@
      margin-bottom: 50px;
  }
 
- #newgame__form .input {
+ .newgame__form__input {
     display: flex;
     flex-direction: column;
     margin: 1rem 2rem;
     min-width: 80%;
  }
 
- #newgame__form .input > input {
-    display: flex;
-    flex-direction: column;
+.newgame__form__input > label {
     min-width: 80%;
+    margin-bottom: 0.5rem;
+    color: var(--blue);
+    font-weight: 600;
  }
+
+#newgame__form__who {
+    min-width: 80%;
+    border: solid var(--blue);
+    padding: 0.7rem;
+    border-radius: 0.77rem;
+ }
+
+#new_game .centered {
+    height: calc(100vh - 164px);
+}
+
+#new_game .centered span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 700;
+    color: var(--blue);
+}

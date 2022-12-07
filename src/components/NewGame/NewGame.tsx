@@ -2,22 +2,28 @@ import { useEffect, useState } from 'react';
 import { TbCheck, TbX } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../helpers/firebase';
+import { getUsers } from '../../helpers/firestore';
+import { User } from '../../interfaces/User';
 import BottomNavigationBar from '../BottomMenuBar/BottomNavigationBar';
 import Header from '../Header/Header';
 import './NewGame.css';
-import NewGameForm from './NewGameForm';
+import NewGameForm, { handleSubmit } from './NewGameForm';
+
 
 const NewGame = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const navigate = useNavigate();
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        getUsers().then(userList => {
+            setUsers(userList);
+        });
+    }, []);
 
     const createGame = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         event.preventDefault();
-        console.log('hehe');
-        const form = document.getElementById('newgame__form') as HTMLFormElement;
-        console.log(form);
-        debugger;
-        form.submit();
+        handleSubmit();
     };
 
     const backButton = (
@@ -62,8 +68,10 @@ const NewGame = () => {
             <Header />
                 {
                     loggedIn 
-                    ? <NewGameForm />
-                    : <span className="centered">You need to log in</span>
+                    ? <NewGameForm users={users}/>
+                    : <div className="centered">
+                        <span>You need to log in to create new games.</span>
+                    </div>
                 }
             <BottomNavigationBar
                 firstButton={backButton}
