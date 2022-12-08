@@ -1,0 +1,28 @@
+.dashboard__match {
+  display: flex;
+  flex-direction: column;
+  margin: 0.75em 1.5em;
+  padding-bottom: 0.75em;
+}
+
+.dashboard__match:not(:last-child) {
+  border-bottom: solid 1px rgba(200, 200, 200, 0.5);
+}
+
+.dashboard__match__dt {
+  font-weight: 300;
+}
+
+.winner {
+  color: rgba(180, 255, 180);
+}
+
+.loser {
+  color: rgba(255, 180, 180);
+}
+
+.dashboard__match__vs {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}

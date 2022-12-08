@@ -8,3 +8,7 @@ export interface Tournament {
     winner?: User;
     timestamp?: Date;
 }
+
+export interface TournamentProps {
+    tournaments: Array<Tournament>;
+}

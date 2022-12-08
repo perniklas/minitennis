@@ -5,3 +5,7 @@ export interface User {
     losses?: number,
     rating?: number
 };
+
+export interface UserProps {
+    users: Array<User>;
+}

@@ -27,7 +27,7 @@ const NewGame = () => {
     };
 
     const backButton = (
-        <a href="" onClick={() => navigate('/dashboard')} className="cancel">
+        <a href="" onClick={() => navigate('/')} className="cancel">
             <div>
                 <TbX style={{margin: 'auto'}}></TbX>
             </div>
@@ -74,8 +74,10 @@ const NewGame = () => {
                     </div>
                 }
             <BottomNavigationBar
-                firstButton={backButton}
-                secondButton={createGameButton}
+                buttons={[
+                    backButton,
+                    createGameButton
+                ]}
             />
         </div>
     );

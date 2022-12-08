@@ -73,6 +73,10 @@
   text-align: right;
 }
 
+#login__back {
+  font-size: 1.3em;
+}
+
 @media screen and (min-width: 600px) {
   .login__container {
     justify-content: center;

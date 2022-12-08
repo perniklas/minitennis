@@ -3,7 +3,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { auth, sendPasswordReset } from "../../helpers/firebase";
-// import "./Reset.css";
 
 function Reset() {
   const [email, setEmail] = useState("");
@@ -12,7 +11,7 @@ function Reset() {
 
   useEffect(() => {
     if (loading) return;
-    if (user) navigate("/dashboard");
+    if (user) navigate("/");
   }, [user, loading]);
 
   return (

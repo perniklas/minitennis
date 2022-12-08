@@ -80,6 +80,7 @@ const registerWithEmailAndPassword = async (name: string, email: string, passwor
       name,
       authProvider: "local",
       email,
+      rating: 1500
     });
   } catch (err) {
     console.error(err);

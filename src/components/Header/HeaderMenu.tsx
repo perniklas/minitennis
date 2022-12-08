@@ -86,6 +86,11 @@ const Menu = () => {
             </li>
           </ul>
           <div>
+            { signedIn ? (
+             "hehehe"
+            ) : null}
+          </div>
+          <div>
             {signedIn ? signOutComp : signInComp}
           </div>
         </div>

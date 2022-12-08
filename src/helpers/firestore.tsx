@@ -5,10 +5,17 @@ import {
     collection,
     orderBy,
     QueryDocumentSnapshot,
+    addDoc,
 } from "firebase/firestore";
 import { User } from "../interfaces/User";
+import { auth } from '../helpers/firebase';
+import { Match } from "../interfaces/Match";
+import { Tournament } from "../interfaces/Tournament";
+import { match } from "assert";
 
 var users: Array<User> = [];
+var matches: Array<Match> = [];
+var tournaments: Array<Tournament> = [];
 
 const getUsers = async () => {
     users = [];
@@ -24,22 +31,35 @@ const getUsers = async () => {
             rating: userData.rating ?? -1
         };
 
-        users.push(user);
+        if (user.id)
+            users.push(user);
     });
 
     return users;
 }
 
 const getMatches = async () => {
-    const matches: Array<any> = [];
+    matches = [];
     const matchQuery = query(collection(db, "matches"));
     const matchDocs = await getDocs(matchQuery);
     matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
-        const match = snapshot.data();
-        matches.push(match)
+        const matchData = snapshot.data();
+        const players = matchData.players.map((id) => users.find(u => u.id == id));
+        const match: Match = {
+            players: players,
+            timestamp: matchData.timestamp,
+            winner: matchData.winner
+        };
+        matches.push(match);
     });
 
     return matches;
+}
+
+const getMyMatches = () => {
+    const myID = auth.currentUser?.uid;
+    if (!myID) return;
+    return matches.filter((match) => match.players.map(user => user.id).includes(myID));
 }
 
 const getTournaments = async () => {
@@ -66,8 +86,18 @@ const getDashboardOverview = async () => {
     };
 };
 
-const createMatch = async () => {
-    
+const createMatch = async (againstID: string) => {
+    const myID = auth.currentUser?.uid;
+    if (!myID) return;
+
+    await addDoc(collection(db, "matches"), {
+        players: [
+            myID,
+            againstID
+        ],
+        winner: null,
+        timestamp: new Date()
+    });
 };
 
 export {
@@ -75,5 +105,6 @@ export {
     getUsers,
     getMatches,
     getTournaments,
-    createMatch
+    createMatch,
+    users
 }

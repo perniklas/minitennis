@@ -1,5 +1,6 @@
 import { auth } from "../../helpers/firebase";
 import { User } from "../../interfaces/User";
+import { createMatch, users } from '../../helpers/firestore';
 
 interface GameProps {
     users: Array<User>;
@@ -8,9 +9,12 @@ interface GameProps {
 const NewGameForm = (props: GameProps) => {
     return (
         <form onSubmit={handleSubmit} id="newgame__form">
+            {/* <div className="newgame__form__input">
+                <label htmlFor="newgame__form__when">When?</label>
+                <input id="newgame__form__when" type="datetime-local" defaultValue= />
+            </div> */}
             <div className="newgame__form__input">
                 <label htmlFor="newgame__form__who">You and who?</label>
-                {/* <input id="newgame__form__who" defaultValue="test" /> */}
                 <select id="newgame__form__who">
                     {props.users.filter(u => u.id !== auth.currentUser.uid).map((user: User) => {
                         return (
@@ -18,13 +22,12 @@ const NewGameForm = (props: GameProps) => {
                         );
                     })}
                 </select>
-
             </div>
         </form>
     );
 };
 
-const handleSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+const handleSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
     if (event) {
         event.preventDefault();
     }
@@ -34,13 +37,16 @@ const handleSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
         return;
     }
 
-    const who = document.getElementById('newgame__form__who') as HTMLInputElement;
+    const who = document.getElementById('newgame__form__who') as HTMLSelectElement;
     if (!who) {
         alert('You gotta choose someone bruh');
     }
 
-    const whoID = who.value;
-    console.log(whoID);
+    const whoID = who.children[who.selectedIndex]?.id;
+
+    const whoName = who.value;
+    console.log(whoID, whoName);
+    await createMatch(whoID);
 };
 
 export {

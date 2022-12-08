@@ -2,8 +2,8 @@
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    /* position: fixed;
-    bottom: 0; */
+    position: fixed;
+    bottom: 0;
     height: 80px;
     width: 100vw;
     background: linear-gradient(to bottom right, var(--blue), var(--dark));
@@ -22,7 +22,7 @@
     text-align: center;
     height: 100%;
     text-decoration: none;
-    color: rgb(200, 211, 255);
+    color: rgb(211, 233, 255);
 }
 
 .bottom_navigation_bar__item a.active {

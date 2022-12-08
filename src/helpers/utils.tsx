@@ -19,6 +19,22 @@ const truncateName = (name: string) => {
     return name;
 }
 
+const formatDate = (seconds: number) => {
+    return new Date((seconds * 1000)).toDateString().replaceAll('/', '.');
+}
+
+const formatTime = (seconds: number) => {
+    return new Date((seconds * 1000)).toLocaleTimeString().substring(0, 5);
+}
+
+const formatToPercentageString = (number: number) => {
+    const num = number * 100;
+    return `${num.toFixed(0)}%`;
+}
+
 export {
-    truncateName
+    truncateName,
+    formatDate,
+    formatTime,
+    formatToPercentageString
 };
