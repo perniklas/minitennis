@@ -6,7 +6,9 @@
     bottom: 0;
     height: 80px;
     width: 100vw;
-    background: linear-gradient(to bottom right, var(--blue), var(--dark));
+    background: linear-gradient(to bottom right, /* var(--blue),*/
+    #203687,
+     var(--blue));
     color: white;
 }
 
@@ -26,7 +28,7 @@
 }
 
 .bottom_navigation_bar__item a.active {
-    color: rgb(202, 149, 255);
+    color: rgb(198 255 156);
 }
 
 .bottom_navigation_bar__item a:not(span) {

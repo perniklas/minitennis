@@ -8,10 +8,12 @@ interface MatchProps {
 
 const LatestMatches = (props: MatchProps) => {
     const { matches } = props;
+    matches.sort((a, b) => a.timestamp > b.timestamp ? -1 : 1);
+    const latestMatches = matches.slice(0, 10);
 
     return (
         <div>
-            { matches.map((match: Match) => {
+            { latestMatches.map((match: Match) => {
                 var key = match.timestamp?.toString() ?? "match";
                 key += ("-" + match.players.map(p => p.id).join('-'));
 

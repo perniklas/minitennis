@@ -9,17 +9,19 @@ import Header from '../Header/Header';
 import './NewGame.css';
 import NewGameForm, { handleSubmit } from './NewGameForm';
 
+interface GameProps {
+    users: Array<User>;
+}
 
-const NewGame = () => {
+const NewGame = (props: GameProps) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const navigate = useNavigate();
-    const [users, setUsers] = useState([]);
+    const users = props.users;
 
-    useEffect(() => {
-        getUsers().then(userList => {
-            setUsers(userList);
-        });
-    }, []);
+    try {
+        document.getElementById('navigationbutton_newgame').classList.add('active');
+    } catch { }
+
 
     const createGame = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         event.preventDefault();
@@ -29,7 +31,7 @@ const NewGame = () => {
     const backButton = (
         <a href="" onClick={() => navigate('/')} className="cancel">
             <div>
-                <TbX style={{margin: 'auto'}}></TbX>
+                <TbX style={{ margin: 'auto' }}></TbX>
             </div>
             <span>
                 Cancel
@@ -40,7 +42,7 @@ const NewGame = () => {
     const createGameButton = (
         <a href="" onClick={(e) => createGame(e)} className="greenlight">
             <div>
-                <TbCheck style={{margin: 'auto'}}></TbCheck>
+                <TbCheck style={{ margin: 'auto' }}></TbCheck>
             </div>
             <span>
                 Create
@@ -62,17 +64,17 @@ const NewGame = () => {
             }
         });
     });
-    
+
     return (
         <div id="new_game">
             <Header />
-                {
-                    loggedIn 
-                    ? <NewGameForm users={users}/>
+            {
+                loggedIn
+                    ? <NewGameForm users={users} />
                     : <div className="centered">
                         <span>You need to log in to create new games.</span>
                     </div>
-                }
+            }
             <BottomNavigationBar
                 buttons={[
                     backButton,

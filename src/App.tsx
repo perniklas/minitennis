@@ -8,8 +8,7 @@ import Reset from "./components/Auth/Reset";
 import NewGame from './components/NewGame/NewGame';
 import MyGames from './components/MyGames/MyGames';
 import { firestoreReducer } from './firestoreReducer';
-import { Match } from './interfaces/Match';
-import { getDashboardOverview } from './helpers/firestore';
+import { getDashboardOverview, getMyMatches } from './helpers/firestore';
 
 function App() {
   const [state, dispatch] = useReducer(firestoreReducer, {
@@ -17,6 +16,11 @@ function App() {
     users: [],
     tournaments: []
   });
+
+  let route = window.location.href.split('/').at(-1);
+  if (!route.length) route = 'dashboard';
+  console.log(`navigationbutton_${route}`);
+  document.getElementById(`navigationbutton_${route}`)?.classList.add('active');
 
   useEffect(() => {
     getDashboardOverview().then(response => {
@@ -48,8 +52,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/reset" element={<Reset />} />
-          <Route path="/newgame" element={<NewGame />} />
-          <Route path="/mygames" element={<MyGames matches={state.matches} />} />
+          <Route path="/newgame" element={<NewGame users={state.users ?? []} />} />
+          <Route path="/mygames" element={<MyGames users={state.users ?? []} />} />
         </Routes>
       </Router>
     </div>

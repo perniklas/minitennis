@@ -1,28 +1,44 @@
 import { TbCheck, TbX } from "react-icons/tb";
 import { auth } from "../../helpers/firebase";
-import { MatchProps } from "../../interfaces/Match";
+import { Match } from "../../interfaces/Match";
 import Card from "../Cards/Card";
+import { User } from "../../interfaces/User";
 
-const IncomingMatches = (props: MatchProps) => {
+interface IncomingMatchesProps {
+  matches: Array<Match>;
+  users: Array<User>;
+  acceptMatch: Function;
+  declineMatch: Function;
+}
+
+const IncomingMatches = (props: IncomingMatchesProps) => {
+  const { matches, acceptMatch, declineMatch } = props;
+
+  let prevMatch = matches[0];
+
   const child = (
     <div>
-      { props.matches.map(match => {
+      {matches.map(match => {
         const contestant = match.players.filter(p => p.id != auth.currentUser?.uid)[0].name;
         return (
-          <div key={match.timestamp.seconds.toString() + match.players[0].id + match.players[1].id} className="incoming__match__contestant">
-            <span>{ contestant }</span>
+          <div key={match.id} className="incoming__match__contestant">
+            <span>{contestant}</span>
             <div className="incoming__match__contestant__decision">
-              <TbCheck></TbCheck>
-              <TbX></TbX>
+              <a className="incoming__match_decline cancel" onClick={() => declineMatch(match.id)}>
+                <TbX></TbX>
+              </a>
+              <a className="incoming__match_accept greenlight" onClick={() => acceptMatch(match.id)}>
+                <TbCheck></TbCheck>
+              </a>
             </div>
           </div>
         );
-      }) }
+      })}
     </div>
   );
 
   return (
-    <Card title="Match requests" child={child}/>
+    <Card title="Match Requests" child={child} />
   )
 };
 

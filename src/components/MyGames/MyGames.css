@@ -1,7 +1,34 @@
 .incoming__match__contestant {
-  padding: 1em 1em 2em 2em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1.2em 2.1em;
 }
 
 .incoming__match__contestant:not(:last-child) {
   border-bottom: solid 1px rgba(255,255,255,0.7);
+}
+
+#mystats {
+  display: flex;
+  flex-direction: column;
+  padding: 0.25em 4em 1.75em 4em;
+}
+
+.mystats__row {
+  margin: 0.5rem 0;
+}
+
+.incoming__match__contestant__decision {
+  display: flex;
+  flex-direction: row;
+  font-size: 1.4rem;
+}
+
+.incoming__match_decline {
+  padding: 0 0.75em 0 0.1em;
+}
+
+.incoming__match_accept {
+  padding: 0 0.1em 0 0.75em;
 }

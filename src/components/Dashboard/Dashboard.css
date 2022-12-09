@@ -1,8 +1,8 @@
 #dashboard {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 80px);
-    overflow: auto;
+    /* height: calc(100vh - 80px);
+    overflow: auto; */
 }
 
 /* demo styles */
@@ -24,7 +24,7 @@
 }
 
 .home {
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
+    overflow-y: scroll;
+    min-height: calc(100vh - 80px);
+    padding-bottom: 100px;
 }
