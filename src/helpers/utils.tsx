@@ -19,12 +19,12 @@ const truncateName = (name: string) => {
     return name;
 }
 
-const formatDate = (seconds: number) => {
-    return new Date((seconds * 1000)).toDateString().replaceAll('/', '.');
+const formatDate = (milliseconds: number) => {
+    return new Date(milliseconds).toDateString().replaceAll('/', '.');
 }
 
-const formatTime = (seconds: number) => {
-    return new Date((seconds * 1000)).toLocaleTimeString().substring(0, 5);
+const formatTime = (milliseconds: number) => {
+    return new Date(milliseconds).toLocaleTimeString().substring(0, 5);
 }
 
 const formatToPercentageString = (number: number) => {

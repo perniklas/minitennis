@@ -23,8 +23,8 @@ const LatestMatches = (props: MatchProps) => {
                 return (
                     <div key={key} className="dashboard__match">
                         <div className="dashboard__match__dt">
-                            <span>{formatDate((match.timestamp?.seconds ?? 0))}</span>
-                            <span style={{float: "right"}}>{formatTime((match.timestamp?.seconds ?? 0))}</span>
+                            <span>{formatDate((match.timestamp ?? 0))}</span>
+                            <span style={{float: "right"}}>{formatTime((match.timestamp ?? 0))}</span>
                         </div>
                         <div className="dashboard__match__vs">
                             <span className={firstColor}>{truncateName(match.players[0].name ?? "")}</span>

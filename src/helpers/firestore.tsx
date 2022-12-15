@@ -8,6 +8,8 @@ import {
     addDoc,
     DocumentData,
     Query,
+    orderBy,
+    limit,
 } from "firebase/firestore";
 import { User } from "../interfaces/User";
 import { auth } from '../helpers/firebase';
@@ -41,7 +43,7 @@ const getUsers = async () => {
 
 const getMatches = async () => {
     matches = [];
-    const matchQuery = query(collection(db, "matches"));
+    const matchQuery = query(collection(db, "matches"), orderBy('timespan', 'desc'), limit(10));
     const matchDocs = await getDocs(matchQuery);
     matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
         const matchData = snapshot.data();
@@ -81,11 +83,14 @@ const getMatchesFromFirestore = async (query: Query<DocumentData>) => {
         const match = createMatchFromData(snapshot.id, matchData);
         matches.push(match);
     });
+
+    matches.sort((a, b) => a.timestamp > b.timestamp ? -1 : 1);
+
     return matches;
 };
 
 const getMyMatches = async () => {
-    const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid));
+    const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid), orderBy('timestamp', 'desc'));
     return await getMatchesFromFirestore(matchQuery);
 };
 
@@ -154,7 +159,7 @@ const createMatch = async (againstID: string) => {
         ],
         challenger: myID,
         winner: null,
-        timestamp: new Date(),
+        timestamp: new Date().getMilliseconds(),
         accepted: false
     });
 };

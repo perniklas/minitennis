@@ -1,3 +1,4 @@
+import { configureStore } from "@reduxjs/toolkit";
 import { initializeApp } from "firebase/app";
 import {
   GoogleAuthProvider,
@@ -18,6 +19,10 @@ import {
   addDoc,
 } from "firebase/firestore";
 
+import { combineReducers, createStore } from 'redux';
+import { reduxFirestore, firestoreReducer } from 'redux-firestore';
+
+
 interface Error {
   message: string;
 }
@@ -35,6 +40,26 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+/** BONKERS FIRESTORE SHIT 
+const initialState = {
+  matchHistory: [],
+  myMatchHistory: [],
+  incomingMatches: [],
+  declareWinnerMatches: [],
+};
+
+// Create the reducer for your Firestore data
+const rootReducer = combineReducers({
+  firestore: firestoreReducer,
+});
+
+// Create the store
+const store = createStore(rootReducer);
+
+// Add the Redux bindings for Firestore
+const firestore = reduxFirestore(store);
+/* END OF BONKERS SHIT */
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -108,6 +133,7 @@ const logOutUser = async () => {
 };
 
 export {
+  //store,
   auth,
   db,
   signInWithGoogle,

@@ -6,10 +6,7 @@ export interface Match {
     players: Array<User>;
     winner?: string;
     challenger: string;
-    timestamp?: {
-        seconds: number;
-        nanoseconds: number;
-    };
+    timestamp?: number;
     accepted?: boolean;
 };
 

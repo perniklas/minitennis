@@ -4,8 +4,6 @@ import { MatchProps } from "../../interfaces/Match";
 import Card from "../Cards/Card";
 
 const MyStats = (props: MatchProps) => {
-  console.log(props);
-  console.log(auth.currentUser?.uid);
   const wins = props.matches.filter(match => match.winner === auth.currentUser?.uid).length;
   const losses = props.matches.filter(match => match.winner !== auth.currentUser?.uid).length;
   const games = wins + losses;
