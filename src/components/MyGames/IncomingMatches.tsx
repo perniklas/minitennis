@@ -1,20 +1,37 @@
 import { TbCheck, TbX } from "react-icons/tb";
 import { auth } from "../../helpers/firebase";
-import { Match } from "../../interfaces/Match";
 import Card from "../Cards/Card";
 import { User } from "../../interfaces/User";
+import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
+import { setDeclareWinnerMatches, setIncomingMatches } from "../../Redux/reducers";
 
 interface IncomingMatchesProps {
-  matches: Array<Match>;
   users: Array<User>;
-  acceptMatch: Function;
-  declineMatch: Function;
 }
 
 const IncomingMatches = (props: IncomingMatchesProps) => {
-  const { matches, acceptMatch, declineMatch } = props;
+  const dispatch = useAppDispatch();
+  const matches = useAppSelector(state => state.incomingMatches);
+  const declareWinnerMatches = useAppSelector(state => state.declareWinnerMatches);
 
-  let prevMatch = matches[0];
+  const removeMatchFromIncoming = (id: string) => {
+    const match = matches.find(m => m.id === id);
+    const newMatches = matches.filter(m => m.id !== id);
+    dispatch(setIncomingMatches(newMatches));
+    return match;
+  };
+
+
+  const acceptMatch = (id: string) => {
+    const match = removeMatchFromIncoming(id);
+    const newMatches = [...declareWinnerMatches];
+    newMatches.push(match);
+    dispatch(setDeclareWinnerMatches(newMatches));;
+  };
+
+  const declineMatch = (id: string) => {
+
+  };
 
   const child = (
     <div>
@@ -36,6 +53,10 @@ const IncomingMatches = (props: IncomingMatchesProps) => {
       })}
     </div>
   );
+
+  if (!matches.length) {
+    return (<></>);
+  }
 
   return (
     <Card title="Match Requests" child={child} />

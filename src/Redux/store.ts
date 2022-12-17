@@ -3,7 +3,9 @@ import matchReducer from './reducers';
 
 
 export const store = configureStore({
-  reducer: matchReducer
+  reducer: matchReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware()
 });
 
 export type RootState = ReturnType<typeof store.getState>;

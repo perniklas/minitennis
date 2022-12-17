@@ -1,14 +1,10 @@
-import { auth } from "../../helpers/firebase";
-import { Match } from "../../interfaces/Match"
+import { useAppSelector } from "../../Redux/hooks";
 import Card from "../Cards/Card";
 import LatestMatches from "../LatestMatches/LatestMatches";
 
-interface MatchProps {
-  matches: Array<Match>;
-}
-
-const MyMatches = (props: MatchProps) => {
-  return <Card title="My matches" child={<LatestMatches matches={props.matches} />}/>
+const MyMatches = () => {
+  const matches = useAppSelector(state => state.myMatchHistory);
+  return <Card title="My matches" child={<LatestMatches matches={matches} />}/>
 }
 
 

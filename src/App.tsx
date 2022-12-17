@@ -6,7 +6,7 @@ import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import Reset from "./components/Auth/Reset";
 import NewGame from './components/NewGame/NewGame';
-import MyGames from './components/MyGames/MyGames';
+import MyPage from './components/MyGames/MyPage';
 import { firestoreReducer } from './firestoreReducer';
 import { getDashboardOverview, getMyMatches } from './helpers/firestore';
 
@@ -53,7 +53,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/reset" element={<Reset />} />
           <Route path="/newgame" element={<NewGame users={state.users ?? []} />} />
-          <Route path="/mygames" element={<MyGames users={state.users ?? []} />} />
+          <Route path="/mygames" element={<MyPage users={state.users ?? []} />} />
         </Routes>
       </Router>
     </div>

@@ -1,11 +1,14 @@
 import { auth } from "../../helpers/firebase";
 import { formatToPercentageString } from "../../helpers/utils";
 import { MatchProps } from "../../interfaces/Match";
+import { useAppSelector } from "../../Redux/hooks";
 import Card from "../Cards/Card";
 
-const MyStats = (props: MatchProps) => {
-  const wins = props.matches.filter(match => match.winner === auth.currentUser?.uid).length;
-  const losses = props.matches.filter(match => match.winner !== auth.currentUser?.uid).length;
+const MyStats = () => {
+  const matchHistory = useAppSelector(state => state.myMatchHistory);
+
+  const wins = matchHistory.filter(match => match.winner === auth.currentUser?.uid).length;
+  const losses = matchHistory.filter(match => match.winner !== auth.currentUser?.uid).length;
   const games = wins + losses;
   const winrate = (wins / (games === 0 ? 1 : games));
 

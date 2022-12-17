@@ -6,13 +6,21 @@ interface StateInterface {
     myMatchHistory: Array<Match>;
     incomingMatches: Array<Match>;
     declareWinnerMatches: Array<Match>;
+    loadingAllMatches: boolean;
+    loadingMyMatchHistory: boolean;
+    loadingIncomingMatches: boolean;
+    loadingDeclareWinnerMatches: boolean;
 }
 
 const initialState: StateInterface = {
     matchHistory: [],
     myMatchHistory: [],
     incomingMatches: [],
-    declareWinnerMatches: []
+    declareWinnerMatches: [],
+    loadingAllMatches: false,
+    loadingMyMatchHistory: false,
+    loadingIncomingMatches: false,
+    loadingDeclareWinnerMatches: false
 };
 
 export const matchSlice = createSlice({
@@ -22,15 +30,30 @@ export const matchSlice = createSlice({
         setAllMatches: (state: any, action: PayloadAction<Match[]>) => {
             state.matchHistory = action.payload
         },
+        setLoadingAllMatches: (state: any, action: PayloadAction<boolean>) => {
+            state.loadingAllMatches = action.payload
+        },
+
         setMyMatchHistory: (state: any, action: PayloadAction<Match[]>) => {
             console.log('setting my match history', action.payload);
             state.myMatchHistory = action.payload
         },
+        setLoadingMyMatchHistory: (state: any, action: PayloadAction<boolean>) => {
+            state.loadingMyMatchHistory = action.payload
+        },
+
         setIncomingMatches: (state: any, action: PayloadAction<Match[]>) => {
             state.incomingMatches = action.payload
         },
+        setLoadingIncomingMatches: (state: any, action: PayloadAction<boolean>) => {
+            state.loadingIncomingMatches = action.payload
+        },
+
         setDeclareWinnerMatches: (state: any, action: PayloadAction<Match[]>) => {
             state.declareWinnerMatches = action.payload
+        },
+        setLoadingDeclareWinnerMatches: (state: any, action: PayloadAction<boolean>) => {
+            state.loadingDeclareWinnerMatches = action.payload
         },
     },
 });
