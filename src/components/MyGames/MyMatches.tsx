@@ -1,12 +1,12 @@
-import { useAppSelector } from "../../Redux/hooks";
+import { MatchProps } from "../../interfaces/Match";
 import Card from "../Cards/Card";
 import LatestMatches from "../LatestMatches/LatestMatches";
 
-const MyMatches = () => {
-  const matches = useAppSelector(state => state.myMatchHistory);
+const MyMatches = (props: MatchProps) => {
+  const { matches } = props;
+  console.log(matches);
+
   return <Card title="My matches" child={<LatestMatches matches={matches} />}/>
 }
-
-
 
 export default MyMatches;

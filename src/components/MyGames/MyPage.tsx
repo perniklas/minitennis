@@ -8,10 +8,10 @@ import DeclareWinner from './DeclareWinner';
 import MyStats from './MyStats';
 import BottomBarButtons from '../BottomNavigationButtons/BottomNavigationButtons';
 import { User } from '../../interfaces/User';
-import { auth } from '../../helpers/firebase';
-import { connect, useSelector } from 'react-redux';
-import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
-import { fetchDeclareWinnerMatches, fetchIncomingMatches, fetchMyMatches } from '../../Redux/actions';
+import { auth, db } from '../../helpers/firebase';
+import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { Match } from '../../interfaces/Match';
+import { getMyFinishedMatchesListener, users } from '../../helpers/firestore';
 
 interface GameProps {
   users: Array<User>
@@ -19,10 +19,8 @@ interface GameProps {
 
 const MyPage = (props: GameProps) => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const dispatch = useAppDispatch();
-  let loadingMyMatches: boolean,
-    loadingIncomingMatches: boolean,
-    loadingDeclareWinnerMatches: boolean = false;
+  const emptyMatches: Match[] = [];
+  const [matches, setMatches] = useState(emptyMatches);
 
   auth.onAuthStateChanged((user) => {
     if (user) {
@@ -32,30 +30,21 @@ const MyPage = (props: GameProps) => {
     }
   });
 
-  if (loggedIn) {
-    if (!loadingMyMatches) {
-      loadingMyMatches = true;
-      dispatch(fetchMyMatches());
-    }
+  useEffect(() => {
+    if (!loggedIn) return;
+    
+    const unsubscribe = getMyFinishedMatchesListener(setMatches);
 
-    if (!loadingIncomingMatches) {
-      loadingIncomingMatches = true;
-      dispatch(fetchIncomingMatches());
-    }
-
-    if (!loadingDeclareWinnerMatches) {
-      loadingDeclareWinnerMatches = true;
-      dispatch(fetchDeclareWinnerMatches());
-    }
-  }
+    return () => unsubscribe();
+  }, [loggedIn]);
 
   return (
     <div className="home">
       <Header />
-      <MyStats />
-      <IncomingMatches users={props.users} />
-      <DeclareWinner />
-      <MyMatches />
+      <MyStats matches={matches} />
+      <IncomingMatches loggedIn={loggedIn} users={props.users} />
+      <DeclareWinner loggedIn={loggedIn} />
+      <MyMatches matches={matches} />
       <BottomNavigationBar
         buttons={
           BottomBarButtons()

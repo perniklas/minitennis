@@ -7,6 +7,7 @@ import { setDeclareWinnerMatches, setIncomingMatches } from "../../Redux/reducer
 
 interface IncomingMatchesProps {
   users: Array<User>;
+  loggedIn: boolean;
 }
 
 const IncomingMatches = (props: IncomingMatchesProps) => {

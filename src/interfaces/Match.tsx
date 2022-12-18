@@ -1,4 +1,3 @@
-import internal from 'stream';
 import { User } from './User';
 
 export interface Match {
@@ -11,5 +10,5 @@ export interface Match {
 };
 
 export interface MatchProps {
-    matches: Array<Match>;
+    matches: Match[];
 }

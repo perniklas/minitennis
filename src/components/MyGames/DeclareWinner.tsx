@@ -1,9 +1,35 @@
 import { formatDate, formatTime } from "../../helpers/utils";
-import { useAppSelector } from "../../Redux/hooks";
 import Card from "../Cards/Card";
+import { useEffect, useState } from 'react';
+import { auth, db } from '../../helpers/firebase';
+import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { Match } from "../../interfaces/Match";
 
-const DeclareWinner = () => {
-  const matches = useAppSelector(state => state.declareWinnerMatches);
+interface DeclareWinnerProps {
+  loggedIn: boolean;
+}
+
+const DeclareWinner = (props: DeclareWinnerProps) => {
+  const [matches, setMatches] = useState([]);
+  const { loggedIn } = props;
+
+  useEffect(() => {
+    if (!loggedIn) return;
+
+    const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid),
+      where("winner", "==", null), where("accepted", "==", true), orderBy('timestamp', 'desc'));
+    const unsubscribe = onSnapshot(matchQuery, docsSnap => {
+      const matchList: Match[] = [];
+      docsSnap.forEach(doc => {
+        const matchData = doc.data() as Match;
+        matchList.push(matchData);
+      });
+
+      setMatches(matchList);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const child = (
     <div>

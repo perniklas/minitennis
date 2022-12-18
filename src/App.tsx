@@ -8,7 +8,7 @@ import Reset from "./components/Auth/Reset";
 import NewGame from './components/NewGame/NewGame';
 import MyPage from './components/MyGames/MyPage';
 import { firestoreReducer } from './firestoreReducer';
-import { getDashboardOverview, getMyMatches } from './helpers/firestore';
+import { getDashboardOverview } from './helpers/firestore';
 
 function App() {
   const [state, dispatch] = useReducer(firestoreReducer, {
