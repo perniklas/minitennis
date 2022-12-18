@@ -31,10 +31,10 @@ const Leaderboard = (props: Proppos) => {
                             {truncateName(user.name)}
                         </td>
                         <td className="centered">
-                            {user.wins}
+                            {user.wins ?? "0"}
                         </td>
                         <td className="centered">
-                            {user.losses}
+                            {user.losses ?? "0"}
                         </td>
                     </tr>
                 ))}

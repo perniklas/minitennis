@@ -8,13 +8,14 @@
     flex-direction: column;
     justify-content: space-between;
     z-index: 5;
-    position: absolute;
+    position: fixed;
+    overflow-y: scroll;
     right: -100%;
     top: 0;
     background: var(--dark);
     padding: 0.75em;
     min-width: 300px;
-    min-height: calc(100% - 1.5em);
+    min-height: calc(100vh - 1.5em);
     width: 25%;
     transition: ease-out 0.65s;
 }

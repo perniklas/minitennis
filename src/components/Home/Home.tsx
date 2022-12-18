@@ -13,7 +13,7 @@ const Home = (props: DataProps) => {
     return (
         <div className="home">
             <Header></Header>
-            <Dashboard users={props.users} matches={props.matches} tournaments={props.tournaments}></Dashboard>
+            <Dashboard users={props.users} tournaments={props.tournaments}></Dashboard>
             <BottomNavigationBar 
                 buttons={
                     BottomBarButtons()

@@ -1,59 +1,39 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import Home from './components/Home/Home';
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import Reset from "./components/Auth/Reset";
 import NewGame from './components/NewGame/NewGame';
 import MyPage from './components/MyGames/MyPage';
-import { firestoreReducer } from './firestoreReducer';
-import { getDashboardOverview } from './helpers/firestore';
+import { loggedIn } from './helpers/firebase';
+import { getAllRegisteredUsers } from './helpers/firestore';
 
 function App() {
-  const [state, dispatch] = useReducer(firestoreReducer, {
-    matches: [],
-    users: [],
-    tournaments: []
-  });
-
-  let route = window.location.href.split('/').at(-1);
-  if (!route.length) route = 'dashboard';
-  console.log(`navigationbutton_${route}`);
-  document.getElementById(`navigationbutton_${route}`)?.classList.add('active');
-
+  const [users, setUsers] = useState([]);
+  
   useEffect(() => {
-    getDashboardOverview().then(response => {
-      dispatch({
-        type: 'set',
-        key: 'users',
-        value: response.loadedUsers
-      });
+    let route = window.location.href.split('/').at(-1);
+    if (!route.length) route = 'dashboard';
+    console.log(`navigationbutton_${route}`);
+    document.getElementById(`navigationbutton_${route}`)?.classList.add('active');
 
-      dispatch({
-        type: 'set',
-        key: 'matches',
-        value: response.loadedMatches
-      });
+    const unsubscribe = getAllRegisteredUsers(setUsers, 10);
 
-      dispatch({
-        type: 'set',
-        key: 'tournaments',
-        value: response.loadedTournaments
-      });
-    });
-  }, []);
+    return () => unsubscribe();
+  });
 
   return (
     <div id="app">
       <Router>
         <Routes>
-          <Route path="/" element={<Home users={state.users} matches={state.matches} tournaments={state.tournaments} />} />
+          <Route path="/" element={<Home users={users} tournaments={[]} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/reset" element={<Reset />} />
-          <Route path="/newgame" element={<NewGame users={state.users ?? []} />} />
-          <Route path="/mygames" element={<MyPage users={state.users ?? []} />} />
+          <Route path="/newgame" element={<NewGame users={users ?? []} />} />
+          <Route path="/mygames" element={<MyPage users={users ?? []} />} />
         </Routes>
       </Router>
     </div>

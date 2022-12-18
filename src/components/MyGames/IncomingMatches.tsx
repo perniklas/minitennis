@@ -4,6 +4,8 @@ import Card from "../Cards/Card";
 import { User } from "../../interfaces/User";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { setDeclareWinnerMatches, setIncomingMatches } from "../../Redux/reducers";
+import { useEffect, useState } from "react";
+import { getIncomingMatchesListener, updateAcceptedMatchInFirestore } from "../../helpers/firestore";
 
 interface IncomingMatchesProps {
   users: Array<User>;
@@ -11,23 +13,23 @@ interface IncomingMatchesProps {
 }
 
 const IncomingMatches = (props: IncomingMatchesProps) => {
-  const dispatch = useAppDispatch();
-  const matches = useAppSelector(state => state.incomingMatches);
-  const declareWinnerMatches = useAppSelector(state => state.declareWinnerMatches);
+  const { loggedIn } = props;
+  let loading = false;
 
-  const removeMatchFromIncoming = (id: string) => {
-    const match = matches.find(m => m.id === id);
-    const newMatches = matches.filter(m => m.id !== id);
-    dispatch(setIncomingMatches(newMatches));
-    return match;
-  };
+  const [matches, setMatches] = useState([]);
+  useEffect(() => {
+    if (!loggedIn) return;
 
+    const unsubscribe = getIncomingMatchesListener(setMatches);
+    return () => unsubscribe();
+  }, [loggedIn]);
 
-  const acceptMatch = (id: string) => {
-    const match = removeMatchFromIncoming(id);
-    const newMatches = [...declareWinnerMatches];
-    newMatches.push(match);
-    dispatch(setDeclareWinnerMatches(newMatches));;
+  const acceptMatch = async (id: string) => {
+    if (loading) return;
+    loading = true;
+    
+    await updateAcceptedMatchInFirestore(id);
+    loading = false;
   };
 
   const declineMatch = (id: string) => {
@@ -37,7 +39,7 @@ const IncomingMatches = (props: IncomingMatchesProps) => {
   const child = (
     <div>
       {matches.map(match => {
-        const contestant = match.players.filter(p => p.id != auth.currentUser?.uid)[0].name;
+        const contestant = match.players.filter((p: User) => p.id != auth.currentUser?.uid)[0].name;
         return (
           <div key={match.id} className="incoming__match__contestant">
             <span>{contestant}</span>

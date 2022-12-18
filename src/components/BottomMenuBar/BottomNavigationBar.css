@@ -28,7 +28,7 @@
 }
 
 .bottom_navigation_bar__item a.active {
-    color: #fffc4c;
+    color: rgb(0, 255, 119);
 }
 
 .bottom_navigation_bar__item a:not(span) {

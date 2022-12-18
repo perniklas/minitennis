@@ -115,6 +115,16 @@ const registerWithEmailAndPassword = async (name: string, email: string, passwor
   }
 };
 
+let loggedIn = false;
+
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    loggedIn = true;
+  } else {
+    loggedIn = false;
+  }
+});
+
 const sendPasswordReset = async (email: string) => {
   try {
     await sendPasswordResetEmail(auth, email);
@@ -135,6 +145,7 @@ const logOutUser = async () => {
 export {
   //store,
   auth,
+  loggedIn,
   db,
   signInWithGoogle,
   logInWithEmailAndPassword,

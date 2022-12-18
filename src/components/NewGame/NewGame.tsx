@@ -1,20 +1,17 @@
-import { useEffect, useState } from 'react';
 import { TbCheck, TbX } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../../helpers/firebase';
-import { getUsers } from '../../helpers/firestore';
 import { User } from '../../interfaces/User';
 import BottomNavigationBar from '../BottomMenuBar/BottomNavigationBar';
 import Header from '../Header/Header';
 import './NewGame.css';
 import NewGameForm, { handleSubmit } from './NewGameForm';
+import { loggedIn } from '../../helpers/firebase';
 
 interface GameProps {
     users: Array<User>;
 }
 
 const NewGame = (props: GameProps) => {
-    const [loggedIn, setLoggedIn] = useState(false);
     const navigate = useNavigate();
     const users = props.users;
 
@@ -49,21 +46,6 @@ const NewGame = (props: GameProps) => {
             </span>
         </a>
     );
-
-    useEffect(() => {
-        const me = auth.currentUser?.uid;
-        if (!me) {
-            // window.location.replace('/login');
-        }
-
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                setLoggedIn(true);
-            } else {
-                setLoggedIn(false);
-            }
-        });
-    });
 
     return (
         <div id="new_game">

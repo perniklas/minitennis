@@ -1,19 +1,22 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import UserContext from '../../Context/UserSettings.context';
 import { auth, logOutUser } from '../../helpers/firebase';
 import "./HeaderMenu.css";
+import { users } from '../../helpers/firestore';
+import { loggedIn } from '../../helpers/firebase';
 
 const Menu = () => {
-  const userContext = useContext(UserContext);
-  const [signedIn, setSignedIn] = useState(false);
   const [displayMenu, setDisplayMenu] = useState(false);
   const navigate = useNavigate();
 
   const setShowMenu = (show: boolean) => {
-    userContext.showMenu = show;
     setDisplayMenu(show);
   }
+
+  useEffect(() => {
+    console.log('logging ' + (loggedIn ? "in" : "out"));
+    setDisplayMenu(false);
+  }, [loggedIn]);
 
   const handleMenuToggle = () => {
     const elem = document.getElementById('header_menu_content');
@@ -29,19 +32,9 @@ const Menu = () => {
   const handleLogOut = async () => {
     console.log('logging out');
     await logOutUser();
+    setShowMenu(false);
   };
 
-  useEffect(() => {
-    auth.onAuthStateChanged(user => {
-      console.log('authstate changed, signed in? ', signedIn);
-      if (user) {
-        setSignedIn(true);
-      } else {
-        setSignedIn(false);
-      }
-    });
-  });
-  
   const signInComp = (
     <button className="button" id="button__login" onClick={(e) => navigate("/login")}>
       ♕ Log in
@@ -55,47 +48,45 @@ const Menu = () => {
   )
 
   return (
-    <UserContext.Provider value={{ showMenu: userContext.showMenu }}>
-      <div id="header_menu">
+    <div id="header_menu">
+      <button
+        id="header_menu_button"
+        onClick={() => handleMenuToggle()}
+        className="button">
+        ☰
+        {/* <Hamburger></Hamburger> */}
+      </button>
+      <div id="header_menu_content" className={displayMenu ? "shown" : ""}>
         <button
-          id="header_menu_button"
+          id="header_menu_content_close"
           onClick={() => handleMenuToggle()}
-          className="button">
-          ☰
-          {/* <Hamburger></Hamburger> */}
+          className={"button" + (displayMenu ? " shown" : "")}>
+          ✕
         </button>
-        <div id="header_menu_content" className={userContext.showMenu ? "shown" : ""}>
-          <button
-            id="header_menu_content_close"
-            onClick={() => handleMenuToggle()}
-            className={"button" + (userContext.showMenu ? " shown" : "")}>
-            ✕
-          </button>
-          <ul>
-            <li>
-              <a href="#">Menu item</a>
-            </li>
-            <li>
-              <a href="#">Menu item 55</a>
-            </li>
-            <li>
-              <a href="#">Menu item 2</a>
-            </li>
-            <li>
-              <a href="#">Benu bitem b3</a>
-            </li>
-          </ul>
-          <div>
-            { signedIn ? (
-             "hehehe"
-            ) : null}
-          </div>
-          <div>
-            {signedIn ? signOutComp : signInComp}
-          </div>
+        <ul>
+          <li>
+            <a href="#">Menu item</a>
+          </li>
+          <li>
+            <a href="#">Menu item 55</a>
+          </li>
+          <li>
+            <a href="#">Menu item 2</a>
+          </li>
+          <li>
+            <a href="#">Benu bitem b3</a>
+          </li>
+        </ul>
+        <div className="greenlight">
+          { loggedIn ? (
+            `Hello, ${users.find(u => u.id === auth.currentUser.uid)?.name ?? "Mystery Person"}`
+          ) : null}
+        </div>
+        <div>
+          {loggedIn ? signOutComp : signInComp}
         </div>
       </div>
-    </UserContext.Provider>
+    </div>
   );
 };
 
