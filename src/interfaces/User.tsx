@@ -1,5 +1,6 @@
 export interface User {
     id: string,
+    docId: string,
     name: string,
     wins?: number,
     losses?: number,

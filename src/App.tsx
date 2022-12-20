@@ -7,8 +7,7 @@ import Register from "./components/Auth/Register";
 import Reset from "./components/Auth/Reset";
 import NewGame from './components/NewGame/NewGame';
 import MyPage from './components/MyGames/MyPage';
-import { loggedIn } from './helpers/firebase';
-import { getAllRegisteredUsers } from './helpers/firestore';
+import { getAllRegisteredUsers, getUsers } from './helpers/firestore';
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -16,12 +15,19 @@ function App() {
   useEffect(() => {
     let route = window.location.href.split('/').at(-1);
     if (!route.length) route = 'dashboard';
-    console.log(`navigationbutton_${route}`);
     document.getElementById(`navigationbutton_${route}`)?.classList.add('active');
 
-    const unsubscribe = getAllRegisteredUsers(setUsers, 10);
+    if (users.length) {
+      console.log('users are already loaded thanks');
+      return;
+    } 
+      
+    getUsers().then(response => {
+      setUsers(response);
+    });
 
-    return () => unsubscribe();
+    // const unsubscribe = getAllRegisteredUsers(setUsers, 1000);
+    // return () => unsubscribe();
   });
 
   return (

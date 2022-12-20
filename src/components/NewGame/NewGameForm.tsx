@@ -1,6 +1,6 @@
 import { auth } from "../../helpers/firebase";
 import { User } from "../../interfaces/User";
-import { createMatch, users } from '../../helpers/firestore';
+import { createMatch } from '../../helpers/firestore';
 
 interface GameProps {
     users: Array<User>;

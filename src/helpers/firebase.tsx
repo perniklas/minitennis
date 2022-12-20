@@ -17,6 +17,7 @@ import {
   doc,
   where,
   addDoc,
+  setDoc,
 } from "firebase/firestore";
 
 import { combineReducers, createStore } from 'redux';
@@ -100,12 +101,12 @@ const registerWithEmailAndPassword = async (name: string, email: string, passwor
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
-    await addDoc(collection(db, "users"), {
+    await setDoc(doc(db, 'users', user.uid), {
       uid: user.uid,
       name,
       authProvider: "local",
       email,
-      rating: 1500
+      rating: 1000
     });
   } catch (err) {
     console.error(err);

@@ -19,6 +19,7 @@ import { User } from "../interfaces/User";
 import { auth } from '../helpers/firebase';
 import { Match } from "../interfaces/Match";
 import { Tournament } from "../interfaces/Tournament";
+import { calculateRatings } from "./utils";
 
 var users: Array<User> = [];
 var matches: Array<Match> = [];
@@ -32,6 +33,7 @@ const getUsers = async () => {
         var userData = snapshot.data();
         var user: User = {
             id: userData.uid,
+            docId: snapshot.id,
             name: userData.name,
             wins: userData.wins ?? 0,
             losses: userData.losses ?? 0,
@@ -120,7 +122,7 @@ export const getAllRegisteredUsers = (setState: Function, limiter: number = 10) 
 };
 
 export const getAllFinishedMatchesListener = (setState: Function, limiter: number = 10) => {
-    const matchQuery = query(collection(db, "matches"), where("winner", "!=", null), orderBy('timestamp', 'desc'), limit(limiter));
+    const matchQuery = query(collection(db, "matches"), where("winner", "!=", null), orderBy("winner", "desc"), orderBy('timestamp', 'desc'), limit(limiter));
     return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, setState));
 };
 
@@ -154,9 +156,22 @@ export const updateAcceptedMatchInFirestore = async (id: string) => {
     });
 };
 
-export const updateWinnerForMatchInFirestore = async (matchId: string, winnerId: string) => {
+export const updateWinnerOfMatchInFirestore  = async (matchId: string, winner: User, loser: User) => {
     await updateDoc(doc(db, `matches/${matchId}`), {
-        winner: winnerId
+        winner: winner.id
+    });
+    
+    let newWins = ((winner.wins ?? 0) + 1);
+    let newLosses = ((loser.losses ?? 0) + 1);
+    const { winnerNewRating, loserNewRating } = calculateRatings(winner, loser);
+
+    await updateDoc(doc(db, `users/${winner.docId}`), {
+        wins: newWins,
+        rating: winnerNewRating
+    });
+    await updateDoc(doc(db, `users/${loser.docId}`), {
+        losses: newLosses,
+        rating: loserNewRating
     });
 };
 

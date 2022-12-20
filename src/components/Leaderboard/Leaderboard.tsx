@@ -15,6 +15,8 @@ interface Proppos {
 const Leaderboard = (props: Proppos) => {
     const { users } = props;
 
+    users.sort((a: User, b: User) => a.rating > b.rating ? -1 : a.wins > b.wins ? -1 : 1);
+
     return (
         <table className="leaderboard_users">
             <thead className="leaderboard___tbl_header">

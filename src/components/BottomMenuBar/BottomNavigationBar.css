@@ -8,7 +8,7 @@
     width: 100vw;
     background: linear-gradient(to bottom right, /* var(--blue),*/
     #203687,
-     var(--blue));
+     var(--dark));
     color: white;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .bottom_navigation_bar__item a.active {
-    color: rgb(0, 255, 119);
+    color: #ffc559;
 }
 
 .bottom_navigation_bar__item a:not(span) {

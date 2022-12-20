@@ -23,6 +23,7 @@ const NewGame = (props: GameProps) => {
     const createGame = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         event.preventDefault();
         handleSubmit();
+        // go to dashboard? any user feedback at all?
     };
 
     const backButton = (
@@ -50,6 +51,9 @@ const NewGame = (props: GameProps) => {
     return (
         <div id="new_game">
             <Header />
+            <div style={{padding: "0 1em"}}>
+                <h2>NEW GAME</h2>
+            </div>
             {
                 loggedIn
                     ? <NewGameForm users={users} />
@@ -57,6 +61,7 @@ const NewGame = (props: GameProps) => {
                         <span>You need to log in to create new games.</span>
                     </div>
             }
+            
             <BottomNavigationBar
                 buttons={[
                     backButton,
