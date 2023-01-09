@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import matchReducer from './reducers';
 
-
 export const store = configureStore({
   reducer: matchReducer,
   middleware: (getDefaultMiddleware) =>

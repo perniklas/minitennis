@@ -33,8 +33,17 @@
 
 .bottom_navigation_bar__item a:not(span) {
     font-size: 1.65rem;
+    position: relative;
 }
 
 .bottom_navigation_bar__item a span {
     font-size: 0.88rem;
+}
+
+#navigationbutton_mygames__notification {
+    position: absolute;
+    top: 7.5px;
+    right: 10px;
+    color: #ff2525;
+    font-size: 0.5em;
 }

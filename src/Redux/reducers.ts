@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Match } from '../interfaces/Match';
+import { User } from '../interfaces/User';
 
 interface StateInterface {
+    users: User[];
     matchHistory: Array<Match>;
     myMatchHistory: Array<Match>;
     incomingMatches: Array<Match>;
@@ -13,6 +15,7 @@ interface StateInterface {
 }
 
 const initialState: StateInterface = {
+    users: [],
     matchHistory: [],
     myMatchHistory: [],
     incomingMatches: [],
@@ -27,6 +30,9 @@ export const matchSlice = createSlice({
     name: 'matches',
     initialState,
     reducers: {
+        setAllUsers: (state: any, action: PayloadAction<User[]>) => {
+            state.users = action.payload
+        }, 
         setAllMatches: (state: any, action: PayloadAction<Match[]>) => {
             state.matchHistory = action.payload
         },

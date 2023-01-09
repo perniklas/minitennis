@@ -67,9 +67,9 @@ const Menu = () => {
           <li>
             <a href="#">Menu item</a>
           </li>
-          <li>
+          {/* <li>
             <a href="#">Menu item 55</a>
-          </li>
+          </li> */}
           <li>
             <a href="#">Menu item 2</a>
           </li>

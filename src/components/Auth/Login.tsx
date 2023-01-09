@@ -12,20 +12,16 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (loading) {
-      // maybe trigger a loading screen
-      return;
-    }
     if (user) navigate("/");
-  }, [user, loading, navigate]);
+  }, [user]);
 
   return (
     <div className="login">
       <div className="login__header">
+        <Link to={'/'} id='login__back'>
+          <TbChevronLeft></TbChevronLeft>
+        </Link>
         <h1>
-          <a id='login__back' onClick={() => navigate(-1)}>
-            <TbChevronLeft></TbChevronLeft>
-          </a>
           Login
         </h1>
       </div>

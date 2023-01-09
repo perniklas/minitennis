@@ -10,10 +10,11 @@ const LatestMatches = (props: MatchProps) => {
     const { matches } = props;
     matches.sort((a, b) => a.timestamp > b.timestamp ? -1 : 1);
     const latestMatches = matches.slice(0, 10);
+    console.log('latest matches', matches);
 
     return (
         <div>
-            { latestMatches.map((match: Match) => {
+            {latestMatches.map((match: Match) => {
                 var key = match.timestamp?.toString() ?? "match";
                 key += ("-" + match.players.map(p => p?.id).join('-'));
 
@@ -24,7 +25,7 @@ const LatestMatches = (props: MatchProps) => {
                     <div key={key} className="dashboard__match">
                         <div className="dashboard__match__dt">
                             <span>{formatDate((match.timestamp ?? 0))}</span>
-                            <span style={{float: "right"}}>{formatTime((match.timestamp ?? 0))}</span>
+                            <span style={{ float: "right" }}>{formatTime((match.timestamp ?? 0))}</span>
                         </div>
                         <div className="dashboard__match__vs">
                             <span className={firstColor}>{truncateName(match.players[0]?.name ?? "")}</span>
@@ -33,7 +34,7 @@ const LatestMatches = (props: MatchProps) => {
                         </div>
                     </div>
                 );
-            }) }
+            })}
         </div>
     );
 };

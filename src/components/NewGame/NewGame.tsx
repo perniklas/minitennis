@@ -1,5 +1,5 @@
 import { TbCheck, TbX } from 'react-icons/tb';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { User } from '../../interfaces/User';
 import BottomNavigationBar from '../BottomMenuBar/BottomNavigationBar';
 import Header from '../Header/Header';
@@ -14,31 +14,39 @@ interface GameProps {
 const NewGame = (props: GameProps) => {
     const navigate = useNavigate();
     const users = props.users;
+    let loading = false;
 
     try {
         document.getElementById('navigationbutton_newgame').classList.add('active');
     } catch { }
 
 
-    const createGame = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    const createGame = async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         event.preventDefault();
-        handleSubmit();
+        if (loading) {
+            alert('Hold your horses lad, we\'re still creating the first game you wanted');
+            return;
+        }
+        loading = true;
+        await handleSubmit();
         // go to dashboard? any user feedback at all?
+        //navigate(-1);
+        loading = false;
     };
 
     const backButton = (
-        <a href="" onClick={() => navigate('/')} className="cancel">
+        <Link to="/" className="cancel">
             <div>
                 <TbX style={{ margin: 'auto' }}></TbX>
             </div>
             <span>
                 Cancel
             </span>
-        </a>
+        </Link>
     );
 
     const createGameButton = (
-        <a href="" onClick={(e) => createGame(e)} className="greenlight">
+        <a onClick={(e) => createGame(e)} className="greenlight">
             <div>
                 <TbCheck style={{ margin: 'auto' }}></TbCheck>
             </div>

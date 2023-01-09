@@ -33,6 +33,12 @@ const formatToPercentageString = (number: number) => {
     return `${num.toFixed(0)}%`;
 };
 
+export const highlightActiveTabButton = () => {
+    let route = window.location.href.split('/').at(-1);
+    if (!route.length || route === '/') route = 'dashboard';
+    document.getElementById(`navigationbutton_${route}`)?.classList.add('active');
+};
+
 /**
  * WILL BE REPLACED BY FIRESTORE ONCHANGE LISTENER FUNCTION - PERHAPS!
  * Calculates changes in rating for players based on their current rating and their opponents rating
@@ -64,13 +70,13 @@ export const calculateRatings = (winner: User, loser: User) => {
 
 function getK(gamesPlayed: number) {
     if (gamesPlayed < 30) {
-      return 32;
+        return 32;
     } else if (gamesPlayed < 100) {
-      return 18;
+        return 18;
     } else {
-      return 8;
+        return 8;
     }
-  }
+}
 
 export {
     truncateName,

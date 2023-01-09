@@ -11,16 +11,17 @@ import { User } from '../../interfaces/User';
 import { Match } from '../../interfaces/Match';
 import { getMyFinishedMatchesListener } from '../../helpers/firestore';
 import { loggedIn } from '../../helpers/firebase';
+import { highlightActiveTabButton } from '../../helpers/utils';
 
 interface GameProps {
-  users: Array<User>
+  users: User[];
 }
 
 const MyPage = (props: GameProps) => {
-  const emptyMatches: Match[] = [];
-  const [matches, setMatches] = useState(emptyMatches);
-
+  const [matches, setMatches] = useState([]);
+  
   useEffect(() => {
+    highlightActiveTabButton();
     if (!loggedIn) return;
 
     const unsubscribe = getMyFinishedMatchesListener(setMatches);

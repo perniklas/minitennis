@@ -6,6 +6,8 @@ import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { setDeclareWinnerMatches, setIncomingMatches } from "../../Redux/reducers";
 import { useEffect, useState } from "react";
 import { getIncomingMatchesListener, updateAcceptedMatchInFirestore } from "../../helpers/firestore";
+import { Match } from "../../interfaces/Match";
+import { useNavigate } from "react-router-dom";
 
 interface IncomingMatchesProps {
   users: Array<User>;
@@ -13,12 +15,15 @@ interface IncomingMatchesProps {
 }
 
 const IncomingMatches = (props: IncomingMatchesProps) => {
+  const [matches, setMatches] = useState([]);
   const { loggedIn } = props;
+  const navigate = useNavigate();
   let loading = false;
 
-  const [matches, setMatches] = useState([]);
   useEffect(() => {
-    if (!loggedIn) return;
+    if (!loggedIn || !auth.currentUser?.uid) {
+      navigate('/login');
+    }
 
     const unsubscribe = getIncomingMatchesListener(setMatches);
     return () => unsubscribe();

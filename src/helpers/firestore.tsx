@@ -20,6 +20,7 @@ import { auth } from '../helpers/firebase';
 import { Match } from "../interfaces/Match";
 import { Tournament } from "../interfaces/Tournament";
 import { calculateRatings } from "./utils";
+import { store } from '../Redux/store';
 
 var users: Array<User> = [];
 var matches: Array<Match> = [];
@@ -53,6 +54,7 @@ const getMatches = async () => {
     const matchDocs = await getDocs(matchQuery);
     matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
         const matchData = snapshot.data();
+        console.log(matchData);
         const match = createMatchFromData(snapshot.id, matchData);
         matches.push(match);
     });
@@ -61,6 +63,8 @@ const getMatches = async () => {
 }
 
 const createMatchFromData = (id: string, matchData: DocumentData) => {
+    const state = store.getState();
+    const users = state.users;
     const players = matchData.players.map((id: string) => users.find(u => u.id === id));
     const match: Match = {
         id: id,
@@ -101,6 +105,7 @@ const getMyMatches = async () => {
 const handleMatchListenerSnapshots = (docsSnap: QuerySnapshot<DocumentData>, setState: Function) => {
     const matchList: Match[] = [];
     docsSnap.forEach(doc => {
+        console.log(doc.data());
         const match = createMatchFromData(doc.id, doc.data());
         matchList.push(match);
     });
@@ -181,7 +186,7 @@ const getMyMatchHistory = async () => {
 };
 
 const getMyIncomingMatches = async () => {
-    const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid), where("accepted", "==", false));
+    const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid), where('challenger', '!=', auth.currentUser.uid), where("accepted", "==", false));
     return await getMatchesFromFirestore(matchQuery);
 };
 

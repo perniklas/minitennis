@@ -1,40 +1,47 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Home from './components/Home/Home';
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import Reset from "./components/Auth/Reset";
 import NewGame from './components/NewGame/NewGame';
 import MyPage from './components/MyGames/MyPage';
-import { getAllRegisteredUsers, getUsers } from './helpers/firestore';
+import { getAllRegisteredUsers, getIncomingMatchesListener, getUsers } from './helpers/firestore';
+import { loggedIn } from './helpers/firebase';
+import { useAppDispatch } from './Redux/hooks';
+import { store } from './Redux/store';
+import { fetchAllUsers, fetchIncomingMatches, fetchMyMatches } from './Redux/actions';
 
 function App() {
+  const dispatch = useAppDispatch();
+  //const [users, setUsers] = useState([]);
+  let usersLoaded = false;
+  let incomingLoaded = false;
+  const state = store.getState();
   const [users, setUsers] = useState([]);
+  const [incomingMatches, setIncomingMatches] = useState([]);
   
   useEffect(() => {
-    let route = window.location.href.split('/').at(-1);
-    if (!route.length) route = 'dashboard';
-    document.getElementById(`navigationbutton_${route}`)?.classList.add('active');
+    if (!state.users.length && !usersLoaded) {
+      dispatch(fetchAllUsers(setUsers));
+      usersLoaded = true;
+    }
+    
+    if (!state.incomingMatches.length && !incomingLoaded && loggedIn) {
+      dispatch(fetchIncomingMatches(setIncomingMatches)); 
+      incomingLoaded = true;
+    }
+  }, []);
 
-    if (users.length) {
-      console.log('users are already loaded thanks');
-      return;
-    } 
-      
-    getUsers().then(response => {
-      setUsers(response);
-    });
-
-    // const unsubscribe = getAllRegisteredUsers(setUsers, 1000);
-    // return () => unsubscribe();
-  });
+  //tournaments={[]}
 
   return (
     <div id="app">
       <Router>
         <Routes>
-          <Route path="/" element={<Home users={users} tournaments={[]} />} />
+          <Route path="/" element={<Home users={users} notification={(incomingMatches.length > 0)} 
+           />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/reset" element={<Reset />} />

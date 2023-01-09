@@ -139,8 +139,8 @@ const sendPasswordReset = async (email: string) => {
 };
 
 const logOutUser = async () => {
-  await signOut(auth);
-  await auth.signOut();
+  await signOut(auth).then(() => window.location.href = '/');
+  //await auth.signOut();
 };
 
 export {
