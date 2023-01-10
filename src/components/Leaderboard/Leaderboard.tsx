@@ -21,9 +21,10 @@ const Leaderboard = (props: Proppos) => {
         <table className="leaderboard_users">
             <thead className="leaderboard___tbl_header">
                 <tr>
-                    <th>Name</th>
-                    <th className="centered">W</th>
-                    <th className="centered">L</th>
+                    <th title="Come on, you know what this is">Name</th>
+                    <th className="centered" title="Wins">W</th>
+                    <th className="centered" title="Losses">L</th>
+                    <th className="centered" title="Rating">R</th>
                 </tr>
             </thead>
             <tbody className="leaderboard___tbl_content">
@@ -37,6 +38,9 @@ const Leaderboard = (props: Proppos) => {
                         </td>
                         <td className="centered">
                             {user.losses ?? "0"}
+                        </td>
+                        <td className="centered">
+                            {user.rating?.toFixed(0) ?? "1000"}
                         </td>
                     </tr>
                 ))}

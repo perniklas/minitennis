@@ -21,12 +21,14 @@ const IncomingMatches = (props: IncomingMatchesProps) => {
   let loading = false;
 
   useEffect(() => {
+    console.log(auth);
     if (!loggedIn || !auth.currentUser?.uid) {
-      navigate('/login');
+      //navigate('/login');
+    } else {
+      const unsubscribe = getIncomingMatchesListener(setMatches);
+      return () => unsubscribe();
     }
 
-    const unsubscribe = getIncomingMatchesListener(setMatches);
-    return () => unsubscribe();
   }, [loggedIn]);
 
   const acceptMatch = async (id: string) => {

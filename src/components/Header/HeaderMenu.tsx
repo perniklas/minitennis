@@ -4,6 +4,7 @@ import { auth, logOutUser } from '../../helpers/firebase';
 import "./HeaderMenu.css";
 import { users } from '../../helpers/firestore';
 import { loggedIn } from '../../helpers/firebase';
+import { TbUserPlus } from 'react-icons/tb';
 
 const Menu = () => {
   const [displayMenu, setDisplayMenu] = useState(false);
@@ -35,6 +36,12 @@ const Menu = () => {
     setShowMenu(false);
   };
 
+  const signUpComp = (
+    <button className="button" id="button__signup" onClick={(e) => navigate("/register")}>
+      <TbUserPlus /> Register
+    </button>
+  );
+
   const signInComp = (
     <button className="button" id="button__login" onClick={(e) => navigate("/login")}>
       ♕ Log in
@@ -43,7 +50,7 @@ const Menu = () => {
 
   const signOutComp = (
     <button className="button" id="button__login" onClick={(e) => handleLogOut()}>
-      ♕ Log out
+      Log out
     </button>
   )
 
@@ -78,11 +85,12 @@ const Menu = () => {
           </li>
         </ul>
         <div className="greenlight">
-          { loggedIn ? (
+          {loggedIn ? (
             `Hello, ${users.find(u => u.id === auth.currentUser.uid)?.name ?? "Mystery Person"}`
           ) : null}
         </div>
         <div>
+          {loggedIn ? null : signUpComp}
           {loggedIn ? signOutComp : signInComp}
         </div>
       </div>

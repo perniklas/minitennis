@@ -16,10 +16,11 @@ html, body, #root {
   --gray: #41414E;
   --dark: #1E1E24;
   --blue: #111D4A;
-  --lightblue: #2f4ebc;
+  --lightblue: #7392ff;
   --red: #DE6449;
   --lightred: #fbab99;
   --green: #4A7856;
+  --breakpoint: 600px;
 }
 
 #app {
@@ -36,4 +37,12 @@ html, body, #root {
   background: none;
   border: none;
   color: #111D4A;
+}
+
+@media screen and (min-width: 600px) {
+  .home {
+    max-width: 1200px;
+    margin: auto;
+    overflow-y: auto;
+  }
 }

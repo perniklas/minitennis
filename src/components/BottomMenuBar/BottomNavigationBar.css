@@ -25,6 +25,7 @@
     height: 100%;
     text-decoration: none;
     color: rgb(211, 233, 255);
+    transition: ease 0.3s;
 }
 
 .bottom_navigation_bar__item a.active {
@@ -46,4 +47,23 @@
     right: 10px;
     color: #ff2525;
     font-size: 0.5em;
+}
+
+@media screen and (min-width: 600px) {
+    #bottom_navigation_bar {
+        /* position: absolute; */
+        bottom: 15px;
+        max-width: 600px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 1em;
+        box-shadow: 0px 5px 15px var(--gray);
+    }
+
+    .bottom_navigation_bar__item a:hover {
+        color: #d1ff9c;
+        transition: ease 0.3s;
+        /* text-shadow: 3px 3px 10px #fff, 3px -3px 10px #fff, -3px 3px 10px #fff, -3px -3px 10px #fff; */
+    }
+
 }

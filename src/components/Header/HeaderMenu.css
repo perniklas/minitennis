@@ -1,4 +1,4 @@
-#button__login {
+#button__login, #button__signup {
     color: var(--lightblue);
     font-size: 2rem;
 }
@@ -18,6 +18,11 @@
     min-height: calc(100vh - 1.5em);
     width: 25%;
     transition: ease-out 0.65s;
+}
+
+#header_menu_content a:hover, #header_menu_content button:hover {
+    cursor: pointer;
+    color: rgb(255, 223, 126);
 }
 
 #header_menu_button {

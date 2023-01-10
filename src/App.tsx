@@ -7,15 +7,13 @@ import Register from "./components/Auth/Register";
 import Reset from "./components/Auth/Reset";
 import NewGame from './components/NewGame/NewGame';
 import MyPage from './components/MyGames/MyPage';
-import { getAllRegisteredUsers, getIncomingMatchesListener, getUsers } from './helpers/firestore';
 import { loggedIn } from './helpers/firebase';
 import { useAppDispatch } from './Redux/hooks';
 import { store } from './Redux/store';
-import { fetchAllUsers, fetchIncomingMatches, fetchMyMatches } from './Redux/actions';
+import { fetchAllUsers, fetchIncomingMatches } from './Redux/actions';
 
 function App() {
   const dispatch = useAppDispatch();
-  //const [users, setUsers] = useState([]);
   let usersLoaded = false;
   let incomingLoaded = false;
   const state = store.getState();
@@ -33,8 +31,6 @@ function App() {
       incomingLoaded = true;
     }
   }, []);
-
-  //tournaments={[]}
 
   return (
     <div id="app">

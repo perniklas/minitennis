@@ -77,9 +77,14 @@
 }
 
 @media screen and (min-width: 600px) {
-  .login__container {
+  .login {
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin: auto;
+  }
+
+  #login__container {
     justify-content: center;
-    width: 50%;
     max-width: 600px;
     margin: auto;
     font-size: 1.1rem;

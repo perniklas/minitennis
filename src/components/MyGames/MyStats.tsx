@@ -1,11 +1,18 @@
 import { auth } from "../../helpers/firebase";
 import { formatToPercentageString } from "../../helpers/utils";
 import { MatchProps } from "../../interfaces/Match";
+import { store } from "../../Redux/store";
 import Card from "../Cards/Card";
 
 const MyStats = (props: MatchProps) => {
   //const matchHistory = useAppSelector(state => state.myMatchHistory);
   const { matches } = props;
+
+  const state = store.getState();
+  const me = state.users.find(u => u.id === auth.currentUser?.uid);
+  if (!me) {
+    return (<div></div>);
+  }
 
   const wins = matches.filter(match => match.winner === auth.currentUser?.uid).length;
   const losses = matches.filter(match => match.winner !== auth.currentUser?.uid).length;
@@ -15,6 +22,9 @@ const MyStats = (props: MatchProps) => {
   return (
     <Card title="My Stats" child={(
       <div id="mystats">
+        <div className="mystats__row">
+          <span>Rating:</span><span style={{ float: "right" }}>{me.rating.toFixed(2) ?? 1000}</span>
+        </div>
         <div className="mystats__row">
           <span>Wins:</span><span className="greenlight" style={{ float: "right" }}>{wins}</span>
         </div>
