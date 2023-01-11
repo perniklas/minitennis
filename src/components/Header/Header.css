@@ -18,14 +18,19 @@
   flex-direction: row;
 }
 
+#header_container:hover {
+  cursor: pointer;
+}
+
 #header_logo {
-  margin-top: 1em;
+  margin-top: 15px;
+  margin-left: 10px;
   max-height: 3rem;
   filter: invert(11%) sepia(37%) saturate(3123%) hue-rotate(212deg) brightness(90%) contrast(100%);
 }
 
 #header_title {
-  margin: 0.37em 0 0 0.5em;
+  margin: 15px;
   color: var(--blue);
   font-size: 2.2rem;
 }

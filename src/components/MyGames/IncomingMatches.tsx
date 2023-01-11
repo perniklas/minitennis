@@ -5,7 +5,7 @@ import { User } from "../../interfaces/User";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { setDeclareWinnerMatches, setIncomingMatches } from "../../Redux/reducers";
 import { useEffect, useState } from "react";
-import { getIncomingMatchesListener, updateAcceptedMatchInFirestore } from "../../helpers/firestore";
+import { getIncomingMatchesListener, updateAcceptedMatchInFirestore, updateDeclinedMatchInFirestore } from "../../helpers/firestore";
 import { Match } from "../../interfaces/Match";
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +21,6 @@ const IncomingMatches = (props: IncomingMatchesProps) => {
   let loading = false;
 
   useEffect(() => {
-    console.log(auth);
     if (!loggedIn || !auth.currentUser?.uid) {
       //navigate('/login');
     } else {
@@ -39,8 +38,12 @@ const IncomingMatches = (props: IncomingMatchesProps) => {
     loading = false;
   };
 
-  const declineMatch = (id: string) => {
-
+  const declineMatch = async (id: string) => {
+    if (loading) return;
+    loading = true;
+    
+    await updateDeclinedMatchInFirestore(id);
+    loading = false;
   };
 
   const child = (

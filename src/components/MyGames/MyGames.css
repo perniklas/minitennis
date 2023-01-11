@@ -4,7 +4,7 @@
   justify-content: space-between;
   /* padding: 1.2em 2.1em; */
   margin: 1.2em;
-  
+
 }
 
 .incoming__match__contestant:not(:last-child) {
@@ -26,6 +26,17 @@
   display: flex;
   flex-direction: row;
   font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.incoming__match_decline:hover {
+  cursor: pointer;
+  color: #f36969 !important;
+}
+
+.incoming__match_accept:hover {
+  cursor: pointer;
+  color: #66ff52 !important;
 }
 
 .incoming__match_decline {
@@ -62,7 +73,12 @@
   /* margin: 1em; */
   border: 1px solid #a4e8ff;
   border-radius: 0.5em;
-   color: #a4e8ff;
-   /*
-  background: rgba(233, 239, 255, 0.25); */
+  color: #a4e8ff;
+  cursor: pointer;
+  /* background: rgba(233, 239, 255, 0.25); */
+}
+
+.declarewinner__match_person:hover {
+  border: 1px solid #8dff5c;
+  color: #8dff5c;
 }

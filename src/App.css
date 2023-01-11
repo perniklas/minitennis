@@ -38,11 +38,3 @@ html, body, #root {
   border: none;
   color: #111D4A;
 }
-
-@media screen and (min-width: 600px) {
-  .home {
-    max-width: 1200px;
-    margin: auto;
-    overflow-y: auto;
-  }
-}

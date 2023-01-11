@@ -71,18 +71,18 @@ const Menu = () => {
           ✕
         </button>
         <ul>
-          <li>
+          {/* <li>
             <a href="#">Menu item</a>
           </li>
-          {/* <li>
+          <li>
             <a href="#">Menu item 55</a>
-          </li> */}
+          </li>
           <li>
             <a href="#">Menu item 2</a>
           </li>
           <li>
             <a href="#">Benu bitem b3</a>
-          </li>
+          </li> */}
         </ul>
         <div className="greenlight">
           {loggedIn ? (

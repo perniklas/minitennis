@@ -19,15 +19,15 @@ function App() {
   const state = store.getState();
   const [users, setUsers] = useState([]);
   const [incomingMatches, setIncomingMatches] = useState([]);
-  
+
   useEffect(() => {
     if (!state.users.length && !usersLoaded) {
       dispatch(fetchAllUsers(setUsers));
       usersLoaded = true;
     }
-    
+
     if (!state.incomingMatches.length && !incomingLoaded && loggedIn) {
-      dispatch(fetchIncomingMatches(setIncomingMatches)); 
+      dispatch(fetchIncomingMatches(setIncomingMatches));
       incomingLoaded = true;
     }
   }, []);
@@ -36,8 +36,8 @@ function App() {
     <div id="app">
       <Router>
         <Routes>
-          <Route path="/" element={<Home users={users} notification={(incomingMatches.length > 0)} 
-           />} />
+          <Route path="/" element={<Home users={users} notification={(incomingMatches.length > 0)}
+          />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/reset" element={<Reset />} />

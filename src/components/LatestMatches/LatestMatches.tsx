@@ -10,7 +10,6 @@ const LatestMatches = (props: MatchProps) => {
     const { matches } = props;
     matches.sort((a, b) => a.timestamp > b.timestamp ? -1 : 1);
     const latestMatches = matches.slice(0, 10);
-    console.log('latest matches', matches);
 
     return (
         <div>
@@ -28,9 +27,9 @@ const LatestMatches = (props: MatchProps) => {
                             <span style={{ float: "right" }}>{formatTime((match.timestamp ?? 0))}</span>
                         </div>
                         <div className="dashboard__match__vs">
-                            <span className={firstColor}>{truncateName(match.players[0]?.name ?? "")}</span>
+                            <span className={firstColor} title={match.players[0]?.name}>{truncateName(match.players[0]?.name ?? "")}</span>
                             <span>vs</span>
-                            <span className={secondColor}>{truncateName(match.players[1]?.name ?? "")}</span>
+                            <span className={secondColor} title={match.players[1]?.name}>{truncateName(match.players[1]?.name ?? "")}</span>
                         </div>
                     </div>
                 );

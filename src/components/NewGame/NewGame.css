@@ -8,13 +8,6 @@
      color: rgb(178, 246, 169);
  }
 
- #new_game {
-     display: flex;
-     flex-direction: column;
-     height: 100vh;
-     backdrop-filter: blur(10px);
- }
-
  #newgame__form {
      display: flex;
      flex: 1;

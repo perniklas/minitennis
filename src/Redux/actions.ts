@@ -9,11 +9,15 @@ export const matchActions = matchSlice.actions;
 
 export const fetchAllUsers = (setState: Function): ThunkAction<void, RootState, unknown, AnyAction> => {
     return async (dispatch, getState) => {
-        if (!getState().loadingAllMatches) {
-            const response: User[] = await getUsers(); 
-            dispatch(matchActions.setAllUsers(response));
-            setState(response);
-        }
+        const response: User[] = await getUsers(); 
+        dispatch(matchActions.setAllUsers(response));
+        setState(response);
+    };
+};
+
+export const setAllUsers = (users: User[]): ThunkAction<void, RootState, unknown, AnyAction> => {
+    return async (dispatch, getState) => {
+        dispatch(matchActions.setAllUsers(users));
     };
 };
 
@@ -30,9 +34,7 @@ export const fetchAllMatches = (setState: Function): ThunkAction<void, RootState
 export const fetchLatestMatches = (): ThunkAction<void, RootState, unknown, AnyAction> => {
     return async (dispatch, getState) => {
         if (!getState().loadingAllMatches) {
-            console.log('fetching all matches');
             const response: Match[] = await getMatches();
-            console.log('all matches: ', response);
             dispatch(matchActions.setAllMatches(response));
         }
     };
@@ -40,7 +42,6 @@ export const fetchLatestMatches = (): ThunkAction<void, RootState, unknown, AnyA
 
 export const fetchMyMatches = (): ThunkAction<void, RootState, unknown, AnyAction> => {
     return async (dispatch, getState) => {
-        console.log('fetching my matches');
         const response: Match[] = await getMyMatchHistory();
         dispatch(matchActions.setMyMatchHistory(response));
     };
@@ -49,7 +50,6 @@ export const fetchMyMatches = (): ThunkAction<void, RootState, unknown, AnyActio
 export const fetchIncomingMatches = (setState: Function): ThunkAction<void, RootState, unknown, AnyAction> => {
     return async (dispatch, getState) => {
         if (!getState().loadingIncomingMatches) {
-            console.log('fetching incoming matches');
             const response: Match[] = await getMyIncomingMatches();
             dispatch(matchActions.setIncomingMatches(response));
             setState(response);
@@ -60,7 +60,6 @@ export const fetchIncomingMatches = (setState: Function): ThunkAction<void, Root
 export const fetchDeclareWinnerMatches = (setState: Function): ThunkAction<void, RootState, unknown, AnyAction> => {
     return async (dispatch, getState) => {
         if (!getState().loadingDeclareWinnerMatches) {
-            console.log('fetching declare-winner-matches (what a clusterfuck of words)');
             const response: Match[] = await getDeclareWinnerMatches();
             dispatch(matchActions.setDeclareWinnerMatches(response));
             setState(response);

@@ -1,4 +1,18 @@
 .home {
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
+    min-height: calc(100vh - 100px);
+    padding-bottom: 75px;
+}
+
+@media screen and (min-width: 600px) {
+    .home {
+        max-width: 1200px;
+        margin: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+        min-height: calc(100vh - 100px);
+        padding-bottom: 110px;
+    }
 }

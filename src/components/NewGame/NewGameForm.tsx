@@ -1,6 +1,8 @@
 import { auth } from "../../helpers/firebase";
 import { User } from "../../interfaces/User";
 import { createMatch } from '../../helpers/firestore';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface GameProps {
     users: Array<User>;
@@ -23,6 +25,7 @@ const NewGameForm = (props: GameProps) => {
                     })}
                 </select>
             </div>
+            <ToastContainer position='bottom-center'/>
         </form>
     );
 };
@@ -38,15 +41,15 @@ const handleSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
     }
 
     const who = document.getElementById('newgame__form__who') as HTMLSelectElement;
+    const notify = () => toast.success(`Game created!`);
     if (!who) {
         alert('You gotta choose someone bruh');
     }
 
     const whoID = who.children[who.selectedIndex]?.id;
-
-    const whoName = who.value;
-    console.log(whoID, whoName);
     await createMatch(whoID);
+    who.value = '';
+    notify();
 };
 
 export {

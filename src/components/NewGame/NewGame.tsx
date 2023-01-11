@@ -57,19 +57,21 @@ const NewGame = (props: GameProps) => {
     );
 
     return (
-        <div id="new_game">
+        <div className="home">
             <Header />
-            <div style={{padding: "0 1em"}}>
-                <h2>NEW GAME</h2>
+            <div style={{ maxWidth: '600px', margin: 'auto' }}>
+                <div style={{ padding: "0 1em", margin: 'auto', textAlign: 'center' }}>
+                    <h2>NEW GAME</h2>
+                </div>
+                {
+                    loggedIn
+                        ? <NewGameForm users={users} />
+                        : <div className="centered">
+                            <span>You need to log in to create new games.</span>
+                        </div>
+                }
+
             </div>
-            {
-                loggedIn
-                    ? <NewGameForm users={users} />
-                    : <div className="centered">
-                        <span>You need to log in to create new games.</span>
-                    </div>
-            }
-            
             <BottomNavigationBar
                 buttons={[
                     backButton,

@@ -14,6 +14,9 @@ import {
     QuerySnapshot,
     updateDoc,
     doc,
+    deleteDoc,
+    setDoc,
+    increment
 } from "firebase/firestore";
 import { User } from "../interfaces/User";
 import { auth } from '../helpers/firebase';
@@ -54,7 +57,6 @@ const getMatches = async () => {
     const matchDocs = await getDocs(matchQuery);
     matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
         const matchData = snapshot.data();
-        console.log(matchData);
         const match = createMatchFromData(snapshot.id, matchData);
         matches.push(match);
     });
@@ -105,7 +107,6 @@ const getMyMatches = async () => {
 const handleMatchListenerSnapshots = (docsSnap: QuerySnapshot<DocumentData>, setState: Function) => {
     const matchList: Match[] = [];
     docsSnap.forEach(doc => {
-        console.log(doc.data());
         const match = createMatchFromData(doc.id, doc.data());
         matchList.push(match);
     });
@@ -161,22 +162,36 @@ export const updateAcceptedMatchInFirestore = async (id: string) => {
     });
 };
 
-export const updateWinnerOfMatchInFirestore  = async (matchId: string, winner: User, loser: User) => {
-    await updateDoc(doc(db, `matches/${matchId}`), {
+export const updateDeclinedMatchInFirestore = async (id: string) => {
+    if (!id) return;
+
+    await deleteDoc(doc(db, `matches/${id}`));
+};
+
+export const updateWinnerOfMatchInFirestore = async (match: Match, winner: User, loser: User) => {
+    await updateDoc(doc(db, `matches/${match.id}`), {
         winner: winner.id
     });
-    
-    let newWins = ((winner.wins ?? 0) + 1);
-    let newLosses = ((loser.losses ?? 0) + 1);
+
     const { winnerNewRating, loserNewRating } = calculateRatings(winner, loser);
 
     await updateDoc(doc(db, `users/${winner.docId}`), {
-        wins: newWins,
+        wins: increment(1),
         rating: winnerNewRating
     });
     await updateDoc(doc(db, `users/${loser.docId}`), {
-        losses: newLosses,
+        losses: increment(1),
         rating: loserNewRating
+    });
+    await setDoc(doc(db, winner.docId, match.id), {
+        timestamp: match.timestamp,
+        rating: winner.rating,
+        win: true,
+    });
+    await setDoc(doc(db, loser.docId, match.id), {
+        timestamp: match.timestamp,
+        rating: loser.rating,
+        win: true,
     });
 };
 

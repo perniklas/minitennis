@@ -15,6 +15,7 @@
 .bottom_navigation_bar__item {
     height: 100%;
     min-width: 75px;
+    cursor: pointer;
 }
 
 .bottom_navigation_bar__item a {
@@ -57,7 +58,7 @@
         left: 50%;
         transform: translateX(-50%);
         border-radius: 1em;
-        box-shadow: 0px 5px 15px var(--gray);
+        box-shadow: 0 7px 15px rgb(0 0 0 / 75%);
     }
 
     .bottom_navigation_bar__item a:hover {

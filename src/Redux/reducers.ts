@@ -41,7 +41,6 @@ export const matchSlice = createSlice({
         },
 
         setMyMatchHistory: (state: any, action: PayloadAction<Match[]>) => {
-            console.log('setting my match history', action.payload);
             state.myMatchHistory = action.payload
         },
         setLoadingMyMatchHistory: (state: any, action: PayloadAction<boolean>) => {

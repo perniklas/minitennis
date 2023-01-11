@@ -30,7 +30,7 @@ const Leaderboard = (props: Proppos) => {
             <tbody className="leaderboard___tbl_content">
                 {users.map(user => (
                     <tr key={user.name + "-" + user.wins + "-" + user.losses}>
-                        <td>
+                        <td title={user.name}>
                             {truncateName(user.name)}
                         </td>
                         <td className="centered">
@@ -39,7 +39,7 @@ const Leaderboard = (props: Proppos) => {
                         <td className="centered">
                             {user.losses ?? "0"}
                         </td>
-                        <td className="centered">
+                        <td className="centered" title={`${user.rating.toFixed(3)}`}>
                             {user.rating?.toFixed(0) ?? "1000"}
                         </td>
                     </tr>
