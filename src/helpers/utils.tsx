@@ -70,11 +70,11 @@ export const calculateRatings = (winner: User, loser: User) => {
 
 function getK(gamesPlayed: number) {
     if (gamesPlayed < 30) {
-        return 32;
+        return 80;
     } else if (gamesPlayed < 100) {
-        return 18;
+        return 40;
     } else {
-        return 8;
+        return 20;
     }
 }
 

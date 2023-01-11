@@ -3,6 +3,7 @@ import { formatToPercentageString } from "../../helpers/utils";
 import { MatchProps } from "../../interfaces/Match";
 import { store } from "../../Redux/store";
 import Card from "../Cards/Card";
+import StatCharts from "./StatCharts";
 
 const MyStats = (props: MatchProps) => {
   //const matchHistory = useAppSelector(state => state.myMatchHistory);

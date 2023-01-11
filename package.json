@@ -14,6 +14,7 @@
     "@types/node": "^16.11.56",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
+    "@types/recharts": "^1.8.24",
     "firebase": "^9.10.0",
     "firebase-tools": "^11.10.0",
     "hamburger-react": "^2.5.0",
@@ -27,10 +28,10 @@
     "react-router-dom": "^6.4.1",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.1",
-    "recharts": "^2.2.0",
     "redux": "^4.2.0",
     "redux-firestore": "^1.0.0",
     "typescript": "^4.7.4",
+    "victory": "^36.6.8",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

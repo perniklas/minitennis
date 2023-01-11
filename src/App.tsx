@@ -42,7 +42,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/reset" element={<Reset />} />
           <Route path="/newgame" element={<NewGame users={users ?? []} />} />
-          <Route path="/mygames" element={<MyPage users={users ?? []} />} />
+          <Route path="/mygames" element={<MyPage users={users ?? []} setUsers={setUsers} />} />
         </Routes>
       </Router>
     </div>

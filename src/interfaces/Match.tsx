@@ -12,3 +12,11 @@ export interface Match {
 export interface MatchProps {
     matches: Match[];
 }
+
+export interface MatchStats {
+    id: string,
+    rating: number,
+    timestamp: number,
+    win: boolean,
+    date?: Date
+}

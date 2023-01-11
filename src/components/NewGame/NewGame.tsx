@@ -32,6 +32,7 @@ const NewGame = (props: GameProps) => {
         // go to dashboard? any user feedback at all?
         //navigate(-1);
         loading = false;
+        
     };
 
     const backButton = (

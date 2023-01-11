@@ -8,25 +8,30 @@ import DeclareWinner from './DeclareWinner';
 import MyStats from './MyStats';
 import BottomBarButtons from '../BottomNavigationButtons/BottomNavigationButtons';
 import { User } from '../../interfaces/User';
-import { Match } from '../../interfaces/Match';
-import { getMyFinishedMatchesListener } from '../../helpers/firestore';
+import { getMyFinishedMatchesListener, getMyRatingHistoryListener } from '../../helpers/firestore';
 import { loggedIn } from '../../helpers/firebase';
 import { highlightActiveTabButton } from '../../helpers/utils';
+import StatCharts from './StatCharts';
 
 interface GameProps {
   users: User[];
+  setUsers: Function;
 }
 
 const MyPage = (props: GameProps) => {
   const [matches, setMatches] = useState([]);
+  const [matchRating, setRating] = useState([]);
   
   useEffect(() => {
     highlightActiveTabButton();
     if (!loggedIn) return;
 
-    const unsubscribe = getMyFinishedMatchesListener(setMatches);
-
-    return () => unsubscribe();
+    const unsubscribeFinishedMatches = getMyFinishedMatchesListener(setMatches);
+    const unsubscribeRatingStats = getMyRatingHistoryListener(setRating);
+    return () => {
+      unsubscribeFinishedMatches();
+      unsubscribeRatingStats();
+    };
   }, [loggedIn]);
 
   return (
@@ -34,8 +39,9 @@ const MyPage = (props: GameProps) => {
       <Header />
       <MyStats matches={matches} />
       <IncomingMatches loggedIn={loggedIn} users={props.users} />
-      <DeclareWinner loggedIn={loggedIn} />
+      <DeclareWinner loggedIn={loggedIn} setUsers={props.setUsers} />
       <MyMatches matches={matches} />
+      <StatCharts matches={matchRating}></StatCharts>
       <BottomNavigationBar
         buttons={
           BottomBarButtons()

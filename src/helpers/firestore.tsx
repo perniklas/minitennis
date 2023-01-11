@@ -20,7 +20,7 @@ import {
 } from "firebase/firestore";
 import { User } from "../interfaces/User";
 import { auth } from '../helpers/firebase';
-import { Match } from "../interfaces/Match";
+import { Match, MatchStats } from "../interfaces/Match";
 import { Tournament } from "../interfaces/Tournament";
 import { calculateRatings } from "./utils";
 import { store } from '../Redux/store';
@@ -55,18 +55,18 @@ const getMatches = async () => {
     matches = [];
     const matchQuery = query(collection(db, "matches"), orderBy('timespan', 'desc'), limit(10));
     const matchDocs = await getDocs(matchQuery);
+    const users = store.getState().users;
     matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
         const matchData = snapshot.data();
-        const match = createMatchFromData(snapshot.id, matchData);
+        const match = createMatchFromData(users, snapshot.id, matchData);
         matches.push(match);
     });
 
     return matches;
 }
 
-const createMatchFromData = (id: string, matchData: DocumentData) => {
-    const state = store.getState();
-    const users = state.users;
+const createMatchFromData = (stateUsers: User[], id: string, matchData: DocumentData) => {
+    const users = stateUsers;
     const players = matchData.players.map((id: string) => users.find(u => u.id === id));
     const match: Match = {
         id: id,
@@ -84,9 +84,10 @@ const getMatchesFromFirestore = async (query: Query<DocumentData>) => {
     if (!auth.currentUser?.uid) return [];
     const matches: Array<Match> = [];
     const matchDocs = await getDocs(query);
+    const users = store.getState().users;
     matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
         const matchData = snapshot.data();
-        const match = createMatchFromData(snapshot.id, matchData);
+        const match = createMatchFromData(users, snapshot.id, matchData);
         matches.push(match);
     });
 
@@ -106,8 +107,9 @@ const getMyMatches = async () => {
 
 const handleMatchListenerSnapshots = (docsSnap: QuerySnapshot<DocumentData>, setState: Function) => {
     const matchList: Match[] = [];
+    const users = store.getState().users;
     docsSnap.forEach(doc => {
-        const match = createMatchFromData(doc.id, doc.data());
+        const match = createMatchFromData(users, doc.id, doc.data());
         matchList.push(match);
     });
 
@@ -148,6 +150,26 @@ export const getDeclareWinnerMatchesListener = (setState: Function) => {
     const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid),
         where("accepted", "==", true), where("winner", "==", null), orderBy('timestamp', 'desc'));
     return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, setState));
+};
+
+export const getMyRatingHistoryListener = (setState: Function) => {
+    const ratingQuery = query(collection(db, auth.currentUser?.uid));
+    return onSnapshot(ratingQuery, docsSnap => {
+        const matchList: MatchStats[] = [];
+        docsSnap.forEach(doc => {
+            const data = doc.data();
+            const match: MatchStats = {
+                id: doc.id,
+                timestamp: data.timestamp,
+                rating: data.rating,
+                win: data.win,
+            };
+        
+            matchList.push(match);
+        });
+
+        setState(matchList);
+    });
 };
 
 /*
@@ -193,6 +215,8 @@ export const updateWinnerOfMatchInFirestore = async (match: Match, winner: User,
         rating: loser.rating,
         win: true,
     });
+
+    return [winnerNewRating, loserNewRating];
 };
 
 const getMyMatchHistory = async () => {

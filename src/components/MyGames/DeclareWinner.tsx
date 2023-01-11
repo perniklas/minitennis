@@ -10,6 +10,7 @@ import { setAllUsers } from "../../Redux/actions";
 
 interface DeclareWinnerProps {
   loggedIn: boolean;
+  setUsers: Function;
 }
 
 const DeclareWinner = (props: DeclareWinnerProps) => {
@@ -44,12 +45,15 @@ const DeclareWinner = (props: DeclareWinnerProps) => {
     let winner = users.find(u => u.id === winnerId);
     let loser = users.find(u => u.id === loserId);
 
-    await updateWinnerOfMatchInFirestore(match, winner, loser);
-    let updatedUsers = users.filter((u: User) => u.id !== winner.id || u.id !== loser.id);
+    const newRatings = await updateWinnerOfMatchInFirestore(match, winner, loser);
+    let updatedUsers = users.filter((u: User) => u.id !== winnerId && u.id !== loserId);
     winner = createUserObjectWithAdditionalWinOrLoss(winner, true);
+    winner.rating = newRatings[0];
     loser = createUserObjectWithAdditionalWinOrLoss(loser, false);
+    loser.rating = newRatings[1];
     updatedUsers = [...updatedUsers, winner, loser];
     dispatch(setAllUsers(updatedUsers));
+    props.setUsers(updatedUsers);
     loading = false;
   };
 

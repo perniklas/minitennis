@@ -15,7 +15,14 @@ interface Proppos {
 const Leaderboard = (props: Proppos) => {
     const { users } = props;
 
-    users.sort((a: User, b: User) => a.rating > b.rating ? -1 : a.wins > b.wins ? -1 : 1);
+    /*
+    * If the ratings're the same, sort by wins.
+    * If the wins're the same, sort by name.
+    * If the names're the same, go to hell.
+    */
+    users.sort((a: User, b: User) => a.rating === b.rating
+        ? (a.wins === b.wins ? (a.name > b.name ? -1 : 1) : a.wins > b.wins ? -1 : 1)
+        : (a.rating > b.rating ? -1 : 1));
 
     return (
         <table className="leaderboard_users">
