@@ -66,5 +66,28 @@
         transition: ease 0.3s;
         /* text-shadow: 3px 3px 10px #fff, 3px -3px 10px #fff, -3px 3px 10px #fff, -3px -3px 10px #fff; */
     }
-
 }
+
+@media screen and (max-width: 900) and (orentation: landscape) {
+    #home {
+      max-width: calc(100vw - 100px);
+      margin-right: 0;
+    }
+  
+    #bottom_navigation_bar {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      width: 100px;
+      box-shadow: none;
+      left: 0;
+      transform: none;
+      bottom: 0;
+      border-radius: 0;
+      background: linear-gradient(to bottom left,
+          /* var(--blue),*/
+          #203687, var(--dark));
+    }
+  }

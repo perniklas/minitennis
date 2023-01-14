@@ -26,3 +26,14 @@
   display: flex;
   justify-content: space-between;
 }
+
+.latestMatches {
+  max-height: 350px;
+  overflow-y: scroll;
+}
+
+@media screen and (min-width: 600px) {
+  .latestMatches {
+    max-height: 425px;
+  }
+}

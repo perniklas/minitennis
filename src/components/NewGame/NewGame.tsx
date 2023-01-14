@@ -27,12 +27,16 @@ const NewGame = (props: GameProps) => {
             alert('Hold your horses lad, we\'re still creating the first game you wanted');
             return;
         }
-        loading = true;
-        await handleSubmit();
-        // go to dashboard? any user feedback at all?
-        //navigate(-1);
-        loading = false;
-        
+        try {
+            loading = true;
+            await handleSubmit();
+            // go to dashboard? any user feedback at all?
+            //navigate(-1);
+            loading = false;
+        } catch (e) {
+            console.log(e);
+            loading = false;
+        }
     };
 
     const backButton = (

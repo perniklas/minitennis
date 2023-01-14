@@ -12,7 +12,7 @@ const LatestMatches = (props: MatchProps) => {
     const latestMatches = matches.slice(0, 10);
 
     return (
-        <div>
+        <div className="latestMatches">
             {latestMatches.map((match: Match) => {
                 var key = match.timestamp?.toString() ?? "match";
                 key += ("-" + match.players.map(p => p?.id).join('-'));

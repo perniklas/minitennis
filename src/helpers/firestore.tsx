@@ -153,7 +153,9 @@ export const getDeclareWinnerMatchesListener = (setState: Function) => {
 };
 
 export const getMyRatingHistoryListener = (setState: Function) => {
-    const ratingQuery = query(collection(db, auth.currentUser?.uid));
+    const now = new Date().getTime();
+    const threeMonthsAgo = new Date(now - 7906825262).getTime();
+    const ratingQuery = query(collection(db, auth.currentUser?.uid), where('timestamp', '>', threeMonthsAgo));
     return onSnapshot(ratingQuery, docsSnap => {
         const matchList: MatchStats[] = [];
         docsSnap.forEach(doc => {
