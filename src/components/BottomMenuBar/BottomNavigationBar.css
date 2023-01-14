@@ -68,10 +68,14 @@
     }
 }
 
-@media screen and (max-width: 900) and (orentation: landscape) {
-    #home {
-      max-width: calc(100vw - 100px);
-      margin-right: 0;
+@media screen and (max-width: 1000px) and (orientation: landscape) {
+    #header {
+        width: calc(100vw - 150px) !important
+    }
+
+    .home {
+      width: calc(100vw - 120px) !important;
+      margin-right: 10px;
     }
   
     #bottom_navigation_bar {
