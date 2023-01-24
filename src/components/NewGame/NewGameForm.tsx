@@ -9,6 +9,9 @@ interface GameProps {
 }
 
 const NewGameForm = (props: GameProps) => {
+    const users: User[] = [...props.users];
+    users.sort((a: User, b: User) => a.name < b.name ? -1 : 1);
+
     return (
         <form onSubmit={handleSubmit} id="newgame__form">
             {/* <div className="newgame__form__input">
@@ -18,7 +21,7 @@ const NewGameForm = (props: GameProps) => {
             <div className="newgame__form__input">
                 <label htmlFor="newgame__form__who">You and who?</label>
                 <select id="newgame__form__who">
-                    {props.users.filter(u => u.id !== auth.currentUser.uid).map((user: User) => {
+                    {users.filter(u => u.id !== auth.currentUser.uid).map((user: User) => {
                         return (
                             <option key={user.id} id={user.id}>{user.name}</option>
                         );

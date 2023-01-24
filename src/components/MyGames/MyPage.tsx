@@ -7,20 +7,15 @@ import IncomingMatches from './IncomingMatches';
 import DeclareWinner from './DeclareWinner';
 import MyStats from './MyStats';
 import BottomBarButtons from '../BottomNavigationButtons/BottomNavigationButtons';
-import { User } from '../../interfaces/User';
 import { getMyFinishedMatchesListener, getMyRatingHistoryListener } from '../../helpers/firestore';
-import { loggedIn } from '../../helpers/firebase';
 import { highlightActiveTabButton } from '../../helpers/utils';
 import StatCharts from './StatCharts';
+import { useAppSelector } from '../../Redux/hooks';
 
-interface GameProps {
-  users: User[];
-  setUsers: Function;
-}
-
-const MyPage = (props: GameProps) => {
+const MyPage = () => {
   const [matches, setMatches] = useState([]);
   const [matchRating, setRating] = useState([]);
+  const loggedIn = useAppSelector((state) => state.loggedIn);
   
   useEffect(() => {
     highlightActiveTabButton();
@@ -38,13 +33,13 @@ const MyPage = (props: GameProps) => {
     <div className="home">
       <Header />
       <MyStats matches={matches} />
-      <IncomingMatches loggedIn={loggedIn} users={props.users} />
-      <DeclareWinner loggedIn={loggedIn} setUsers={props.setUsers} />
+      <IncomingMatches />
+      <DeclareWinner />
       <MyMatches matches={matches} />
       <StatCharts matches={matchRating}></StatCharts>
       <BottomNavigationBar
         buttons={
-          BottomBarButtons()
+          BottomBarButtons(loggedIn)
         }
       ></BottomNavigationBar>
     </div>

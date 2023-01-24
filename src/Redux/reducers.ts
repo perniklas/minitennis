@@ -3,6 +3,7 @@ import { Match } from '../interfaces/Match';
 import { User } from '../interfaces/User';
 
 interface StateInterface {
+    loggedIn: boolean;
     users: User[];
     matchHistory: Array<Match>;
     myMatchHistory: Array<Match>;
@@ -15,6 +16,7 @@ interface StateInterface {
 }
 
 const initialState: StateInterface = {
+    loggedIn: false,
     users: [],
     matchHistory: [],
     myMatchHistory: [],
@@ -30,40 +32,45 @@ export const matchSlice = createSlice({
     name: 'matches',
     initialState,
     reducers: {
+        setLoggedIn: (state: any, action: PayloadAction<boolean>) => {
+            state.loggedIn = action.payload;
+        },
         setAllUsers: (state: any, action: PayloadAction<User[]>) => {
-            state.users = action.payload
+            state.users = action.payload;
         }, 
         setAllMatches: (state: any, action: PayloadAction<Match[]>) => {
-            state.matchHistory = action.payload
+            state.matchHistory = action.payload;
         },
         setLoadingAllMatches: (state: any, action: PayloadAction<boolean>) => {
-            state.loadingAllMatches = action.payload
+            state.loadingAllMatches = action.payload;
         },
 
         setMyMatchHistory: (state: any, action: PayloadAction<Match[]>) => {
-            state.myMatchHistory = action.payload
+            state.myMatchHistory = action.payload;
         },
         setLoadingMyMatchHistory: (state: any, action: PayloadAction<boolean>) => {
-            state.loadingMyMatchHistory = action.payload
+            state.loadingMyMatchHistory = action.payload;
         },
 
         setIncomingMatches: (state: any, action: PayloadAction<Match[]>) => {
-            state.incomingMatches = action.payload
+            state.incomingMatches = action.payload;
         },
         setLoadingIncomingMatches: (state: any, action: PayloadAction<boolean>) => {
-            state.loadingIncomingMatches = action.payload
+            state.loadingIncomingMatches = action.payload;
         },
 
         setDeclareWinnerMatches: (state: any, action: PayloadAction<Match[]>) => {
-            state.declareWinnerMatches = action.payload
+            state.declareWinnerMatches = action.payload;
         },
         setLoadingDeclareWinnerMatches: (state: any, action: PayloadAction<boolean>) => {
-            state.loadingDeclareWinnerMatches = action.payload
+            state.loadingDeclareWinnerMatches = action.payload;
         },
     },
 });
 
 export const {
+    setLoggedIn,
+    setAllUsers,
     setAllMatches,
     setMyMatchHistory,
     setIncomingMatches,

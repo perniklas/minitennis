@@ -111,8 +111,6 @@ function verifyInputs(name: string, email: string, password: string, confirmPass
     alert(whatsWrong);
   }
 
-  console.log(whatsWrong);
-
   return valid;
 }
 

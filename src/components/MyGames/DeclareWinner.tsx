@@ -5,18 +5,15 @@ import { getDeclareWinnerMatchesListener, updateWinnerOfMatchInFirestore, users 
 import { User } from "../../interfaces/User";
 import { auth } from "../../helpers/firebase";
 import { Match } from "../../interfaces/Match";
-import { useAppDispatch } from "../../Redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import { setAllUsers } from "../../Redux/actions";
+import { RootState } from "../../Redux/store";
 
-interface DeclareWinnerProps {
-  loggedIn: boolean;
-  setUsers: Function;
-}
-
-const DeclareWinner = (props: DeclareWinnerProps) => {
+const DeclareWinner = () => {
   const [matches, setMatches] = useState([]);
-  const { loggedIn } = props;
+  const loggedIn = useAppSelector((state) => state.loggedIn);
   const dispatch = useAppDispatch();
+  const users = useAppSelector((state: RootState) => state.users);
 
   useEffect(() => {
     if (!loggedIn) return;
@@ -42,20 +39,31 @@ const DeclareWinner = (props: DeclareWinnerProps) => {
   const handleDeclaringWinnerForMatch = async (match: Match, winnerId: string, loserId: string) => {
     if (loading) return;
     loading = true;
-    let winner = users.find(u => u.id === winnerId);
-    let loser = users.find(u => u.id === loserId);
+    let winnerUser = users.find(u => u.id === winnerId);
+    let loserUser = users.find(u => u.id === loserId);
+    let winner: User = {
+      ...winnerUser
+    };
+    let loser: User = {
+      ...loserUser
+    };
 
     const newRatings = await updateWinnerOfMatchInFirestore(match, winner, loser);
-    let updatedUsers = users.filter((u: User) => u.id !== winnerId && u.id !== loserId);
-    winner = createUserObjectWithAdditionalWinOrLoss(winner, true);
-    winner.rating = newRatings[0];
-    loser = createUserObjectWithAdditionalWinOrLoss(loser, false);
-    loser.rating = newRatings[1];
-    updatedUsers = [...updatedUsers, winner, loser];
-    dispatch(setAllUsers(updatedUsers));
-    props.setUsers(updatedUsers);
+    updateUserStats(newRatings, winner, loser);
+
     loading = false;
   };
+
+  const updateUserStats = (newRatings: number[], winner: User, loser: User) => {
+    winner = createUserObjectWithAdditionalWinOrLoss(winner, true);
+    loser = createUserObjectWithAdditionalWinOrLoss(loser, false);
+
+    winner.rating = newRatings[0];
+    loser.rating = newRatings[1];
+
+    let updatedUsers = [...users.filter((u: User) => u.id !== winner.id && u.id !== loser.id), winner, loser];
+    dispatch(setAllUsers(updatedUsers));
+  }
 
   const child = (
     <div>

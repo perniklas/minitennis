@@ -1,8 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TbHome, TbPlus, TbTournament } from "react-icons/tb";
 import { faTableTennis, faMeh, faSun } from "@fortawesome/free-solid-svg-icons";
-import { auth } from "../../helpers/firebase";
 import { Link } from "react-router-dom";
+import { TbUserCircle } from "react-icons/tb";
+import { CSSProperties } from "react";
 
 const dashboardButton = (
     <Link to={'/'} id="navigationbutton_dashboard">
@@ -10,7 +11,7 @@ const dashboardButton = (
             <TbHome style={{ margin: '0 auto' }} />
         </div>
         <span>
-            Dashboard
+            Home
         </span>
     </Link>
 );
@@ -27,14 +28,13 @@ const newTournamentButton = (
     </Link>
 );
 
-const myGamesButton = (notification: boolean = false) => {
-    const loggedIn: boolean = auth.currentUser?.uid ? true : false;
-
+const myGamesButton = (loggedIn: boolean = false, notification: boolean = false) => {
     return (
-        <Link id="navigationbutton_mygames" to={loggedIn ? '/mygames' : 'login'}>
+        <Link id="navigationbutton_mygames" to={loggedIn ? '/mygames' : '/login'}>
             <div>
                 {notification ? <FontAwesomeIcon id="navigationbutton_mygames__notification" icon={faSun} /> : null}
-                <FontAwesomeIcon icon={faMeh} />
+                {/* <FontAwesomeIcon icon={faMeh} /> */}
+                <TbUserCircle style={{ margin: '0 auto' }} />
             </div>
             <span>
                 Me
@@ -46,8 +46,8 @@ const myGamesButton = (notification: boolean = false) => {
 const newGameButton = (
     <Link id="navigationbutton_newgame" to="/newgame">
         <div>
-            <FontAwesomeIcon icon={faTableTennis} />
-            <TbPlus style={{ margin: 'auto' }}></TbPlus>
+            <FontAwesomeIcon icon={faTableTennis} style={{fontSize: '1.3rem', marginBottom: '6px'}}/>
+            <TbPlus></TbPlus>
         </div>
         <span>
             New game

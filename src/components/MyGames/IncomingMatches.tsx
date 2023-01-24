@@ -2,32 +2,21 @@ import { TbCheck, TbX } from "react-icons/tb";
 import { auth } from "../../helpers/firebase";
 import Card from "../Cards/Card";
 import { User } from "../../interfaces/User";
-import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
-import { setDeclareWinnerMatches, setIncomingMatches } from "../../Redux/reducers";
 import { useEffect, useState } from "react";
 import { getIncomingMatchesListener, updateAcceptedMatchInFirestore, updateDeclinedMatchInFirestore } from "../../helpers/firestore";
-import { Match } from "../../interfaces/Match";
-import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../Redux/hooks";
 
-interface IncomingMatchesProps {
-  users: Array<User>;
-  loggedIn: boolean;
-}
 
-const IncomingMatches = (props: IncomingMatchesProps) => {
+const IncomingMatches = () => {
   const [matches, setMatches] = useState([]);
-  const { loggedIn } = props;
-  const navigate = useNavigate();
+  const loggedIn = useAppSelector((state) => state.loggedIn);
   let loading = false;
 
   useEffect(() => {
-    if (!loggedIn || !auth.currentUser?.uid) {
-      //navigate('/login');
-    } else {
+    if (loggedIn) {
       const unsubscribe = getIncomingMatchesListener(setMatches);
       return () => unsubscribe();
     }
-
   }, [loggedIn]);
 
   const acceptMatch = async (id: string) => {

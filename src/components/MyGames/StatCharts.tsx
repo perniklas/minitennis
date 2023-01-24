@@ -7,36 +7,22 @@ interface StatProps {
     matches: MatchStats[];
 };
 
-const months = {
-    0: 'Jan',
-    1: 'Feb',
-    2: 'Mar',
-    3: 'Apr',
-    4: 'May',
-    5: 'Jun',
-    6: 'Jul',
-    7: 'Aug',
-    8: 'Sep',
-    9: 'Oct',
-    10: 'Nov',
-    11: 'Dec'
-};
-
 const StatCharts = (props: StatProps) => {
     const data = props.matches;
     data.sort((a, b) => a.timestamp > b.timestamp ? 1 : -1);
-    let prevDate = new Date(data[0]?.timestamp ?? 100);
+    
+    let prevDate = new Date(100);
     const chartSeries: Serie[] = [];
     const matchData: Serie = {
         id: 'Rating',
         data: []
     };
-    const valuesToShow = []; // it's in the shitters
+    const valuesToShow = [];
     const dateIsNotTheSame = (date1: Date, date2: Date) => date1.toDateString() !== date2.toDateString();
 
     let yMin = 10000;
     let yMax = 0;
-    for (let i = 1; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
         const match = data[i];
         const matchDate = new Date(match.timestamp);
         matchData.data.push({
@@ -61,23 +47,6 @@ const StatCharts = (props: StatProps) => {
         return (<></>);
     }
 
-    // const valuesToShow = chartSeries[0].data.map((d: Datum) => {
-    //     if (prevDate.getDate() !== (d.x as Date).getDate()) {
-    //         prevDate = (d.x as Date);
-    //         return d;
-    //     } else {
-    //         console.log('nono')
-    //         return '';
-    //     }
-    // });
-    console.log(valuesToShow);
-
-    const formatDateString = (value: Date) => `${value.getDate()}.${months[value.getMonth()]}`;
-    const findNextDate = (date1: Date, date2: Date) => {
-        if (!date1) return '';
-        return (dateIsNotTheSame(date1, date2)) ? formatDateString(date1) ?? '' : ''
-    };
-
     const charts = (
         <div style={{
             height: '300px',
@@ -95,16 +64,13 @@ const StatCharts = (props: StatProps) => {
                     max: yMax + 30
                 }}
                 lineWidth={3}
-                curve="natural"
+                curve="monotoneX"
                 colors={["#cb39f7", "#cb39f7"]}
                 enableGridX={false}
                 axisBottom={{
                     tickRotation: -30,
                     format: (value: Date) => {
-                        // console.log(value, valuesToShow);
                         return valuesToShow.find(d => d === value)?.toDateString() ?? '';
-                         
-                        //return `${value.getDate()}.${months[value.getMonth()]}`;
                     }
                 }}
                 pointSize={5}
@@ -138,6 +104,11 @@ const StatCharts = (props: StatProps) => {
                             strokeWidth: 2,
                             stroke: "#774dd7",
                             strokeOpacity: 1
+                        }
+                    },
+                    tooltip: {
+                        container: {
+                            color: 'black'
                         }
                     }
                 }}

@@ -152,6 +152,27 @@ export const getDeclareWinnerMatchesListener = (setState: Function) => {
     return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, setState));
 };
 
+export const getAllRegisteredUsersListener = (dispatch: Function) => {
+    const userQuery = query(collection(db, "users"));
+    return onSnapshot(userQuery, docsSnap => {
+        const userList: User[] = [];
+        docsSnap.forEach(doc => {
+            const data = doc.data();
+            const user: User = {
+                id: doc.id,
+                docId: doc.id,
+                name: data.name,
+                rating: data.rating ?? 1000,
+                wins: data.wins ?? 0,
+                losses: data.losses ?? 0,
+            };
+            userList.push(user);
+        });
+
+        dispatch(userList);
+    });
+};
+
 export const getMyRatingHistoryListener = (setState: Function) => {
     const now = new Date().getTime();
     const threeMonthsAgo = new Date(now - 7906825262).getTime();
@@ -193,12 +214,11 @@ export const updateDeclinedMatchInFirestore = async (id: string) => {
 };
 
 export const updateWinnerOfMatchInFirestore = async (match: Match, winner: User, loser: User) => {
+    const { winnerNewRating, loserNewRating } = calculateRatings(winner, loser);
+
     await updateDoc(doc(db, `matches/${match.id}`), {
         winner: winner.id
     });
-
-    const { winnerNewRating, loserNewRating } = calculateRatings(winner, loser);
-
     await updateDoc(doc(db, `users/${winner.docId}`), {
         wins: increment(1),
         rating: winnerNewRating
@@ -209,12 +229,12 @@ export const updateWinnerOfMatchInFirestore = async (match: Match, winner: User,
     });
     await setDoc(doc(db, winner.docId, match.id), {
         timestamp: match.timestamp,
-        rating: winner.rating,
+        rating: winnerNewRating,
         win: true,
     });
     await setDoc(doc(db, loser.docId, match.id), {
         timestamp: match.timestamp,
-        rating: loser.rating,
+        rating: loserNewRating,
         win: true,
     });
 

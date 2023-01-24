@@ -1,4 +1,3 @@
-import { configureStore } from "@reduxjs/toolkit";
 import { initializeApp } from "firebase/app";
 import {
   GoogleAuthProvider,
@@ -19,14 +18,8 @@ import {
   addDoc,
   setDoc,
 } from "firebase/firestore";
-
-import { combineReducers, createStore } from 'redux';
-import { reduxFirestore, firestoreReducer } from 'redux-firestore';
-
-
-interface Error {
-  message: string;
-}
+import { setLoggedIn } from "../Redux/reducers";
+import { store } from "../Redux/store";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA6qs_gFyouOYeit7PxWrkIutDPnwXGi5E",
@@ -116,13 +109,11 @@ const registerWithEmailAndPassword = async (name: string, email: string, passwor
   }
 };
 
-let loggedIn = false;
-
 auth.onAuthStateChanged((user) => {
   if (user) {
-    loggedIn = true;
+    store.dispatch(setLoggedIn(true));
   } else {
-    loggedIn = false;
+    store.dispatch(setLoggedIn(false));
   }
 });
 
@@ -144,9 +135,7 @@ const logOutUser = async () => {
 };
 
 export {
-  //store,
   auth,
-  loggedIn,
   db,
   signInWithGoogle,
   logInWithEmailAndPassword,

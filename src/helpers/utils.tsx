@@ -48,6 +48,7 @@ export const highlightActiveTabButton = () => {
  * @param loser See above param
  */
 export const calculateRatings = (winner: User, loser: User) => {
+    console.log(winner, loser);
     const winnerGamesPlayed = ((winner.wins ?? 0) + (winner.losses ?? 0));
     const winnerK = getK(winnerGamesPlayed);
 
@@ -62,6 +63,8 @@ export const calculateRatings = (winner: User, loser: User) => {
     const winnerNewRating = winner.rating + winnerK * (1 - winnerExpected);
     const loserNewRating = loser.rating + loserK * (0 - loserExpected);
 
+    console.log(winnerNewRating, loserNewRating);
+
     return {
         winnerNewRating,
         loserNewRating
@@ -70,11 +73,11 @@ export const calculateRatings = (winner: User, loser: User) => {
 
 function getK(gamesPlayed: number) {
     if (gamesPlayed < 30) {
-        return 80;
+        return 60;
     } else if (gamesPlayed < 100) {
-        return 40;
+        return 45;
     } else {
-        return 20;
+        return 30;
     }
 }
 

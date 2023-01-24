@@ -61,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.29.2",
     "@types/react-burger-menu": "^2.8.3",
     "jest": "^27.5.1"
   }

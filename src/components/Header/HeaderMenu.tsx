@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, logOutUser } from '../../helpers/firebase';
 import "./HeaderMenu.css";
-import { users } from '../../helpers/firestore';
-import { loggedIn } from '../../helpers/firebase';
 import { TbUserPlus } from 'react-icons/tb';
+import { useAppSelector } from '../../Redux/hooks';
 
 const Menu = () => {
   const [displayMenu, setDisplayMenu] = useState(false);
+  const users = useAppSelector(state => state.users);
+  const loggedIn = useAppSelector((state) => state.loggedIn);
   const navigate = useNavigate();
 
   const setShowMenu = (show: boolean) => {
@@ -15,7 +16,7 @@ const Menu = () => {
   }
 
   useEffect(() => {
-    console.log('logging ' + (loggedIn ? "in" : "out"));
+    console.log('logged ' + (loggedIn ? "in" : "out"));
     setDisplayMenu(false);
   }, [loggedIn]);
 
@@ -97,5 +98,12 @@ const Menu = () => {
     </div>
   );
 };
+
+document.addEventListener("click", (event: any) => {
+  if (event.target.closest("#header_menu_content") || event.target.closest('#header_menu_button')) {
+    return;
+  }
+  document.getElementById('header_menu_content')?.classList.remove('shown');
+});
 
 export default Menu;

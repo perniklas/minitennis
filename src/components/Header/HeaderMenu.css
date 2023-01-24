@@ -17,7 +17,7 @@
     min-width: 300px;
     min-height: calc(100vh - 1.5em);
     width: 25%;
-    transition: ease-out 0.65s;
+    transition: ease 0.35s;
 }
 
 #header_menu_content a:hover, #header_menu_content button:hover {

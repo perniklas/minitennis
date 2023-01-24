@@ -1,19 +1,17 @@
 import { TbCheck, TbX } from 'react-icons/tb';
 import { Link, useNavigate } from 'react-router-dom';
 import { User } from '../../interfaces/User';
+import { useAppSelector } from '../../Redux/hooks';
+import { RootState, store } from '../../Redux/store';
 import BottomNavigationBar from '../BottomMenuBar/BottomNavigationBar';
 import Header from '../Header/Header';
 import './NewGame.css';
 import NewGameForm, { handleSubmit } from './NewGameForm';
-import { loggedIn } from '../../helpers/firebase';
 
-interface GameProps {
-    users: Array<User>;
-}
-
-const NewGame = (props: GameProps) => {
+const NewGame = (props) => {
     const navigate = useNavigate();
-    const users = props.users;
+    const state = store.getState();
+    const users = useAppSelector((state: RootState) => state.users);
     let loading = false;
 
     try {
@@ -69,7 +67,7 @@ const NewGame = (props: GameProps) => {
                     <h2>NEW GAME</h2>
                 </div>
                 {
-                    loggedIn
+                    state.loggedIn
                         ? <NewGameForm users={users} />
                         : <div className="centered">
                             <span>You need to log in to create new games.</span>

@@ -1,10 +1,10 @@
 import { myGamesButton, newGameButton, newTournamentButton, dashboardButton } from "../Home/BottomBarButtons";
 
-const BottomBarButtons = (notification: boolean = false) => {
+const BottomBarButtons = (loggedIn: boolean = false, notification: boolean = false) => {
     return [
         //newTournamentButton,
         dashboardButton,
-        myGamesButton(notification),
+        myGamesButton(loggedIn, notification),
         newGameButton
     ];
 };

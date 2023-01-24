@@ -3,27 +3,23 @@ import Header from "../Header/Header";
 import './Home.css';
 import BottomNavigationBar from "../BottomMenuBar/BottomNavigationBar";
 import BottomBarButtons from "../BottomNavigationButtons/BottomNavigationButtons";
-import { store } from "../../Redux/store";
-import { useEffect } from 'react';
-import { User } from "../../interfaces/User";
+import { useAppSelector } from "../../Redux/hooks";
 
 interface HomeProps {
-    users: User[];
     notification: boolean;
 }
 
 const Home = (props: HomeProps) => {
-    //const state = store.getState();
-    const { users } = props;
+    const loggedIn = useAppSelector(state => state.loggedIn);
 
     return (
         <div className="home">
             <Header></Header>
-            <Dashboard users={users} tournaments={[]//props.tournaments
+            <Dashboard tournaments={[]//props.tournaments
             }></Dashboard>
             <BottomNavigationBar
                 buttons={
-                    BottomBarButtons(props.notification)
+                    BottomBarButtons(loggedIn, props.notification)
                 }
             ></BottomNavigationBar>
         </div>

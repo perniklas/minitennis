@@ -7,28 +7,32 @@ import Register from "./components/Auth/Register";
 import Reset from "./components/Auth/Reset";
 import NewGame from './components/NewGame/NewGame';
 import MyPage from './components/MyGames/MyPage';
-import { loggedIn } from './helpers/firebase';
 import { useAppDispatch } from './Redux/hooks';
 import { store } from './Redux/store';
-import { fetchAllUsers, fetchIncomingMatches } from './Redux/actions';
+import { setAllUsers } from './Redux/actions';
+import { getAllRegisteredUsersListener, getIncomingMatchesListener } from './helpers/firestore';
+import { User } from './interfaces/User';
 
 function App() {
   const dispatch = useAppDispatch();
-  let usersLoaded = false;
-  let incomingLoaded = false;
   const state = store.getState();
-  const [users, setUsers] = useState([]);
   const [incomingMatches, setIncomingMatches] = useState([]);
 
   useEffect(() => {
-    if (!state.users.length && !usersLoaded) {
-      dispatch(fetchAllUsers(setUsers));
-      usersLoaded = true;
+    const userCallback = (pUsers: User[]) => {
+      dispatch(setAllUsers(pUsers));
+    };
+
+    const unsubFromUsers = getAllRegisteredUsersListener(userCallback);
+    let unsubFromIncoming = () => {};
+
+    if (state.loggedIn) {
+      unsubFromIncoming = getIncomingMatchesListener(setIncomingMatches);
     }
 
-    if (!state.incomingMatches.length && !incomingLoaded && loggedIn) {
-      dispatch(fetchIncomingMatches(setIncomingMatches));
-      incomingLoaded = true;
+    return () => {
+      unsubFromIncoming();
+      unsubFromUsers();
     }
   }, []);
 
@@ -36,13 +40,13 @@ function App() {
     <div id="app">
       <Router>
         <Routes>
-          <Route path="/" element={<Home users={users} notification={(incomingMatches.length > 0)}
+          <Route path="/" element={<Home notification={(incomingMatches.length > 0)}
           />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/reset" element={<Reset />} />
-          <Route path="/newgame" element={<NewGame users={users ?? []} />} />
-          <Route path="/mygames" element={<MyPage users={users ?? []} setUsers={setUsers} />} />
+          <Route path="/mygames" element={<MyPage />} />
+          <Route path="/newgame" element={<NewGame />} />
         </Routes>
       </Router>
     </div>

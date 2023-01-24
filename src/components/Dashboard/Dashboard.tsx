@@ -8,28 +8,26 @@ import Leaderboard from '../Leaderboard/Leaderboard';
 import LatestMatches from '../LatestMatches/LatestMatches';
 import { getAllFinishedMatchesListener } from '../../helpers/firestore';
 import { store } from '../../Redux/store';
-import { useAppDispatch } from '../../Redux/hooks';
-import { fetchLatestMatches } from '../../Redux/actions';
 import { highlightActiveTabButton } from '../../helpers/utils';
 
 interface DashboardProps {
-    users: Array<User>;
     tournaments: Array<Tournament>;
 }
 
 const Dashboard = (props: DashboardProps) => {
-    var { users, tournaments } = props;
+    // var { users, tournaments } = props;
     const [matches, setMatches] = useState([]);
     const state = store.getState();
+    const users = state.users ?? [];
 
     useEffect(() => {
-        if (state.users) {
+        if (users) {
             const unsubscribe = getAllFinishedMatchesListener(setMatches);
             highlightActiveTabButton();
     
             return () => unsubscribe();
         }
-    }, [state.users]);
+    }, [users]);
 
     let leaderboardUsers = [...users];
     let latestMatches = [...matches];
