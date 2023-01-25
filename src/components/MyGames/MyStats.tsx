@@ -19,7 +19,7 @@ const MyStats = (props: MatchProps) => {
   const winrate = (wins / (games === 0 ? 1 : games));
 
   return (
-    <Card title="My Stats" child={(
+    <Card title="Stats" child={(
       <div id="mystats">
         <div className="mystats__row">
           <span>Rating:</span><span style={{ float: "right" }}>{me.rating.toFixed(2) ?? 1000}</span>

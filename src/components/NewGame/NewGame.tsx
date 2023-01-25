@@ -8,7 +8,7 @@ import Header from '../Header/Header';
 import './NewGame.css';
 import NewGameForm, { handleSubmit } from './NewGameForm';
 
-const NewGame = (props) => {
+const NewGame = () => {
     const navigate = useNavigate();
     const state = store.getState();
     const users = useAppSelector((state: RootState) => state.users);
@@ -27,7 +27,7 @@ const NewGame = (props) => {
         }
         try {
             loading = true;
-            await handleSubmit();
+            await handleSubmit(navigate);
             // go to dashboard? any user feedback at all?
             //navigate(-1);
             loading = false;

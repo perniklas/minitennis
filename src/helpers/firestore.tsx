@@ -53,7 +53,7 @@ const getUsers = async () => {
 
 const getMatches = async () => {
     matches = [];
-    const matchQuery = query(collection(db, "matches"), orderBy('timespan', 'desc'), limit(10));
+    const matchQuery = query(collection(db, "matches"), orderBy('timespan', 'desc'), limit(11));
     const matchDocs = await getDocs(matchQuery);
     const users = store.getState().users;
     matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
@@ -106,7 +106,7 @@ const getMyMatches = async () => {
 */
 
 const handleMatchListenerSnapshots = (docsSnap: QuerySnapshot<DocumentData>, setState: Function) => {
-    const matchList: Match[] = [];
+    let matchList: Match[] = [];
     const users = store.getState().users;
     docsSnap.forEach(doc => {
         const match = createMatchFromData(users, doc.id, doc.data());
@@ -130,7 +130,7 @@ export const getAllRegisteredUsers = (setState: Function, limiter: number = 10) 
 };
 
 export const getAllFinishedMatchesListener = (setState: Function, limiter: number = 10) => {
-    const matchQuery = query(collection(db, "matches"), where("winner", "!=", null), orderBy("winner", "desc"), orderBy('timestamp', 'desc'), limit(limiter));
+    const matchQuery = query(collection(db, "matches"), where('winner', '!=', null), limit(limiter));
     return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, setState));
 };
 
@@ -143,6 +143,11 @@ export const getMyFinishedMatchesListener = (setState: Function) => {
 export const getIncomingMatchesListener = (setState: Function) => {
     const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid),
         where("accepted", "==", false), where("challenger", "!=", auth.currentUser.uid), orderBy('challenger', 'asc'), orderBy('timestamp', 'desc'));
+    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, setState));
+};
+
+export const getOutgoingMatchesListener = (setState: Function) => {
+    const matchQuery = query(collection(db, "matches"), where("accepted", "==", false), where("challenger", "==", auth.currentUser.uid));
     return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, setState));
 };
 
@@ -215,6 +220,7 @@ export const updateDeclinedMatchInFirestore = async (id: string) => {
 
 export const updateWinnerOfMatchInFirestore = async (match: Match, winner: User, loser: User) => {
     const { winnerNewRating, loserNewRating } = calculateRatings(winner, loser);
+    const timestamp = new Date().getTime();
 
     await updateDoc(doc(db, `matches/${match.id}`), {
         winner: winner.id
@@ -228,12 +234,12 @@ export const updateWinnerOfMatchInFirestore = async (match: Match, winner: User,
         rating: loserNewRating
     });
     await setDoc(doc(db, winner.docId, match.id), {
-        timestamp: match.timestamp,
+        timestamp: timestamp,
         rating: winnerNewRating,
         win: true,
     });
     await setDoc(doc(db, loser.docId, match.id), {
-        timestamp: match.timestamp,
+        timestamp: timestamp,
         rating: loserNewRating,
         win: true,
     });

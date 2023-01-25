@@ -46,6 +46,10 @@
   border: solid 2px var(--lightblue);
 }
 
+.submitted:invalid, .submitted.wrong {
+  border: solid 2px red;
+}
+
 .register__btn {
   background-color: var(--blue);
   color: white;

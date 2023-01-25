@@ -1,10 +1,14 @@
 .incoming__match__contestant {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
   /* padding: 1.2em 2.1em; */
   margin: 1.2em;
+}
 
+.incoming__match__contestant .row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .incoming__match__contestant:not(:last-child) {

@@ -7,15 +7,20 @@ import Register from "./components/Auth/Register";
 import Reset from "./components/Auth/Reset";
 import NewGame from './components/NewGame/NewGame';
 import MyPage from './components/MyGames/MyPage';
-import { useAppDispatch } from './Redux/hooks';
-import { store } from './Redux/store';
+import { useAppDispatch, useAppSelector } from './Redux/hooks';
 import { setAllUsers } from './Redux/actions';
 import { getAllRegisteredUsersListener, getIncomingMatchesListener } from './helpers/firestore';
 import { User } from './interfaces/User';
+import { ToastContainer, toast } from 'react-toastify';
+
+export const showToast = () => {
+  const notify = () => toast.success(`Game created!`);
+  notify();
+};
 
 function App() {
   const dispatch = useAppDispatch();
-  const state = store.getState();
+  const loggedIn = useAppSelector(state => state.loggedIn);
   const [incomingMatches, setIncomingMatches] = useState([]);
 
   useEffect(() => {
@@ -26,7 +31,7 @@ function App() {
     const unsubFromUsers = getAllRegisteredUsersListener(userCallback);
     let unsubFromIncoming = () => {};
 
-    if (state.loggedIn) {
+    if (loggedIn) {
       unsubFromIncoming = getIncomingMatchesListener(setIncomingMatches);
     }
 
@@ -49,6 +54,7 @@ function App() {
           <Route path="/newgame" element={<NewGame />} />
         </Routes>
       </Router>
+      <ToastContainer position='bottom-center'/>
     </div>
   );
 }

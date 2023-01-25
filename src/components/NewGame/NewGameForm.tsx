@@ -1,8 +1,9 @@
 import { auth } from "../../helpers/firebase";
 import { User } from "../../interfaces/User";
 import { createMatch } from '../../helpers/firestore';
-import { ToastContainer, toast } from 'react-toastify';
+import { showToast } from "../../App";
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 interface GameProps {
     users: Array<User>;
@@ -11,9 +12,10 @@ interface GameProps {
 const NewGameForm = (props: GameProps) => {
     const users: User[] = [...props.users];
     users.sort((a: User, b: User) => a.name < b.name ? -1 : 1);
+    const navigate = useNavigate();
 
     return (
-        <form onSubmit={handleSubmit} id="newgame__form">
+        <form onSubmit={(e) => handleSubmit(navigate, e)} id="newgame__form">
             {/* <div className="newgame__form__input">
                 <label htmlFor="newgame__form__when">When?</label>
                 <input id="newgame__form__when" type="datetime-local" defaultValue= />
@@ -28,15 +30,12 @@ const NewGameForm = (props: GameProps) => {
                     })}
                 </select>
             </div>
-            <ToastContainer position='bottom-center'/>
         </form>
     );
 };
 
-const handleSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
-    if (event) {
-        event.preventDefault();
-    }
+const handleSubmit = async (navigate, event?: React.FormEvent<HTMLFormElement>) => {
+    if (event) event.preventDefault();
 
     if (!auth.currentUser?.uid) {
         window.location.href = "/login";
@@ -44,7 +43,6 @@ const handleSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
     }
 
     const who = document.getElementById('newgame__form__who') as HTMLSelectElement;
-    const notify = () => toast.success(`Game created!`);
     if (!who) {
         alert('You gotta choose someone bruh');
     }
@@ -52,7 +50,8 @@ const handleSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
     const whoID = who.children[who.selectedIndex]?.id;
     await createMatch(whoID);
     who.value = '';
-    notify();
+    showToast();
+    navigate('/');
 };
 
 export {

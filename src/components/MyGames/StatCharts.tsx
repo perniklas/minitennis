@@ -9,7 +9,7 @@ interface StatProps {
 
 const StatCharts = (props: StatProps) => {
     const data = props.matches;
-    data.sort((a, b) => a.timestamp > b.timestamp ? 1 : -1);
+    data.sort((a, b) => a.timestamp < b.timestamp ? -1 : 1);
     
     let prevDate = new Date(100);
     const chartSeries: Serie[] = [];
@@ -43,8 +43,26 @@ const StatCharts = (props: StatProps) => {
 
     chartSeries.push(matchData);
 
-    if (!chartSeries[0].data.length) {
-        return (<></>);
+    if (!matchData.data.length || matchData.data.length == 1) {
+        const matchData3 = matchData.data.slice();
+        const someTime = new Date();
+        someTime.setDate(someTime.getDate() - 89);
+        const preData3 = {
+            x: someTime,
+            y: 1000.0,
+            color: '#c10dd1'
+        };
+        matchData3.unshift(preData3);
+        matchData.data = matchData3;
+    
+        const matchData24 = matchData.data.slice();
+        const preData24 = {
+            x: new Date(new Date().getTime() - 86400000),
+            y: 1000.0,
+            color: '#c10dd1'
+        };
+        matchData24.unshift(preData24);
+        matchData.data = matchData24;
     }
 
     const charts = (

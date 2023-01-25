@@ -38,6 +38,10 @@ const DeclareWinner = () => {
   let loading = false;
   const handleDeclaringWinnerForMatch = async (match: Match, winnerId: string, loserId: string) => {
     if (loading) return;
+    let response = window.confirm('Are you sure??');
+
+    if (!response) return;
+
     loading = true;
     let winnerUser = users.find(u => u.id === winnerId);
     let loserUser = users.find(u => u.id === loserId);

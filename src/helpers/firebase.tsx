@@ -85,7 +85,12 @@ const logInWithEmailAndPassword = async (email: string, password: string) => {
   } catch (err) {
     console.error(err);
     if (err instanceof Error) {
-      alert(err.message);
+      if (err.message.indexOf('(auth/user-not-found)') > -1)
+        alert('No user found for ' + email);
+      else if (err.message.indexOf('auth/wrong-password') > -1)
+        alert('Wrong email or password.');
+      else 
+        alert("Something went wrong, we'll look into it");
     }
   }
 };

@@ -32,9 +32,8 @@ const Dashboard = (props: DashboardProps) => {
     let leaderboardUsers = [...users];
     let latestMatches = [...matches];
     if (leaderboardUsers.length) {
-        leaderboardUsers = leaderboardUsers.sort((a: User, b: User) => (a.rating ?? 0) > (b.rating ?? 0) ? -1 : 1).slice(0, 7);
+        leaderboardUsers = leaderboardUsers.filter(u => u.losses > 0 || u.wins > 0).sort((a: User, b: User) => (a.rating ?? 0) > (b.rating ?? 0) ? -1 : 1).slice(0, 7);
     }
-    latestMatches = latestMatches.filter((m: Match) => m.winner).sort((a: Match, b: Match) => a.timestamp! > b.timestamp! ? -1 : 1);
 
     return (
         <div id="dashboard">

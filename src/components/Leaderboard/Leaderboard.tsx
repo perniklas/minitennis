@@ -1,5 +1,6 @@
 import './Leaderboard.css';
 import { truncateName } from '../../helpers/utils';
+import { TbCrown } from "react-icons/tb";
 
 interface User {
     name: string,
@@ -10,7 +11,7 @@ interface User {
 
 interface Proppos {
     users: Array<User>;
-}
+};
 
 const Leaderboard = (props: Proppos) => {
     const { users } = props;
@@ -35,9 +36,10 @@ const Leaderboard = (props: Proppos) => {
                 </tr>
             </thead>
             <tbody className="leaderboard___tbl_content">
-                {users.map(user => (
+                {users.map((user, index) => (
                     <tr key={user.name + "-" + user.wins + "-" + user.losses}>
                         <td title={user.name}>
+                            {index == 0 ? <TbCrown style={{ marginRight: '8px', color: 'gold' }} /> : <></>}
                             {truncateName(user.name)}
                         </td>
                         <td className="centered">

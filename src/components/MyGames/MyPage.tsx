@@ -11,6 +11,7 @@ import { getMyFinishedMatchesListener, getMyRatingHistoryListener } from '../../
 import { highlightActiveTabButton } from '../../helpers/utils';
 import StatCharts from './StatCharts';
 import { useAppSelector } from '../../Redux/hooks';
+import OutgoingMatches from './MyOutgoingMatches';
 
 const MyPage = () => {
   const [matches, setMatches] = useState([]);
@@ -37,6 +38,7 @@ const MyPage = () => {
       <DeclareWinner />
       <MyMatches matches={matches} />
       <StatCharts matches={matchRating}></StatCharts>
+      <OutgoingMatches />
       <BottomNavigationBar
         buttons={
           BottomBarButtons(loggedIn)
