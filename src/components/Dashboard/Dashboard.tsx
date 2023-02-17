@@ -6,8 +6,6 @@ import './Dashboard.css';
 import Card from '../Cards/Card';
 import Leaderboard from '../Leaderboard/Leaderboard';
 import LatestMatches from '../LatestMatches/LatestMatches';
-import { getAllFinishedMatchesListener } from '../../helpers/firestore';
-import { store } from '../../Redux/store';
 import { highlightActiveTabButton } from '../../helpers/utils';
 
 interface DashboardProps {
@@ -16,29 +14,14 @@ interface DashboardProps {
 
 const Dashboard = (props: DashboardProps) => {
     // var { users, tournaments } = props;
-    const [matches, setMatches] = useState([]);
-    const state = store.getState();
-    const users = state.users ?? [];
-
     useEffect(() => {
-        if (users) {
-            const unsubscribe = getAllFinishedMatchesListener(setMatches);
-            highlightActiveTabButton();
-    
-            return () => unsubscribe();
-        }
-    }, [users]);
-
-    let leaderboardUsers = [...users];
-    let latestMatches = [...matches];
-    if (leaderboardUsers.length) {
-        leaderboardUsers = leaderboardUsers.filter(u => u.losses > 0 || u.wins > 0).sort((a: User, b: User) => (a.rating ?? 0) > (b.rating ?? 0) ? -1 : 1).slice(0, 7);
-    }
+        highlightActiveTabButton();
+    }, []);
 
     return (
         <div id="dashboard">
-            <Card title="Top Players" child={<Leaderboard users={leaderboardUsers} />} />
-            <Card title="Latest Matches" child={(<LatestMatches matches={latestMatches} />)} />
+            <Card title="Top Players" child={<Leaderboard />} />
+            <Card title="Latest Matches" child={(<LatestMatches />)} />
         </div>
     );
 };

@@ -1,9 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TbHome, TbPlus, TbTournament } from "react-icons/tb";
-import { faTableTennis, faMeh, faSun } from "@fortawesome/free-solid-svg-icons";
+import { faTableTennis, faSun } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { TbUserCircle } from "react-icons/tb";
-import { CSSProperties } from "react";
 
 const dashboardButton = (
     <Link to={'/'} id="navigationbutton_dashboard">

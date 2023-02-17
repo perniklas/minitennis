@@ -3,16 +3,18 @@ import Card from "../Cards/Card";
 import { User } from "../../interfaces/User";
 import { useEffect, useState } from "react";
 import { getOutgoingMatchesListener, updateAcceptedMatchInFirestore, updateDeclinedMatchInFirestore } from "../../helpers/firestore";
-import { useAppSelector } from "../../Redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import PersonRow from "./PersonRow";
 
 const OutgoingMatches = () => {
   const [matches, setMatches] = useState([]);
   const loggedIn = useAppSelector((state) => state.loggedIn);
+  const users = useAppSelector((state) => state.users);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (loggedIn) {
-      const unsubscribe = getOutgoingMatchesListener(setMatches);
+      const unsubscribe = getOutgoingMatchesListener(setMatches, users, dispatch);
       return () => unsubscribe();
     }
   }, [loggedIn]);

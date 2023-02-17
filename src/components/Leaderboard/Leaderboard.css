@@ -2,6 +2,11 @@
     width: 100%;
 }
 
+.leaderboard-wrapper {
+    max-height: 50vh;
+    overflow-y: scroll;
+}
+
 .leaderboard___tbl_header {
     width: 100%;
     /* background-color: rgba(255, 255, 255, 0.1); */

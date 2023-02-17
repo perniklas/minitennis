@@ -1,14 +1,21 @@
 import './LatestMatches.css';
 import { formatDate, formatTime, truncateName } from '../../helpers/utils';
 import { Match } from '../../interfaces/Match'
+import { useEffect, useState } from 'react';
+import { getAllFinishedMatchesListener } from '../../helpers/firestore';
+import { useAppSelector } from '../../Redux/hooks';
 
-interface MatchProps {
-    matches: Array<Match>;
+interface MatchHistory {
+    matches?: Match[]
 }
 
-const LatestMatches = (props: MatchProps) => {
-    const { matches } = props;
-    matches.sort((a, b) => a.timestamp > b.timestamp ? -1 : 1);
+const LatestMatches = (props: MatchHistory) => {
+    const matches = props.matches ?? useAppSelector(state => state.matchHistory);
+    if (!matches.length) {
+        return (<></>);
+    }
+    
+    matches.sort((a: Match, b: Match) => a.timestamp > b.timestamp ? -1 : 1);
 
     return (
         <div className="latestMatches">

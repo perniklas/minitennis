@@ -2,7 +2,6 @@ import BottomNavigationBar from '../BottomMenuBar/BottomNavigationBar';
 import Header from '../Header/Header';
 import { useEffect, useState } from 'react';
 import './MyGames.css';
-import MyMatches from './MyMatches';
 import IncomingMatches from './IncomingMatches';
 import DeclareWinner from './DeclareWinner';
 import MyStats from './MyStats';
@@ -10,22 +9,27 @@ import BottomBarButtons from '../BottomNavigationButtons/BottomNavigationButtons
 import { getMyFinishedMatchesListener, getMyRatingHistoryListener } from '../../helpers/firestore';
 import { highlightActiveTabButton } from '../../helpers/utils';
 import StatCharts from './StatCharts';
-import { useAppSelector } from '../../Redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../Redux/hooks';
 import OutgoingMatches from './MyOutgoingMatches';
+import Card from '../Cards/Card';
+import LatestMatches from '../LatestMatches/LatestMatches';
 
 const MyPage = () => {
-  const [matches, setMatches] = useState([]);
+  // const [matches, setMatches] = useState([]);
+  const matches = useAppSelector(state => state.myMatchHistory);
   const [matchRating, setRating] = useState([]);
   const loggedIn = useAppSelector((state) => state.loggedIn);
+  // const users = useAppSelector((state) => state.users);
+  // const dispatch = useAppDispatch();
   
   useEffect(() => {
     highlightActiveTabButton();
     if (!loggedIn) return;
 
-    const unsubscribeFinishedMatches = getMyFinishedMatchesListener(setMatches);
+    // const unsubscribeFinishedMatches = getMyFinishedMatchesListener(setMatches, users, dispatch);
     const unsubscribeRatingStats = getMyRatingHistoryListener(setRating);
     return () => {
-      unsubscribeFinishedMatches();
+      // unsubscribeFinishedMatches();
       unsubscribeRatingStats();
     };
   }, [loggedIn]);
@@ -36,7 +40,7 @@ const MyPage = () => {
       <MyStats matches={matches} />
       <IncomingMatches />
       <DeclareWinner />
-      <MyMatches matches={matches} />
+      <Card title="Match history" child={<LatestMatches matches={matches} />}/>
       <StatCharts matches={matchRating}></StatCharts>
       <OutgoingMatches />
       <BottomNavigationBar

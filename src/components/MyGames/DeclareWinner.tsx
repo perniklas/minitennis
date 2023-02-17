@@ -1,7 +1,7 @@
 import { formatDate, formatTime } from "../../helpers/utils";
 import Card from "../Cards/Card";
 import { useEffect, useState } from 'react';
-import { getDeclareWinnerMatchesListener, updateWinnerOfMatchInFirestore, users } from "../../helpers/firestore";
+import { getDeclareWinnerMatchesListener, updateWinnerOfMatchInFirestore } from "../../helpers/firestore";
 import { User } from "../../interfaces/User";
 import { auth } from "../../helpers/firebase";
 import { Match } from "../../interfaces/Match";
@@ -10,7 +10,8 @@ import { setAllUsers } from "../../Redux/actions";
 import { RootState } from "../../Redux/store";
 
 const DeclareWinner = () => {
-  const [matches, setMatches] = useState([]);
+  // const [matches, setMatches] = useState([]);
+  const matches = useAppSelector(state => state.declareWinnerMatches);
   const loggedIn = useAppSelector((state) => state.loggedIn);
   const dispatch = useAppDispatch();
   const users = useAppSelector((state: RootState) => state.users);
@@ -18,8 +19,8 @@ const DeclareWinner = () => {
   useEffect(() => {
     if (!loggedIn) return;
 
-    const unsubscribe = getDeclareWinnerMatchesListener(setMatches);
-    return () => unsubscribe();
+    // const unsubscribe = getDeclareWinnerMatchesListener(setMatches, users);
+    // return () => unsubscribe();
   }, [loggedIn]);
 
   const createUserObjectWithAdditionalWinOrLoss = (user: User, winner: boolean) => {

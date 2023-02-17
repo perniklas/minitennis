@@ -24,46 +24,47 @@ import { Match, MatchStats } from "../interfaces/Match";
 import { Tournament } from "../interfaces/Tournament";
 import { calculateRatings } from "./utils";
 import { store } from '../Redux/store';
+import { useAppDispatch } from "../Redux/hooks";
 
-var users: Array<User> = [];
-var matches: Array<Match> = [];
+// var users: Array<User> = [];
+// var matches: Array<Match> = [];
 var tournaments: Array<Tournament> = [];
 
-const getUsers = async () => {
-    users = [];
-    const userQuery = query(collection(db, "users"));
-    const userDocs = await getDocs(userQuery);
-    userDocs.forEach((snapshot: QueryDocumentSnapshot) => {
-        var userData = snapshot.data();
-        var user: User = {
-            id: userData.uid,
-            docId: snapshot.id,
-            name: userData.name,
-            wins: userData.wins ?? 0,
-            losses: userData.losses ?? 0,
-            rating: userData.rating ?? -1
-        };
+// const getUsers = async () => {
+//     users = [];
+//     const userQuery = query(collection(db, "users"));
+//     const userDocs = await getDocs(userQuery);
+//     userDocs.forEach((snapshot: QueryDocumentSnapshot) => {
+//         var userData = snapshot.data();
+//         var user: User = {
+//             id: userData.uid,
+//             docId: snapshot.id,
+//             name: userData.name,
+//             wins: userData.wins ?? 0,
+//             losses: userData.losses ?? 0,
+//             rating: userData.rating ?? -1
+//         };
 
-        if (user.id)
-            users.push(user);
-    });
+//         if (user.id)
+//             users.push(user);
+//     });
 
-    return users;
-}
+//     return users;
+// }
 
-const getMatches = async () => {
-    matches = [];
-    const matchQuery = query(collection(db, "matches"), orderBy('timespan', 'desc'), limit(11));
-    const matchDocs = await getDocs(matchQuery);
-    const users = store.getState().users;
-    matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
-        const matchData = snapshot.data();
-        const match = createMatchFromData(users, snapshot.id, matchData);
-        matches.push(match);
-    });
+// const getMatches = async () => {
+//     matches = [];
+//     const matchQuery = query(collection(db, "matches"), orderBy('timespan', 'desc'), limit(11));
+//     const matchDocs = await getDocs(matchQuery);
+//     const users = store.getState().users;
+//     matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
+//         const matchData = snapshot.data();
+//         const match = createMatchFromData(users, snapshot.id, matchData);
+//         matches.push(match);
+//     });
 
-    return matches;
-}
+//     return matches;
+// }
 
 const createMatchFromData = (stateUsers: User[], id: string, matchData: DocumentData) => {
     const users = stateUsers;
@@ -80,40 +81,39 @@ const createMatchFromData = (stateUsers: User[], id: string, matchData: Document
     return match;
 };
 
-const getMatchesFromFirestore = async (query: Query<DocumentData>) => {
-    if (!auth.currentUser?.uid) return [];
-    const matches: Array<Match> = [];
-    const matchDocs = await getDocs(query);
-    const users = store.getState().users;
-    matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
-        const matchData = snapshot.data();
-        const match = createMatchFromData(users, snapshot.id, matchData);
-        matches.push(match);
-    });
+// const getMatchesFromFirestore = async (query: Query<DocumentData>) => {
+//     if (!auth.currentUser?.uid) return [];
+//     const matches: Array<Match> = [];
+//     const matchDocs = await getDocs(query);
+//     const users = store.getState().users;
+//     matchDocs.forEach((snapshot: QueryDocumentSnapshot) => {
+//         const matchData = snapshot.data();
+//         const match = createMatchFromData(users, snapshot.id, matchData);
+//         matches.push(match);
+//     });
 
-    matches.sort((a, b) => a.timestamp > b.timestamp ? -1 : 1);
+//     matches.sort((a, b) => a.timestamp > b.timestamp ? -1 : 1);
 
-    return matches;
-};
+//     return matches;
+// };
 
-const getMyMatches = async () => {
-    const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid), orderBy('timestamp', 'desc'));
-    return await getMatchesFromFirestore(matchQuery);
-};
+// const getMyMatches = async () => {
+//     const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid), orderBy('timestamp', 'desc'));
+//     return await getMatchesFromFirestore(matchQuery);
+// };
 
 /*
     LISTENERS START
 */
 
-const handleMatchListenerSnapshots = (docsSnap: QuerySnapshot<DocumentData>, setState: Function) => {
+const handleMatchListenerSnapshots = (docsSnap: QuerySnapshot<DocumentData>, users: User[], setState: Function, dispatch: Function) => {
     let matchList: Match[] = [];
-    const users = store.getState().users;
     docsSnap.forEach(doc => {
         const match = createMatchFromData(users, doc.id, doc.data());
         matchList.push(match);
     });
 
-    setState(matchList);
+    dispatch(setState(matchList));
 }
 
 export const getAllRegisteredUsers = (setState: Function, limiter: number = 10) => {
@@ -129,32 +129,35 @@ export const getAllRegisteredUsers = (setState: Function, limiter: number = 10) 
     });
 };
 
-export const getAllFinishedMatchesListener = (setState: Function, limiter: number = 10) => {
+export const getAllFinishedMatchesListener = (setState: Function, users: User[], dispatch: Function, limiter: number = 10) => {
+    console.log(users);
+    if (!users.length) return;
     const matchQuery = query(collection(db, "matches"), where('winner', '!=', null), limit(limiter));
-    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, setState));
+    var a = onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, users, setState, dispatch));
+    return a;
 };
 
-export const getMyFinishedMatchesListener = (setState: Function) => {
+export const getMyFinishedMatchesListener = (setState: Function, users: User[], dispatch: Function) => {
     const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid),
         where("winner", "!=", null), orderBy('winner', 'asc'), orderBy('timestamp', 'desc'));
-    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, setState));
+    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, users, setState, dispatch));
 };
 
-export const getIncomingMatchesListener = (setState: Function) => {
+export const getIncomingMatchesListener = (setState: Function, users: User[], dispatch: Function) => {
     const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid),
         where("accepted", "==", false), where("challenger", "!=", auth.currentUser.uid), orderBy('challenger', 'asc'), orderBy('timestamp', 'desc'));
-    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, setState));
+    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, users, setState, dispatch));
 };
 
-export const getOutgoingMatchesListener = (setState: Function) => {
+export const getOutgoingMatchesListener = (setState: Function, users: User[], dispatch: Function) => {
     const matchQuery = query(collection(db, "matches"), where("accepted", "==", false), where("challenger", "==", auth.currentUser.uid));
-    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, setState));
+    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, users, setState, dispatch));
 };
 
-export const getDeclareWinnerMatchesListener = (setState: Function) => {
+export const getDeclareWinnerMatchesListener = (setState: Function, users: User[], dispatch: Function) => {
     const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid),
         where("accepted", "==", true), where("winner", "==", null), orderBy('timestamp', 'desc'));
-    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, setState));
+    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, users, setState, dispatch));
 };
 
 export const getAllRegisteredUsersListener = (dispatch: Function) => {
@@ -247,49 +250,49 @@ export const updateWinnerOfMatchInFirestore = async (match: Match, winner: User,
     return [winnerNewRating, loserNewRating];
 };
 
-const getMyMatchHistory = async () => {
-    const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid), where("winner", "!=", null));
-    return await getMatchesFromFirestore(matchQuery);
-};
+// const getMyMatchHistory = async () => {
+//     const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid), where("winner", "!=", null));
+//     return await getMatchesFromFirestore(matchQuery);
+// };
 
-const getMyIncomingMatches = async () => {
-    const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid), where('challenger', '!=', auth.currentUser.uid), where("accepted", "==", false));
-    return await getMatchesFromFirestore(matchQuery);
-};
+// const getMyIncomingMatches = async () => {
+//     const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid), where('challenger', '!=', auth.currentUser.uid), where("accepted", "==", false));
+//     return await getMatchesFromFirestore(matchQuery);
+// };
 
-const getDeclareWinnerMatches = async () => {
-    const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid), where("accepted", "==", true), where("winner", "==", null));
-    return await getMatchesFromFirestore(matchQuery);
-};
+// const getDeclareWinnerMatches = async () => {
+//     const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid), where("accepted", "==", true), where("winner", "==", null));
+//     return await getMatchesFromFirestore(matchQuery);
+// };
 
-const getTournaments = async () => {
-    tournaments = [];
-    // const tQuery = query(collection(db, "tournaments"));
-    // const tDocs = await getDocs(tQuery);
-    // tDocs.forEach((snapshot: QueryDocumentSnapshot) => {
-    //     const tournamentData = snapshot.data();
-    //     var tourney: Tournament = {
+// const getTournaments = async () => {
+//     tournaments = [];
+//     // const tQuery = query(collection(db, "tournaments"));
+//     // const tDocs = await getDocs(tQuery);
+//     // tDocs.forEach((snapshot: QueryDocumentSnapshot) => {
+//     //     const tournamentData = snapshot.data();
+//     //     var tourney: Tournament = {
 
-    //     };
-    //     tournaments.push(tourney)
-    // });
+//     //     };
+//     //     tournaments.push(tourney)
+//     // });
 
-    return tournaments;
-}
+//     return tournaments;
+// }
 
-const getDashboardOverview = async () => {
-    const users = await getUsers();
-    const matches = await getMatches();
-    const tournaments = await getTournaments();
+// const getDashboardOverview = async () => {
+//     const users = await getUsers();
+//     const matches = await getMatches();
+//     const tournaments = await getTournaments();
 
-    return {
-        loadedUsers: users,
-        loadedMatches: matches,
-        loadedTournaments: tournaments
-    };
-};
+//     return {
+//         loadedUsers: users,
+//         loadedMatches: matches,
+//         loadedTournaments: tournaments
+//     };
+// };
 
-const createMatch = async (againstID: string) => {
+export const createMatch = async (againstID: string) => {
     const myID = auth.currentUser?.uid;
     if (!myID) return;
 
@@ -304,16 +307,3 @@ const createMatch = async (againstID: string) => {
         accepted: false
     });
 };
-
-export {
-    getDashboardOverview,
-    getUsers,
-    getMatches,
-    getMyMatches,
-    getTournaments,
-    createMatch,
-    users,
-    getMyIncomingMatches,
-    getDeclareWinnerMatches,
-    getMyMatchHistory,
-}
