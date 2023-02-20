@@ -2,7 +2,7 @@ import { auth } from "../../helpers/firebase";
 import Card from "../Cards/Card";
 import { User } from "../../interfaces/User";
 import { useEffect, useState } from "react";
-import { getOutgoingMatchesListener, updateAcceptedMatchInFirestore, updateDeclinedMatchInFirestore } from "../../helpers/firestore";
+import { getOutgoingMatchesListener } from "../../helpers/firestore";
 import { useAppDispatch, useAppSelector } from "../../Redux/hooks";
 import PersonRow from "./PersonRow";
 
@@ -17,13 +17,14 @@ const OutgoingMatches = () => {
       const unsubscribe = getOutgoingMatchesListener(setMatches, users, dispatch);
       return () => unsubscribe();
     }
-  }, [loggedIn]);
+  }, [loggedIn, users]);
 
   const child = (
     <div>
       {matches.map(match => {
-        const contestant = match.players.filter((p: User) => p.id != auth.currentUser?.uid)[0].name;
-        return <PersonRow key={match.id} hideAccept={true} matchId={match.id} name={contestant} timestamp={match.timestamp}/>;
+        const contestant = match.players.filter((p: User) => p?.id != auth.currentUser?.uid)[0];
+        if (!contestant) return;
+        return <PersonRow key={match.id} hideAccept={true} matchId={match.id} name={contestant.name} timestamp={match.timestamp}/>;
       })}
     </div>
   );

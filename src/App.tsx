@@ -37,34 +37,34 @@ function App() {
   useEffect(() => {
     const unsubFromUsers = getAllRegisteredUsersListener(userCallback);
     const unsubFromLatest = getAllFinishedMatchesListener(allMatchesCallback, users, dispatch);
-    // let unsubFromIncoming: Unsubscribe = () => {};
-    // let unsubFromDeclareWinner: Unsubscribe = () => {};
-    // let unsubFromMyMatches: Unsubscribe = () => {};
+    let unsubFromIncoming: Unsubscribe = () => {};
+    let unsubFromDeclareWinner: Unsubscribe = () => {};
+    let unsubFromMyMatches: Unsubscribe = () => {};
     
     if (loggedIn) {
-      // const incomingMatchesCallback = (pMatches: Match[]) => {
-      //   dispatch(setIncomingMatches(pMatches));
-      // };
+      const incomingMatchesCallback = (pMatches: Match[]) => {
+        dispatch(setIncomingMatches(pMatches));
+      };
       
-      // const declareWinnerCallback = (pMatches: Match[]) => {
-      //   dispatch(setDeclareWinnerMatches(pMatches));
-      // };
+      const declareWinnerCallback = (pMatches: Match[]) => {
+        dispatch(setDeclareWinnerMatches(pMatches));
+      };
       
-      // const myMatchesCallback = (pMatches: Match[]) => {
-      //   dispatch(setMyMatches(pMatches));
-      // };
+      const myMatchesCallback = (pMatches: Match[]) => {
+        dispatch(setMyMatches(pMatches));
+      };
 
-      // unsubFromIncoming = getIncomingMatchesListener(incomingMatchesCallback);
-      // unsubFromDeclareWinner = getDeclareWinnerMatchesListener(declareWinnerCallback);
-      // unsubFromMyMatches = getMyFinishedMatchesListener(myMatchesCallback);
+      unsubFromIncoming = getIncomingMatchesListener(incomingMatchesCallback, users, dispatch);
+      unsubFromDeclareWinner = getDeclareWinnerMatchesListener(declareWinnerCallback, users, dispatch);
+      unsubFromMyMatches = getMyFinishedMatchesListener(myMatchesCallback, users, dispatch);
     }
 
     return () => {
       unsubFromUsers();
       if (unsubFromLatest) unsubFromLatest();
-      // unsubFromIncoming();
-      // unsubFromDeclareWinner();
-      // unsubFromMyMatches();
+      if (unsubFromIncoming) unsubFromIncoming();
+      if (unsubFromDeclareWinner) unsubFromDeclareWinner();
+      if (unsubFromMyMatches) unsubFromMyMatches();
     }
   }, [users.length]);
 

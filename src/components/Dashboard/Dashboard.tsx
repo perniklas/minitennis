@@ -7,13 +7,15 @@ import Card from '../Cards/Card';
 import Leaderboard from '../Leaderboard/Leaderboard';
 import LatestMatches from '../LatestMatches/LatestMatches';
 import { highlightActiveTabButton } from '../../helpers/utils';
+import { useAppSelector } from '../../Redux/hooks';
 
 interface DashboardProps {
     tournaments: Array<Tournament>;
 }
 
 const Dashboard = (props: DashboardProps) => {
-    // var { users, tournaments } = props;
+    const matches = useAppSelector(state => state.matchHistory);
+
     useEffect(() => {
         highlightActiveTabButton();
     }, []);
@@ -21,7 +23,7 @@ const Dashboard = (props: DashboardProps) => {
     return (
         <div id="dashboard">
             <Card title="Top Players" child={<Leaderboard />} />
-            <Card title="Latest Matches" child={(<LatestMatches />)} />
+            <Card title="Latest Matches" child={(<LatestMatches matches={matches}/>)} />
         </div>
     );
 };

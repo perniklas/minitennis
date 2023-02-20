@@ -113,7 +113,7 @@ const handleMatchListenerSnapshots = (docsSnap: QuerySnapshot<DocumentData>, use
         matchList.push(match);
     });
 
-    dispatch(setState(matchList));
+    setState(matchList);
 }
 
 export const getAllRegisteredUsers = (setState: Function, limiter: number = 10) => {

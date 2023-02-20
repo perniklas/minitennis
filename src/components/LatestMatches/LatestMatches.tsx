@@ -1,16 +1,13 @@
 import './LatestMatches.css';
 import { formatDate, formatTime, truncateName } from '../../helpers/utils';
 import { Match } from '../../interfaces/Match'
-import { useEffect, useState } from 'react';
-import { getAllFinishedMatchesListener } from '../../helpers/firestore';
-import { useAppSelector } from '../../Redux/hooks';
 
 interface MatchHistory {
-    matches?: Match[]
+    matches: Match[]
 }
 
 const LatestMatches = (props: MatchHistory) => {
-    const matches = props.matches ?? useAppSelector(state => state.matchHistory);
+    const matches = [...props.matches];
     if (!matches.length) {
         return (<></>);
     }
