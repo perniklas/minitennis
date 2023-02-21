@@ -32,6 +32,25 @@
   overflow-y: scroll;
 }
 
+/* Firefox */
+.latestMatchesWrapper {
+  scrollbar-color: blue white;
+  scrollbar-width: thin;
+}
+
+/* WebKit and Chromiums */
+.latestMatchesWrapper ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: #696e83;
+  border-radius: 5px;
+}
+
+.latestMatchesWrapper ::-webkit-scrollbar-thumb {
+  background: #c1c6d8;
+  border-radius: 5px;
+}
+
 @media screen and (min-width: 600px) {
   .latestMatches {
     max-height: 425px;

@@ -73,7 +73,7 @@ const DeclareWinner = () => {
   const child = (
     <div>
       {matches.map((match: Match) => {
-        const me = "Me";//match.players.find((p: User) => p.id === auth.currentUser.uid).name;
+        const me = match.players.find((p: User) => p.id === auth.currentUser.uid).name;
         const them = match.players.find((p: User) => p.id !== auth.currentUser.uid);
 
         return (
