@@ -33,20 +33,20 @@
 }
 
 /* Firefox */
-.latestMatchesWrapper {
-  scrollbar-color: blue white;
+.scrollbar_inside_box {
+  scrollbar-color: #c1c6d8 #696e83;
   scrollbar-width: thin;
 }
 
 /* WebKit and Chromiums */
-.latestMatchesWrapper ::-webkit-scrollbar {
+.scrollbar_inside_box ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   background-color: #696e83;
   border-radius: 5px;
 }
 
-.latestMatchesWrapper ::-webkit-scrollbar-thumb {
+.scrollbar_inside_box ::-webkit-scrollbar-thumb {
   background: #c1c6d8;
   border-radius: 5px;
 }

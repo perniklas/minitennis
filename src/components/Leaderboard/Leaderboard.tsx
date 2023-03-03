@@ -20,7 +20,7 @@ const Leaderboard = () => {
     * If the names're the same, go to hell.
     */
     return (
-        <div className="leaderboard-wrapper">
+        <div className="leaderboard-wrapper scrollbar_inside_box">
             <table className="leaderboard_users">
                 <thead className="leaderboard___tbl_header">
                     <tr>

@@ -15,7 +15,7 @@ const LatestMatches = (props: MatchHistory) => {
     matches.sort((a: Match, b: Match) => a.timestamp > b.timestamp ? -1 : 1);
 
     return (
-        <div className="latestMatchesWrapper">
+        <div className="scrollbar_inside_box">
             <div className="latestMatches">
                 {matches.map((match: Match) => {
                     var key = match.timestamp?.toString() ?? "match";

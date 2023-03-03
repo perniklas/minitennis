@@ -64,7 +64,7 @@ const NewGame = () => {
             <Header />
             <div style={{ maxWidth: '600px', margin: 'auto' }}>
                 <div style={{ padding: "0 1em", margin: 'auto', textAlign: 'center' }}>
-                    <h2>NEW GAME</h2>
+                    <h2>REGISTER GAME</h2>
                 </div>
                 {
                     state.loggedIn
