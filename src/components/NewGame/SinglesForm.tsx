@@ -42,7 +42,7 @@ const SinglesGameForm = (props: GameProps) => {
                 <select className="newgame__form__input__input" id="newgame__form__winner">
                     <option id={null}></option>
                     <option id={auth.currentUser?.uid}>Me</option>
-                    <option value="against">{against?.name}</option>
+                    <option id={against?.id}>{against?.name}</option>
                 </select>
             </div>
 

@@ -9,6 +9,7 @@ import NewGameForm, { handleSubmit } from './NewGameForm';
 const NewGame = () => {
     const navigate = useNavigate();
     const loggedIn = useAppSelector(state => state.loggedIn);
+    const users = useAppSelector(state => state.users);
     let loading = false;
 
     try {
@@ -24,7 +25,7 @@ const NewGame = () => {
         }
         try {
             loading = true;
-            await handleSubmit(navigate);
+            await handleSubmit(navigate, users);
             loading = false;
         } catch (e) {
             console.log(e);

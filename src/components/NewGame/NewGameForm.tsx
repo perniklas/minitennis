@@ -1,6 +1,6 @@
 import { auth } from "../../helpers/firebase";
 import { User } from "../../interfaces/User";
-import { createMatch } from '../../helpers/firestore';
+import { createMatch, MatchResults } from '../../helpers/firestore';
 import { showToast } from "../../App";
 import 'react-toastify/dist/ReactToastify.css';
 import { NavigateFunction, useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ const NewGameForm = () => {
     };
 
     return (
-        <form onSubmit={(e) => handleSubmit(navigate, e)} id="newgame__form">
+        <form onSubmit={(e) => handleSubmit(navigate, users, e)} id="newgame__form">
             {/* <div className="newgame__form__input">
                 <label htmlFor="newgame__form__type">Game type</label>
                 <select className="newgame__form__input__input" id="newgame__form__type" onChange={setGameType}>
@@ -50,7 +50,7 @@ const NewGameForm = () => {
     );
 };
 
-export const handleSubmit = async (navigate: NavigateFunction, event?: React.FormEvent<HTMLFormElement>) => {
+export const handleSubmit = async (navigate: NavigateFunction, users: User[], event?: React.FormEvent<HTMLFormElement>) => {
     if (event) event.preventDefault();
 
     if (!auth.currentUser?.uid) {
@@ -66,7 +66,7 @@ export const handleSubmit = async (navigate: NavigateFunction, event?: React.For
 
     const whoID = who.children[who.selectedIndex]?.id;
     const winnerElement = document.getElementById('newgame__form__winner') as HTMLSelectElement;
-    const winner = winnerElement.options[winnerElement.selectedIndex].id;
+    const winnerID = winnerElement.options[winnerElement.selectedIndex].id;
 
     const scores = document.getElementsByClassName('newgame_score');
     let score1 = parseInt((scores.item(0) as HTMLInputElement).value);
@@ -77,18 +77,36 @@ export const handleSubmit = async (navigate: NavigateFunction, event?: React.For
         return;
     }
 
-    if ((score1 || score2) && !winner) {
+    if ((score1 || score2) && !winnerID) {
         alert('You can\'t have a score, and not a winner. It just doesn\'t work like that.');
         return;
     }
 
-    let results = null;
-    if (winner) {
+    let results: MatchResults;
+    if (winnerID) {
         const winnerScore = score1 > score2 ? score1 : score2;
-        const loserScore = score1 > score2 ? score1 : score2;
+        const loserScore = score1 > score2 ? score2 : score1;
+        let winner: User;
+        let loser: User;
+        if (auth.currentUser.uid === winnerID) {
+            winner = users.find(u => u.id === auth.currentUser.uid);
+            loser = users.find(u => u.id === whoID);
+        } else {
+            winner = users.find(u => u.id === whoID);
+            loser = users.find(u => u.id === auth.currentUser.uid);
+        }
+
+        results = {
+            winner,
+            loser,
+            scores: {
+                winner: winnerScore,
+                loser: loserScore
+            }
+        };
     }
     
-    await createMatch(whoID);
+    await createMatch(whoID, results);
     who.value = '';
     showToast();
     navigate('/');

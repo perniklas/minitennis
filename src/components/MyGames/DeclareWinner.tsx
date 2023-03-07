@@ -1,7 +1,7 @@
 import { formatDate, formatTime } from "../../helpers/utils";
 import Card from "../Cards/Card";
 import { useEffect, useState } from 'react';
-import { getDeclareWinnerMatchesListener, updateWinnerOfMatchInFirestore } from "../../helpers/firestore";
+import { getDeclareWinnerMatchesListener, MatchResults, updateWinnerOfMatchInFirestore } from "../../helpers/firestore";
 import { User } from "../../interfaces/User";
 import { auth } from "../../helpers/firebase";
 import { Match } from "../../interfaces/Match";
@@ -39,21 +39,26 @@ const DeclareWinner = () => {
   let loading = false;
   const handleDeclaringWinnerForMatch = async (match: Match, winnerId: string, loserId: string, score1?: number, score2?: number) => {
     if (loading) return;
-    let response = window.confirm('Are you sure?? You can\'t regret this decision');
+    const response = window.confirm('Are you sure?? You can\'t regret this decision');
 
     if (!response) return;
 
     loading = true;
-    let winnerUser = users.find(u => u.id === winnerId);
-    let loserUser = users.find(u => u.id === loserId);
-    let winner: User = {
+    const winnerUser = users.find(u => u.id === winnerId);
+    const loserUser = users.find(u => u.id === loserId);
+    const winner: User = {
       ...winnerUser
     };
-    let loser: User = {
+    const loser: User = {
       ...loserUser
     };
 
-    const newRatings = await updateWinnerOfMatchInFirestore(match, );
+    const results: MatchResults = {
+      winner,
+      loser
+    };
+
+    const newRatings = await updateWinnerOfMatchInFirestore(match.id, results);
     updateUserStats(newRatings, winner, loser);
 
     loading = false;

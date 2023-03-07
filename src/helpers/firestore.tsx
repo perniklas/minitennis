@@ -159,12 +159,12 @@ export const updateDeclinedMatchInFirestore = async (id: string) => {
 };
 
 
-interface MatchResults {
+export interface MatchResults {
     winner: User;
     loser: User;
-    scores: {
-        winner: number;
-        loser: number;
+    scores?: {
+        winner?: number;
+        loser?: number;
     }
 };
 
@@ -173,24 +173,31 @@ export const updateWinnerOfMatchInFirestore = async (matchId: string, results: M
     const { winnerNewRating, loserNewRating } = calculateRatings(winner, loser);
     const timestamp = new Date().getTime();
 
-    await updateDoc(doc(db, `matches/${matchId}`), {
-        winner: winner.id,
-        scores
-    });
-    await updateDoc(doc(db, `users/${winner.docId}`), {
+    if (scores) {
+        await updateDoc(doc(db, `matches/${matchId}`), {
+            winner: winner.id,
+            scores
+        });
+    } else {
+        await updateDoc(doc(db, `matches/${matchId}`), {
+            winner: winner.id
+        });
+    }
+
+    await updateDoc(doc(db, `users/${winner.id}`), {
         wins: increment(1),
         rating: winnerNewRating
     });
-    await updateDoc(doc(db, `users/${loser.docId}`), {
+    await updateDoc(doc(db, `users/${loser.id}`), {
         losses: increment(1),
         rating: loserNewRating
     });
-    await setDoc(doc(db, winner.docId, matchId), {
+    await setDoc(doc(db, winner.id, matchId), {
         timestamp: timestamp,
         rating: winnerNewRating,
         win: true,
     });
-    await setDoc(doc(db, loser.docId, matchId), {
+    await setDoc(doc(db, loser.id, matchId), {
         timestamp: timestamp,
         rating: loserNewRating,
         win: true,
@@ -213,7 +220,7 @@ export const createMatch = async (againstID: string, results?: MatchResults) => 
         timestamp: new Date().getTime(),
         accepted: true
     }).then(async docRef => {
-        if (results) {
+        if (results && results.winner) {
             await updateWinnerOfMatchInFirestore(docRef.id, results);
         }
     });
