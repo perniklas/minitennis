@@ -15,6 +15,7 @@
      flex-direction: column;
      margin-bottom: 100px;
      justify-content: end;
+     max-width: 100vw;
      /* background-image: url('../../assets/black.svg');
      background-repeat: no-repeat;
      background-size: 40em; */
@@ -27,9 +28,9 @@
      min-width: 80%;
  }
 
- .newgame__form__input>label {
+ .newgame__form__input label {
      min-width: 80%;
-     margin-bottom: 0.5rem;
+     margin-bottom: 8px;
      color: var(--blue);
      font-weight: 600;
  }
@@ -39,6 +40,25 @@
      border: solid var(--blue);
      padding: 0.7rem;
      border-radius: 0.77rem;
+ }
+
+ .newgame__form__input__row .newgame__form__input__input {
+    width: 70%;
+    min-width: 50%;
+ }
+
+ .newgame__form__input.row {
+     display: flex;
+     flex-direction: row;
+     justify-content: space-between;
+ }
+
+ .newgame__form__input.row div:last-child {
+     text-align: right;
+ }
+
+ .newgame__form__input__row {
+    width: 50%;
  }
 
  #new_game .centered {

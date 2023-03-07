@@ -158,12 +158,24 @@ export const updateDeclinedMatchInFirestore = async (id: string) => {
     await deleteDoc(doc(db, `matches/${id}`));
 };
 
-export const updateWinnerOfMatchInFirestore = async (match: Match, winner: User, loser: User) => {
+
+interface MatchResults {
+    winner: User;
+    loser: User;
+    scores: {
+        winner: number;
+        loser: number;
+    }
+};
+
+export const updateWinnerOfMatchInFirestore = async (matchId: string, results: MatchResults) => {
+    const { winner, loser, scores } = results;
     const { winnerNewRating, loserNewRating } = calculateRatings(winner, loser);
     const timestamp = new Date().getTime();
 
-    await updateDoc(doc(db, `matches/${match.id}`), {
-        winner: winner.id
+    await updateDoc(doc(db, `matches/${matchId}`), {
+        winner: winner.id,
+        scores
     });
     await updateDoc(doc(db, `users/${winner.docId}`), {
         wins: increment(1),
@@ -173,12 +185,12 @@ export const updateWinnerOfMatchInFirestore = async (match: Match, winner: User,
         losses: increment(1),
         rating: loserNewRating
     });
-    await setDoc(doc(db, winner.docId, match.id), {
+    await setDoc(doc(db, winner.docId, matchId), {
         timestamp: timestamp,
         rating: winnerNewRating,
         win: true,
     });
-    await setDoc(doc(db, loser.docId, match.id), {
+    await setDoc(doc(db, loser.docId, matchId), {
         timestamp: timestamp,
         rating: loserNewRating,
         win: true,
@@ -187,7 +199,7 @@ export const updateWinnerOfMatchInFirestore = async (match: Match, winner: User,
     return [winnerNewRating, loserNewRating];
 };
 
-export const createMatch = async (againstID: string) => {
+export const createMatch = async (againstID: string, results?: MatchResults) => {
     const myID = auth.currentUser?.uid;
     if (!myID) return;
 
@@ -199,6 +211,10 @@ export const createMatch = async (againstID: string) => {
         challenger: myID,
         winner: null,
         timestamp: new Date().getTime(),
-        accepted: false
+        accepted: true
+    }).then(async docRef => {
+        if (results) {
+            await updateWinnerOfMatchInFirestore(docRef.id, results);
+        }
     });
 };

@@ -37,9 +37,9 @@ const DeclareWinner = () => {
   };
 
   let loading = false;
-  const handleDeclaringWinnerForMatch = async (match: Match, winnerId: string, loserId: string) => {
+  const handleDeclaringWinnerForMatch = async (match: Match, winnerId: string, loserId: string, score1?: number, score2?: number) => {
     if (loading) return;
-    let response = window.confirm('Are you sure??');
+    let response = window.confirm('Are you sure?? You can\'t regret this decision');
 
     if (!response) return;
 
@@ -53,7 +53,7 @@ const DeclareWinner = () => {
       ...loserUser
     };
 
-    const newRatings = await updateWinnerOfMatchInFirestore(match, winner, loser);
+    const newRatings = await updateWinnerOfMatchInFirestore(match, );
     updateUserStats(newRatings, winner, loser);
 
     loading = false;

@@ -38,12 +38,23 @@ const SinglesGameForm = (props: GameProps) => {
             </div>
 
             <div className="newgame__form__input">
-                <label htmlFor="newgame__form__winner">Who won?</label>
+                <label htmlFor="newgame__form__winner">Who won? <span style={{float: "right"}}>(optional)</span></label>
                 <select className="newgame__form__input__input" id="newgame__form__winner">
                     <option id={null}></option>
                     <option id={auth.currentUser?.uid}>Me</option>
                     <option value="against">{against?.name}</option>
                 </select>
+            </div>
+
+            <div className="newgame__form__input row">
+                <div className="newgame__form__input__row">
+                    <label htmlFor="newgame__form__points__1">Score</label>
+                    <input className="newgame__form__input__input newgame_score" id="newgame__form__points__1" type="number"/>
+                </div>
+                <div className="newgame__form__input__row">
+                <label htmlFor="newgame__form__points__2">(optional)</label>
+                    <input className="newgame__form__input__input newgame_score" id="newgame__form__points__2" type="number"/>
+                </div>
             </div>
         </div>
     );

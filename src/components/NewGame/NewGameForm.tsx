@@ -16,15 +16,12 @@ enum MatchType {
 
 const NewGameForm = () => {
     const users: User[] = useAppSelector(state => state.users);
-    let sortedUsers: User[] = [];
     const [matchType, setMatchType] = useState(MatchType.singles);
     const navigate = useNavigate();
 
     useEffect(() => {
-        sortedUsers = [...users].sort((a: User, b: User) => a.name < b.name ? -1 : 1);
-        console.log('sorted');
-        console.log(sortedUsers);
-    }, [matchType, users]);
+
+    }, [matchType]);
 
     const setGameType = () => {
         const select = (document.getElementById('newgame__form__type') as HTMLSelectElement)
@@ -37,17 +34,17 @@ const NewGameForm = () => {
 
     return (
         <form onSubmit={(e) => handleSubmit(navigate, e)} id="newgame__form">
-            <div className="newgame__form__input">
+            {/* <div className="newgame__form__input">
                 <label htmlFor="newgame__form__type">Game type</label>
                 <select className="newgame__form__input__input" id="newgame__form__type" onChange={setGameType}>
                     <option value='singles'>Singles</option>
                     <option value='doubles'>Doubles</option>
                 </select>
-            </div>
+            </div> */}
             { 
                 matchType === MatchType.singles
-                ? <SinglesGameForm users={sortedUsers} />
-                : <DoublesGameForm users={sortedUsers} />
+                ? <SinglesGameForm users={users} />
+                : <DoublesGameForm users={users} />
             }
         </form>
     );
@@ -64,9 +61,33 @@ export const handleSubmit = async (navigate: NavigateFunction, event?: React.For
     const who = document.getElementById('newgame__form__who') as HTMLSelectElement;
     if (!who) {
         alert('You gotta choose someone bruh');
+        return;
     }
 
     const whoID = who.children[who.selectedIndex]?.id;
+    const winnerElement = document.getElementById('newgame__form__winner') as HTMLSelectElement;
+    const winner = winnerElement.options[winnerElement.selectedIndex].id;
+
+    const scores = document.getElementsByClassName('newgame_score');
+    let score1 = parseInt((scores.item(0) as HTMLInputElement).value);
+    let score2 = parseInt((scores.item(1) as HTMLInputElement).value);
+    
+    if ((score1 && !score2) || (score2 && !score1) || (score1 < 0 || score2 < 0)) {
+        alert('Something\'s off with those scores.');
+        return;
+    }
+
+    if ((score1 || score2) && !winner) {
+        alert('You can\'t have a score, and not a winner. It just doesn\'t work like that.');
+        return;
+    }
+
+    let results = null;
+    if (winner) {
+        const winnerScore = score1 > score2 ? score1 : score2;
+        const loserScore = score1 > score2 ? score1 : score2;
+    }
+    
     await createMatch(whoID);
     who.value = '';
     showToast();

@@ -44,7 +44,7 @@ const NewGame = () => {
     );
 
     const createGameButton = (
-        <a onClick={(e) => createGame(e)} className="greenlight">
+        <a onClick={createGame} className="greenlight">
             <div>
                 <TbCheck style={{ margin: 'auto' }}></TbCheck>
             </div>
