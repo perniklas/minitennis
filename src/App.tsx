@@ -36,7 +36,7 @@ function App() {
 
   useEffect(() => {
     const unsubFromUsers = getAllRegisteredUsersListener(userCallback);
-    const unsubFromLatest = getAllFinishedMatchesListener(allMatchesCallback, users, dispatch);
+    const unsubFromLatest = getAllFinishedMatchesListener(allMatchesCallback, users);
     let unsubFromIncoming: Unsubscribe = () => {};
     let unsubFromDeclareWinner: Unsubscribe = () => {};
     let unsubFromMyMatches: Unsubscribe = () => {};
@@ -54,9 +54,9 @@ function App() {
         dispatch(setMyMatches(pMatches));
       };
 
-      unsubFromIncoming = getIncomingMatchesListener(incomingMatchesCallback, users, dispatch);
-      unsubFromDeclareWinner = getDeclareWinnerMatchesListener(declareWinnerCallback, users, dispatch);
-      unsubFromMyMatches = getMyFinishedMatchesListener(myMatchesCallback, users, dispatch);
+      unsubFromIncoming = getIncomingMatchesListener(incomingMatchesCallback, users);
+      unsubFromDeclareWinner = getDeclareWinnerMatchesListener(declareWinnerCallback, users);
+      unsubFromMyMatches = getMyFinishedMatchesListener(myMatchesCallback, users);
     }
 
     return () => {

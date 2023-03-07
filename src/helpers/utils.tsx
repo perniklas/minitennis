@@ -81,6 +81,21 @@ function getK(gamesPlayed: number) {
     }
 }
 
+export const saveDataToLocalStorage = (category: string, data: Object) => {
+    localStorage.setItem(category, JSON.stringify(data));
+};
+
+function loadDataFromLocalStorage(category: string) {
+    const data = localStorage.getItem(category);
+    return data;
+};
+
+export const loadMatchesFromLocalStorage = () => {
+    const matchesString = loadDataFromLocalStorage('matches');
+    const matchesJSON = JSON.parse(matchesString);
+    console.log('skrrr');
+};
+
 export {
     truncateName,
     formatDate,

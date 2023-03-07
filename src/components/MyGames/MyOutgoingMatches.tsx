@@ -14,7 +14,7 @@ const OutgoingMatches = () => {
 
   useEffect(() => {
     if (loggedIn) {
-      const unsubscribe = getOutgoingMatchesListener(setMatches, users, dispatch);
+      const unsubscribe = getOutgoingMatchesListener(setMatches, users);
       return () => unsubscribe();
     }
   }, [loggedIn, users]);

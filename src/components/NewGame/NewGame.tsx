@@ -1,8 +1,6 @@
 import { TbCheck, TbX } from 'react-icons/tb';
 import { Link, useNavigate } from 'react-router-dom';
-import { User } from '../../interfaces/User';
 import { useAppSelector } from '../../Redux/hooks';
-import { RootState, store } from '../../Redux/store';
 import BottomNavigationBar from '../BottomMenuBar/BottomNavigationBar';
 import Header from '../Header/Header';
 import './NewGame.css';
@@ -10,8 +8,7 @@ import NewGameForm, { handleSubmit } from './NewGameForm';
 
 const NewGame = () => {
     const navigate = useNavigate();
-    const state = store.getState();
-    const users = useAppSelector((state: RootState) => state.users);
+    const loggedIn = useAppSelector(state => state.loggedIn);
     let loading = false;
 
     try {
@@ -28,8 +25,6 @@ const NewGame = () => {
         try {
             loading = true;
             await handleSubmit(navigate);
-            // go to dashboard? any user feedback at all?
-            //navigate(-1);
             loading = false;
         } catch (e) {
             console.log(e);
@@ -67,8 +62,8 @@ const NewGame = () => {
                     <h2>REGISTER GAME</h2>
                 </div>
                 {
-                    state.loggedIn
-                        ? <NewGameForm users={users} />
+                    loggedIn
+                        ? <NewGameForm />
                         : <div className="centered">
                             <span>You need to log in to create new games.</span>
                         </div>
