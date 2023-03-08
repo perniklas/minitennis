@@ -19,7 +19,7 @@ import { User } from "../interfaces/User";
 import { auth } from '../helpers/firebase';
 import { Match, MatchStats } from "../interfaces/Match";
 import { Tournament } from "../interfaces/Tournament";
-import { calculateRatings, loadFinishedMatchesFromLocalStorage, loadMyFinishedMatchesFromLocalStorage, loadMyRatingHistoryFromLocalStorage, saveDataToLocalStorage } from "./utils";
+import { calculateDoublesRatings, calculateRatings, loadFinishedMatchesFromLocalStorage, loadMyFinishedMatchesFromLocalStorage, loadMyRatingHistoryFromLocalStorage, saveDataToLocalStorage } from "./utils";
 
 // var users: Array<User> = [];
 // var matches: Array<Match> = [];
@@ -202,6 +202,15 @@ export interface MatchResults {
     }
 };
 
+export interface DoublesMatchResults {
+    winners: User[];
+    losers: User[];
+    scores?: {
+        winner?: number;
+        loser?: number;
+    }
+}
+
 export const updateWinnerOfMatchInFirestore = async (matchId: string, results: MatchResults) => {
     const { winner, loser, scores } = results;
     const { winnerNewRating, loserNewRating } = calculateRatings(winner, loser);
@@ -242,7 +251,67 @@ export const updateWinnerOfMatchInFirestore = async (matchId: string, results: M
     return [winnerNewRating, loserNewRating];
 };
 
-export const createMatch = async (againstID: string, results?: MatchResults) => {
+export const updateWinnerOfDoublesMatchInFirestore = async (matchId: string, results: DoublesMatchResults) => {
+    const { winners, losers, scores } = results;
+    const { winnerNewRating, loserNewRating } = calculateDoublesRatings(winners, losers);
+    const timestamp = new Date().getTime();
+
+    if (scores) {
+        await updateDoc(doc(db, `matches/${matchId}`), {
+            winner: winners.map(w => w.id),
+            done: true,
+            scores
+        });
+    } else {
+        await updateDoc(doc(db, `matches/${matchId}`), {
+            winner: winners.map(w => w.id),
+            done: true,
+        });
+    }
+
+    await updateDoc(doc(db, `users/${winner.id}`), {
+        wins: increment(1),
+        rating: winnerNewRating
+    });
+    await updateDoc(doc(db, `users/${loser.id}`), {
+        losses: increment(1),
+        rating: loserNewRating
+    });
+    await setDoc(doc(db, winner.id, matchId), {
+        timestamp: timestamp,
+        rating: winnerNewRating,
+        win: true,
+    });
+    await setDoc(doc(db, loser.id, matchId), {
+        timestamp: timestamp,
+        rating: loserNewRating,
+        win: true,
+    });
+
+    return [winnerNewRating, loserNewRating];
+};
+
+export const createSinglesMatch = async (againstID: string, results?: MatchResults) => {
+    const myID = auth.currentUser?.uid;
+    if (!myID) return;
+
+    await addDoc(collection(db, "matches"), {
+        players: [
+            myID,
+            againstID
+        ],
+        challenger: myID,
+        winner: null,
+        timestamp: new Date().getTime(),
+        accepted: true
+    }).then(async docRef => {
+        if (results && results.winner) {
+            await updateWinnerOfMatchInFirestore(docRef.id, results);
+        }
+    });
+};
+
+export const createDoublesMatch = async (withID: string, againstID: string[], results?: DoublesMatchResults) => {
     const myID = auth.currentUser?.uid;
     if (!myID) return;
 

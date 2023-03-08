@@ -9,7 +9,7 @@ import { useAppSelector } from "../../Redux/hooks";
 import SinglesGameForm from "./SinglesForm";
 import DoublesGameForm from "./DoublesForm";
 
-enum MatchType {
+export enum MatchType {
     singles,
     doubles
 }
@@ -33,7 +33,7 @@ const NewGameForm = () => {
     };
 
     return (
-        <form onSubmit={(e) => handleSubmit(navigate, users, e)} id="newgame__form">
+        <form onSubmit={(e) => handleSubmit(navigate, users, matchType, e)} id="newgame__form">
             <div className="newgame__form__input">
                 <label htmlFor="newgame__form__type">Game type</label>
                 <select className="newgame__form__input__input" id="newgame__form__type" onChange={setGameType}>
@@ -41,10 +41,10 @@ const NewGameForm = () => {
                     <option value='doubles'>Doubles</option>
                 </select>
             </div>
-            { 
+            {
                 matchType === MatchType.singles
-                ? <SinglesGameForm users={users} />
-                : <DoublesGameForm users={users} />
+                    ? <SinglesGameForm users={users} />
+                    : <DoublesGameForm users={users} />
             }
         </form>
     );
@@ -71,7 +71,7 @@ export const handleSubmit = async (navigate: NavigateFunction, users: User[], ev
     const scores = document.getElementsByClassName('newgame_score');
     let score1 = parseInt((scores.item(0) as HTMLInputElement).value);
     let score2 = parseInt((scores.item(1) as HTMLInputElement).value);
-    
+
     if ((score1 && !score2) || (score2 && !score1) || (score1 < 0 || score2 < 0)) {
         alert('Something\'s off with those scores.');
         return;
@@ -79,6 +79,11 @@ export const handleSubmit = async (navigate: NavigateFunction, users: User[], ev
 
     if ((score1 || score2) && !winnerID) {
         alert('You can\'t have a score, and not a winner. It just doesn\'t work like that.');
+        return;
+    }
+
+    if (!winnerID) {
+        alert('Someone has to have won, that\'s kind of the point of playing. Come on, select a winner.');
         return;
     }
 
@@ -105,11 +110,19 @@ export const handleSubmit = async (navigate: NavigateFunction, users: User[], ev
             }
         };
     }
-    
+
     await createMatch(whoID, results);
     who.value = '';
     showToast();
     navigate('/');
 };
+
+function handleSinglesGame() {
+
+}
+
+function handleDoublesGame() {
+    
+}
 
 export default NewGameForm;

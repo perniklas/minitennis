@@ -1,3 +1,4 @@
+import { MatchType } from "../components/NewGame/NewGameForm";
 import { User } from "../interfaces/User";
 
 const truncateName = (name: string) => {
@@ -66,6 +67,36 @@ export const calculateRatings = (winner: User, loser: User) => {
         winnerNewRating,
         loserNewRating
     };
+}
+
+export const calculateDoublesRatings = (winners: User[], losers: User[]) => {
+    const winnersWins = Math.floor((winners[0].wins + winners[1].wins) / 2);
+    const winnersLosses = Math.floor((winners[0].losses + winners[1].losses) / 2);
+    const winnersRating = (winners[0].rating + winners[1].rating) / 2;
+
+    const losersWins = Math.floor((losers[0].wins + losers[1].wins) / 2);
+    const losersLosses = Math.floor((losers[0].losses + losers[1].losses) / 2);
+    const losersRating = (losers[0].rating + losers[1].rating) / 2;
+
+    const newWinner: User = {
+        docId: '42069',
+        id: '69420',
+        name: 'Temp',
+        wins: winnersWins,
+        losses: winnersLosses,
+        rating: winnersRating
+    }
+
+    const newLoser: User = {
+        docId: '42069',
+        id: '69420',
+        name: 'Temp',
+        wins: losersWins,
+        losses: losersLosses,
+        rating: losersRating
+    }
+
+    return calculateRatings(newWinner, newLoser);
 }
 
 function getK(gamesPlayed: number) {
