@@ -34,13 +34,13 @@ const NewGameForm = () => {
 
     return (
         <form onSubmit={(e) => handleSubmit(navigate, users, e)} id="newgame__form">
-            {/* <div className="newgame__form__input">
+            <div className="newgame__form__input">
                 <label htmlFor="newgame__form__type">Game type</label>
                 <select className="newgame__form__input__input" id="newgame__form__type" onChange={setGameType}>
                     <option value='singles'>Singles</option>
                     <option value='doubles'>Doubles</option>
                 </select>
-            </div> */}
+            </div>
             { 
                 matchType === MatchType.singles
                 ? <SinglesGameForm users={users} />

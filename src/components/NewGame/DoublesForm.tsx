@@ -8,30 +8,37 @@ interface GameProps {
 }
 
 const DoublesGameForm = (props: GameProps) => {
-    const users: User[] = [...props.users];
+    const users: User[] = [...props.users].filter(u => u.id != auth.currentUser.uid);
     users.sort((a: User, b: User) => a.name < b.name ? -1 : 1);
 
-    const setAvailableUsers = () => {
-        const teammateSelect = (document.getElementById('newgame__form__who') as HTMLSelectElement)
-        const teammate = teammateSelect.options[teammateSelect.selectedIndex]?.id;
+    const setSelectedUsers = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const element = event.target as HTMLSelectElement;
+        const selectedIndex = element.selectedIndex;
+        const selectedUserID = element.options[element.selectedIndex].id;
+        const selects = document.getElementsByClassName('doublesselector');
 
-        const opponent1Select = (document.getElementById('newgame__form__who__opponent1') as HTMLSelectElement)
-        const opponent1 = opponent1Select.options[opponent1Select.selectedIndex]?.id;
+        for (let i = 0; i < selects.length; i++) {
+            const elem = selects.item(i) as HTMLSelectElement;
+            const id = elem.options[elem.selectedIndex].id;
+            if (id != '' && id == selectedUserID) {
+                elem.selectedIndex = 0;
+            }
+        }
 
-        const opponent2Select = (document.getElementById('newgame__form__who__opponent2') as HTMLSelectElement)
-        const opponent2 = opponent2Select.options[opponent2Select.selectedIndex]?.id;
+        element.selectedIndex = selectedIndex;
     };
 
     useEffect(() => {
-        setAvailableUsers();
+        //setSelectedUsers();
     }, [props.users]);
 
     return (
-        <div id="newgame__form__singles">
+        <div id="newgame__form__doubles">
             <div className="newgame__form__input">
-                <label htmlFor="newgame__form__who">Your teammate?</label>
-                <select className="newgame__form__input__input" id="newgame__form__who" onChange={setAvailableUsers}>
-                    {users.filter(u => u.id !== auth.currentUser.uid).map((user: User) => {
+                <label htmlFor="newgame__form__who">Your teammate</label>
+                <select className="newgame__form__input__input doublesselector" id="newgame__form__who" onChange={setSelectedUsers}>
+                    <option id=""></option>
+                    {users.map((user: User) => {
                         return (
                             <option key={user.id} id={user.id}>{user.name}</option>
                         );
@@ -41,16 +48,18 @@ const DoublesGameForm = (props: GameProps) => {
 
             <div className="newgame__form__input">
                 <label htmlFor="newgame__form__who__opponent1">Opponents</label>
-                <select className="newgame__form__input__input" id="newgame__form__who__opponent1" onChange={setAvailableUsers}>
-                    {users.filter(u => u.id !== auth.currentUser.uid).map((user: User) => {
+                <select className="newgame__form__input__input doublesselector" id="newgame__form__who__opponent1" onChange={setSelectedUsers}>
+                    <option id=""></option>
+                    {users.map((user: User) => {
                         return (
                             <option key={user.id} id={user.id}>{user.name}</option>
                         );
                     })}
                 </select>
 
-                <select className="newgame__form__input__input" style={{marginTop: '20px'}} id="newgame__form__who__opponent2" onChange={setAvailableUsers}>
-                    {users.filter(u => u.id !== auth.currentUser.uid).map((user: User) => {
+                <select className="newgame__form__input__input doublesselector" style={{ marginTop: '20px' }} id="newgame__form__who__opponent2" onChange={setSelectedUsers}>
+                    <option id=""></option>
+                    {users.map((user: User) => {
                         return (
                             <option key={user.id} id={user.id}>{user.name}</option>
                         );
