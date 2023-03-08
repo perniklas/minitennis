@@ -16,6 +16,7 @@
      margin-bottom: 100px;
      justify-content: end;
      max-width: 100vw;
+     min-width: 80vw;
      /* background-image: url('../../assets/black.svg');
      background-repeat: no-repeat;
      background-size: 40em; */
@@ -43,8 +44,8 @@
  }
 
  .newgame__form__input__row .newgame__form__input__input {
-    width: 70%;
-    min-width: 50%;
+     width: 70%;
+     min-width: 50%;
  }
 
  .newgame__form__input.row {
@@ -58,7 +59,7 @@
  }
 
  .newgame__form__input__row {
-    width: 50%;
+     width: 50%;
  }
 
  #new_game .centered {
@@ -72,4 +73,11 @@
      transform: translate(-50%, -50%);
      font-weight: 700;
      color: var(--blue);
+ }
+
+ @media screen and (min-width: 600px) {
+    #newgame__form {
+        max-width: 80vw;
+        min-width: 25vw;
+    }
  }
