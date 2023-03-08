@@ -48,7 +48,6 @@ export const highlightActiveTabButton = () => {
  * @param loser See above param
  */
 export const calculateRatings = (winner: User, loser: User) => {
-    console.log(winner, loser);
     const winnerGamesPlayed = ((winner.wins ?? 0) + (winner.losses ?? 0));
     const winnerK = getK(winnerGamesPlayed);
 
@@ -62,8 +61,6 @@ export const calculateRatings = (winner: User, loser: User) => {
     // Calculate the new ratings for each player
     const winnerNewRating = winner.rating + winnerK * (1 - winnerExpected);
     const loserNewRating = loser.rating + loserK * (0 - loserExpected);
-
-    console.log(winnerNewRating, loserNewRating);
 
     return {
         winnerNewRating,
@@ -90,10 +87,19 @@ function loadDataFromLocalStorage(category: string) {
     return data;
 };
 
-export const loadMatchesFromLocalStorage = () => {
-    const matchesString = loadDataFromLocalStorage('matches');
-    const matchesJSON = JSON.parse(matchesString);
-    console.log('skrrr');
+export const loadFinishedMatchesFromLocalStorage = () => {
+    const matchesString = loadDataFromLocalStorage('matches-finished');
+    return JSON.parse(matchesString) ?? [];
+};
+
+export const loadMyFinishedMatchesFromLocalStorage = () => {
+    const matchesString = loadDataFromLocalStorage('matches-my-finished');
+    return JSON.parse(matchesString) ?? [];
+};
+
+export const loadMyRatingHistoryFromLocalStorage = () => {
+    const matchesString = loadDataFromLocalStorage('ratinghistory');
+    return JSON.parse(matchesString) ?? [];
 };
 
 export {

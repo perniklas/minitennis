@@ -10,18 +10,18 @@ const Leaderboard = () => {
     let leaderboardUsers = [...users];
     leaderboardUsers = leaderboardUsers.sort((a: User, b: User) => (a.rating ?? 0) > (b.rating ?? 0) ? -1 : 1);
 
-    leaderboardUsers.sort((a: User, b: User) => a.rating === b.rating
-        ? (a.wins === b.wins ? (a.name > b.name ? -1 : 1) : a.wins > b.wins ? -1 : 1)
-        : (a.rating > b.rating ? -1 : 1));
-
     /*
     * If the ratings're the same, sort by wins.
     * If the wins're the same, sort by name.
     * If the names're the same, go to hell.
     */
+    leaderboardUsers.sort((a: User, b: User) => a.rating === b.rating
+        ? (a.wins === b.wins ? (a.name > b.name ? -1 : 1) : a.wins > b.wins ? -1 : 1)
+        : (a.rating > b.rating ? -1 : 1));
+
     return (
-        <div className="leaderboard-wrapper scrollbar_inside_box">
-            <table className="leaderboard_users">
+        <div className="leaderboard-wrapper">
+            <table className="leaderboard_users scrollbar_inside_box">
                 <thead className="leaderboard___tbl_header">
                     <tr>
                         <th title="Come on, you know what this is">Name</th>

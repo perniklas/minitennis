@@ -17,15 +17,14 @@ const LatestMatches = (props: MatchHistory) => {
     return (
         <div className="scrollbar_inside_box">
             <div className="latestMatches">
-                {matches.map((match: Match) => {
-                    var key = match.timestamp?.toString() ?? "match";
-                    key += ("-" + match.players.map(p => p?.id).join('-'));
-
+                {matches.map((match: Match, index: number) => {
                     const firstColor = (match.players[0]?.id === match.winner) ? "winner" : "loser";
                     const secondColor = (match.players[1]?.id === match.winner) ? "winner" : "loser";
+                    const winnerScore = match.score?.winner;
+                    const loserScore = match.score?.loser;
 
                     return (
-                        <div key={key} className="dashboard__match">
+                        <div key={index} className="dashboard__match">
                             <div className="dashboard__match__dt">
                                 <span>{formatDate((match.timestamp ?? 0))}</span>
                                 <span style={{ float: "right" }}>{formatTime((match.timestamp ?? 0))}</span>
@@ -35,6 +34,14 @@ const LatestMatches = (props: MatchHistory) => {
                                 <span>vs</span>
                                 <span className={secondColor} title={match.players[1]?.name}>{truncateName(match.players[1]?.name ?? "")}</span>
                             </div>
+                            { match.score ? 
+                            <div className="dashboard__match__vs">
+                                <span className={firstColor} title="Score">{firstColor === 'winner' ? winnerScore : loserScore}</span>
+                                <span></span>
+                                <span className={secondColor} title="Score">{secondColor === 'winner' ? winnerScore : loserScore}</span>
+                            </div>
+                             : <></>
+                            }
                         </div>
                     );
                 })}

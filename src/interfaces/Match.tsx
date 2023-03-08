@@ -7,6 +7,10 @@ export interface Match {
     challenger: string;
     timestamp?: number;
     accepted?: boolean;
+    score?: {
+        winner: number;
+        loser: number;
+    }
 };
 
 export interface MatchProps {

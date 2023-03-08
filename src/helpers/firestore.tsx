@@ -19,7 +19,7 @@ import { User } from "../interfaces/User";
 import { auth } from '../helpers/firebase';
 import { Match, MatchStats } from "../interfaces/Match";
 import { Tournament } from "../interfaces/Tournament";
-import { calculateRatings, saveDataToLocalStorage } from "./utils";
+import { calculateRatings, loadFinishedMatchesFromLocalStorage, loadMyFinishedMatchesFromLocalStorage, loadMyRatingHistoryFromLocalStorage, saveDataToLocalStorage } from "./utils";
 
 // var users: Array<User> = [];
 // var matches: Array<Match> = [];
@@ -34,20 +34,29 @@ const createMatchFromData = (stateUsers: User[], id: string, matchData: Document
         challenger: matchData.challenger,
         timestamp: matchData.timestamp,
         accepted: matchData.accepted ?? false,
-        winner: matchData.winner
+        winner: matchData.winner,
+        score: matchData.scores
     };
 
     return match;
 };
 
-const handleMatchListenerSnapshots = (docsSnap: QuerySnapshot<DocumentData>, users: User[], setState: Function, saveToLocal?: Function) => {
+const handleMatchListenerSnapshots = (docsSnap: QuerySnapshot<DocumentData>, users: User[], setState: Function, saveToLocal?: Function, localMatches?: Match[]) => {
     let matchList: Match[] = [];
+    if (localMatches) {
+        localMatches.forEach(match => {
+            matchList.push(match);
+        });
+    }
+
     docsSnap.forEach(doc => {
         const match = createMatchFromData(users, doc.id, doc.data());
         matchList.push(match);
-        if (saveToLocal) 
-            saveToLocal(match);
     });
+
+    if (saveToLocal) {
+        saveToLocal(matchList);
+    }
 
     setState(matchList);
 }
@@ -66,22 +75,39 @@ export const getAllRegisteredUsers = (setState: Function, limiter: number = 10) 
 };
 
 export const getAllFinishedMatchesListener = (dispatch: Function, users: User[], limiter: number = 10) => {
-    console.log(users);
     if (!users.length) return;
-    const matchQuery = query(collection(db, "matches"), where('winner', '!=', null), limit(limiter));
-    const saveCallback = (match: Match) => {
-        saveDataToLocalStorage(match.id, match);
+    let timestamp = 0;
+    const locallySavedMatches = loadFinishedMatchesFromLocalStorage();
+    if (locallySavedMatches && locallySavedMatches.length) {
+        locallySavedMatches.sort((a: Match, b: Match) => a.timestamp < b.timestamp ? -1 : 1);
+        timestamp = locallySavedMatches.at(-1).timestamp;
+    }
+
+    const matchQuery = query(collection(db, "matches"), where('done', '==', true), where('timestamp', '>', timestamp), orderBy('timestamp', 'desc'), limit(limiter));
+    const saveCallback = (matches: Match[]) => {
+        saveDataToLocalStorage('matches-finished', matches);
     };
 
     return onSnapshot(matchQuery, docsSnap => {
-        handleMatchListenerSnapshots(docsSnap, users, dispatch, saveCallback);
+        handleMatchListenerSnapshots(docsSnap, users, dispatch, saveCallback, locallySavedMatches);
     });
 };
 
 export const getMyFinishedMatchesListener = (dispatch: Function, users: User[]) => {
+    let timestamp = 0;
+    const locallySavedMatches = loadMyFinishedMatchesFromLocalStorage();
+    if (locallySavedMatches && locallySavedMatches.length) {
+        locallySavedMatches.sort((a: Match, b: Match) => a.timestamp < b.timestamp ? -1 : 1);
+        timestamp = locallySavedMatches.at(-1).timestamp;
+    }
+
     const matchQuery = query(collection(db, "matches"), where("players", "array-contains", auth.currentUser.uid),
-        where("winner", "!=", null), orderBy('winner', 'asc'), orderBy('timestamp', 'desc'));
-    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, users, dispatch));
+        where('done', '==', true), where('timestamp', '>', timestamp), orderBy('timestamp', 'desc'));
+    const saveCallback = (matches: Match[]) => {
+        saveDataToLocalStorage('matches-my-finished', matches);
+    };
+
+    return onSnapshot(matchQuery, docsSnap => handleMatchListenerSnapshots(docsSnap, users, dispatch, saveCallback, locallySavedMatches));
 };
 
 export const getIncomingMatchesListener = (dispatch: Function, users: User[]) => {
@@ -125,9 +151,15 @@ export const getAllRegisteredUsersListener = (dispatch: Function) => {
 export const getMyRatingHistoryListener = (setState: Function) => {
     const now = new Date().getTime();
     const threeMonthsAgo = new Date(now - 7906825262).getTime();
-    const ratingQuery = query(collection(db, auth.currentUser?.uid), where('timestamp', '>', threeMonthsAgo));
+    let timestamp = threeMonthsAgo;
+    const locallySavedRatings = loadMyRatingHistoryFromLocalStorage();
+    if (locallySavedRatings.length) {
+        timestamp = locallySavedRatings.at(-1).timestamp;
+    }
+    const ratingQuery = query(collection(db, auth.currentUser?.uid), where('timestamp', '>', timestamp));
     return onSnapshot(ratingQuery, docsSnap => {
         const matchList: MatchStats[] = [];
+        locallySavedRatings.forEach((rating: MatchStats) => matchList.push(rating));
         docsSnap.forEach(doc => {
             const data = doc.data();
             const match: MatchStats = {
@@ -139,6 +171,8 @@ export const getMyRatingHistoryListener = (setState: Function) => {
         
             matchList.push(match);
         });
+
+        saveDataToLocalStorage('ratinghistory', matchList);
 
         setState(matchList);
     });
@@ -176,11 +210,13 @@ export const updateWinnerOfMatchInFirestore = async (matchId: string, results: M
     if (scores) {
         await updateDoc(doc(db, `matches/${matchId}`), {
             winner: winner.id,
+            done: true,
             scores
         });
     } else {
         await updateDoc(doc(db, `matches/${matchId}`), {
-            winner: winner.id
+            winner: winner.id,
+            done: true,
         });
     }
 

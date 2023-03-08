@@ -12,9 +12,6 @@ interface HomeProps {
 const Home = (props: HomeProps) => {
     const loggedIn = useAppSelector(state => state.loggedIn);
 
-
-    console.log(props);
-
     return (
         <div className="home">
             <Header></Header>
