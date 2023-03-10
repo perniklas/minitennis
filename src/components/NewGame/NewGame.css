@@ -78,6 +78,6 @@
  @media screen and (min-width: 600px) {
     #newgame__form {
         max-width: 80vw;
-        min-width: 25vw;
+        min-width: 5vw;
     }
  }

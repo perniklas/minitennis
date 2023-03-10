@@ -1,4 +1,3 @@
-import { MatchType } from "../components/NewGame/NewGameForm";
 import { User } from "../interfaces/User";
 
 const truncateName = (name: string) => {
@@ -96,7 +95,14 @@ export const calculateDoublesRatings = (winners: User[], losers: User[]) => {
         rating: losersRating
     }
 
-    return calculateRatings(newWinner, newLoser);
+    const newRatings = calculateRatings(newWinner, newLoser);
+    const winnersPointsGained = newRatings.winnerNewRating - winnersRating;
+    const losersPointsLost = losersRating - newRatings.loserNewRating;
+
+    return {
+        winnersPointsGained,
+        losersPointsLost
+    };
 }
 
 function getK(gamesPlayed: number) {
@@ -132,6 +138,29 @@ export const loadMyRatingHistoryFromLocalStorage = () => {
     const matchesString = loadDataFromLocalStorage('ratinghistory');
     return JSON.parse(matchesString) ?? [];
 };
+
+export const createUserObjectWithAdditionalWinOrLoss = (user: User, winner: boolean) => {
+    let newUser: User = {
+        name: user.name,
+        id: user.id,
+        docId: user.docId,
+        wins: (winner ? user.wins + 1 : user.wins),
+        losses: (winner ? user.losses : user.losses + 1),
+        rating: user.rating,
+    };
+
+    return newUser;
+};
+
+export const updateUserStats = (newRatings: number[], winner: User, loser: User, dispatch?: Function) => {
+    winner = createUserObjectWithAdditionalWinOrLoss(winner, true);
+    loser = createUserObjectWithAdditionalWinOrLoss(loser, false);
+
+    winner.rating = newRatings[0];
+    loser.rating = newRatings[1];
+
+    if (dispatch) dispatch(winner, loser);
+}
 
 export {
     truncateName,

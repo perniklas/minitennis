@@ -1,4 +1,4 @@
-import { formatDate, formatTime } from "../../helpers/utils";
+import { formatDate, formatTime, updateUserStats } from "../../helpers/utils";
 import Card from "../Cards/Card";
 import { useEffect, useState } from 'react';
 import { getDeclareWinnerMatchesListener, MatchResults, updateWinnerOfMatchInFirestore } from "../../helpers/firestore";
@@ -23,17 +23,9 @@ const DeclareWinner = () => {
     // return () => unsubscribe();
   }, [loggedIn]);
 
-  const createUserObjectWithAdditionalWinOrLoss = (user: User, winner: boolean) => {
-    let newUser: User = {
-      name: user.name,
-      id: user.id,
-      docId: user.docId,
-      wins: (winner ? user.wins + 1 : user.wins),
-      losses: (winner ? user.losses : user.losses + 1),
-      rating: user.rating,
-    };
-
-    return newUser;
+  const refreshUsers = (winner: User, loser: User) => {
+    let updatedUsers = [...users.filter((u: User) => u.id !== winner.id && u.id !== loser.id), winner, loser];
+    dispatch(setAllUsers(updatedUsers));
   };
 
   let loading = false;
@@ -59,21 +51,10 @@ const DeclareWinner = () => {
     };
 
     const newRatings = await updateWinnerOfMatchInFirestore(match.id, results);
-    updateUserStats(newRatings, winner, loser);
+    updateUserStats(newRatings, winner, loser, refreshUsers);
 
     loading = false;
   };
-
-  const updateUserStats = (newRatings: number[], winner: User, loser: User) => {
-    winner = createUserObjectWithAdditionalWinOrLoss(winner, true);
-    loser = createUserObjectWithAdditionalWinOrLoss(loser, false);
-
-    winner.rating = newRatings[0];
-    loser.rating = newRatings[1];
-
-    let updatedUsers = [...users.filter((u: User) => u.id !== winner.id && u.id !== loser.id), winner, loser];
-    dispatch(setAllUsers(updatedUsers));
-  }
 
   const child = (
     <div>

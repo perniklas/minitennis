@@ -1,48 +1,48 @@
 import { auth } from "../../helpers/firebase";
 import { User } from "../../interfaces/User";
-import { createMatch, MatchResults } from '../../helpers/firestore';
+import { createSinglesMatch, MatchResults } from '../../helpers/firestore';
 import { showToast } from "../../App";
 import 'react-toastify/dist/ReactToastify.css';
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppSelector } from "../../Redux/hooks";
 import SinglesGameForm from "./SinglesForm";
 import DoublesGameForm from "./DoublesForm";
+import Select, { OptionType } from "../Select/Select";
 
-export enum MatchType {
-    singles,
-    doubles
+interface NewGameProps {
+    matchType: OptionType;
+    setMatchType: Function;
+    matchOptions: OptionType[];
 }
 
-const NewGameForm = () => {
+const NewGameForm = (props: NewGameProps) => {
     const users: User[] = useAppSelector(state => state.users);
-    const [matchType, setMatchType] = useState(MatchType.singles);
+    const { matchType, setMatchType, matchOptions } = props;
     const navigate = useNavigate();
 
     useEffect(() => {
-
+        // remove?
     }, [matchType]);
 
-    const setGameType = () => {
-        const select = (document.getElementById('newgame__form__type') as HTMLSelectElement)
-        const gameTypeString = select.options[select.selectedIndex]?.value;
-        if (gameTypeString) {
-            const gameType = MatchType[gameTypeString];
-            setMatchType(gameType);
-        }
-    };
+    const setGameType = (selected: OptionType) => {
+        setMatchType(selected);
+    }
 
     return (
         <form onSubmit={(e) => handleSubmit(navigate, users, matchType, e)} id="newgame__form">
             <div className="newgame__form__input">
                 <label htmlFor="newgame__form__type">Game type</label>
-                <select className="newgame__form__input__input" id="newgame__form__type" onChange={setGameType}>
-                    <option value='singles'>Singles</option>
-                    <option value='doubles'>Doubles</option>
-                </select>
+                {/* <Select
+                    id='singles_match_opponent'
+                    value={matchType}
+                    options={matchOptions}
+                    onChange={setGameType}
+                    placeholder='Match type'
+                /> */}
             </div>
             {
-                matchType === MatchType.singles
+                matchType.value === 'singles'
                     ? <SinglesGameForm users={users} />
                     : <DoublesGameForm users={users} />
             }
@@ -50,13 +50,25 @@ const NewGameForm = () => {
     );
 };
 
-export const handleSubmit = async (navigate: NavigateFunction, users: User[], event?: React.FormEvent<HTMLFormElement>) => {
+export const handleSubmit = async (navigate: NavigateFunction, users: User[], matchType: OptionType, event?: React.FormEvent<HTMLFormElement>) => {
     if (event) event.preventDefault();
 
     if (!auth.currentUser?.uid) {
         window.location.href = "/login";
         return;
     }
+
+    if (matchType.value === 'singles') {
+        const opponent = document.getElementById('singles_match_opponent') as HTMLSelectElement;
+        debugger;
+    } else {
+
+    }
+
+    return;
+    
+
+    ////////
 
     const who = document.getElementById('newgame__form__who') as HTMLSelectElement;
     if (!who) {
@@ -111,14 +123,14 @@ export const handleSubmit = async (navigate: NavigateFunction, users: User[], ev
         };
     }
 
-    await createMatch(whoID, results);
+    await createSinglesMatch(whoID, results);
     who.value = '';
     showToast();
     navigate('/');
 };
 
 function handleSinglesGame() {
-
+    
 }
 
 function handleDoublesGame() {

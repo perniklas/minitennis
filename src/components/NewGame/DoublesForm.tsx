@@ -3,14 +3,10 @@ import { User } from "../../interfaces/User";
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from "react";
 import ReactSelect from "react-select";
+import Select, { OptionType } from "../Select/Select";
 
 interface GameProps {
     users: Array<User>;
-}
-
-interface OptionType {
-    label: string;
-    value: string;
 }
 
 const DoublesGameForm = (props: GameProps) => {
@@ -27,8 +23,8 @@ const DoublesGameForm = (props: GameProps) => {
         setSelectedTeammate(selected);
     };
 
-    const handleSelectOpponents = (selected) => {
-        setSelectedOpponents(selected as OptionType[]);
+    const handleSelectOpponents = (selected: OptionType[]) => {
+        setSelectedOpponents(selected);
     };
 
     const options: OptionType[] = users.map(user => {
@@ -40,75 +36,32 @@ const DoublesGameForm = (props: GameProps) => {
 
     users.sort((a: User, b: User) => a.name < b.name ? -1 : 1);
 
-    const customStyles = {
-        control: (base) => ({
-            ...base,
-            fontSize: '18px',
-            border: 'solid #111d4a',
-            borderRadius: '0.77rem',
-            padding: '0.25rem'
-        }),
-        menu: (base) => ({
-            ...base,
-            fontSize: '18px',
-        })
-    };
-
-    // const setSelectedUsers = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    //     const element = event.target as HTMLSelectElement;
-    //     const selectedIndex = element.selectedIndex;
-    //     const selectedUserID = element.options[element.selectedIndex].id;
-    //     const selects = document.getElementsByClassName('doublesselector');
-
-    //     for (let i = 0; i < selects.length; i++) {
-    //         const elem = selects.item(i) as HTMLSelectElement;
-    //         const id = elem.options[elem.selectedIndex].id;
-    //         if (id !== '' && id === selectedUserID) {
-    //             elem.selectedIndex = 0;
-    //         }
-    //     }
-
-    //     element.selectedIndex = selectedIndex;
-    // };
-
     useEffect(() => {
-        //setSelectedUsers();
+        // remove?
     }, [props.users]);
 
     return (
         <div id="newgame__form__doubles">
             <div className="newgame__form__input">
                 <label htmlFor="newgame__form__who">Your teammate</label>
-                <ReactSelect
-                    styles={customStyles}
+                <Select
+                    isMulti={false}
                     options={options}
                     value={selectedTeammate}
                     onChange={handleSelectTeammate}
                     placeholder="Select pardner"
-                    noOptionsMessage={() => 'No options available'}
                 />
-                {/* <select className="newgame__form__input__input doublesselector" id="newgame__form__who" onChange={setSelectedUsers}>
-                    <option id=""></option>
-                    {users.map((user: User) => {
-                        return (
-                            <option key={user.id} id={user.id}>{user.name}</option>
-                        );
-                    })}
-                </select> */}
             </div>
 
             <div className="newgame__form__input">
                 <label htmlFor="newgame__form__who__opponent1">Opponents</label>
-                <ReactSelect
-                    styles={customStyles}
+                <Select
                     options={options.filter(o => o.value !== selectedTeammate?.value)}
                     value={selectedOpponents}
                     onChange={handleSelectOpponents}
                     isOptionDisabled={() => selectedOpponents.length >= 2}
-                    isMulti
-                    closeMenuOnSelect={false}
+                    isMulti={true}
                     placeholder="Select opponents"
-                    noOptionsMessage={() => 'No options available'}
                 />
                 {/* <select className="newgame__form__input__input doublesselector" id="newgame__form__who__opponent1" onChange={setSelectedUsers}>
                     <option id=""></option>

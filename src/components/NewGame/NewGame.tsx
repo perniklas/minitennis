@@ -1,21 +1,33 @@
 import { TbCheck, TbX } from 'react-icons/tb';
 import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useAppSelector } from '../../Redux/hooks';
 import BottomNavigationBar from '../BottomMenuBar/BottomNavigationBar';
 import Header from '../Header/Header';
 import './NewGame.css';
 import NewGameForm, { handleSubmit } from './NewGameForm';
+import { OptionType } from '../Select/Select';
 
 const NewGame = () => {
     const navigate = useNavigate();
     const loggedIn = useAppSelector(state => state.loggedIn);
+    const matchOptions: OptionType[] = [
+        {
+            value: 'singles',
+            label: 'Singles'
+        },
+        {
+            value: 'doubles',
+            label: 'Doubles'
+        }
+    ];
+    const [matchType, setMatchType] = useState(matchOptions[0]);
     const users = useAppSelector(state => state.users);
     let loading = false;
 
     try {
         document.getElementById('navigationbutton_newgame').classList.add('active');
     } catch { }
-
 
     const createGame = async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         event.preventDefault();
@@ -25,7 +37,7 @@ const NewGame = () => {
         }
         try {
             loading = true;
-            await handleSubmit(navigate, users);
+            await handleSubmit(navigate, users, matchType);
             loading = false;
         } catch (e) {
             console.log(e);
@@ -64,7 +76,7 @@ const NewGame = () => {
                 </div>
                 {
                     loggedIn
-                        ? <NewGameForm />
+                        ? <NewGameForm matchType={matchType} setMatchType={setMatchType} matchOptions={matchOptions} />
                         : <div className="centered">
                             <span>You need to log in to create new games.</span>
                         </div>
