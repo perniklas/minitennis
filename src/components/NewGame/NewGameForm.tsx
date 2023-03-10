@@ -84,8 +84,6 @@ export const handleSubmit = async (navigate: NavigateFunction, users: User[], ev
 
     let results: MatchResults;
     if (winnerID) {
-        const winnerScore = score1 > score2 ? score1 : score2;
-        const loserScore = score1 > score2 ? score2 : score1;
         let winner: User;
         let loser: User;
         if (auth.currentUser.uid === winnerID) {
@@ -99,11 +97,17 @@ export const handleSubmit = async (navigate: NavigateFunction, users: User[], ev
         results = {
             winner,
             loser,
-            scores: {
+        };
+
+        if (score1 && score2) {
+            const winnerScore = score1 > score2 ? score1 : score2;
+            const loserScore = score1 > score2 ? score2 : score1;
+
+            results.scores = {
                 winner: winnerScore,
                 loser: loserScore
             }
-        };
+        }
     }
     
     await createMatch(whoID, results);
