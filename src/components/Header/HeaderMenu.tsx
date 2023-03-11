@@ -4,6 +4,7 @@ import { auth, logOutUser } from '../../helpers/firebase';
 import "./HeaderMenu.css";
 import { TbUserPlus } from 'react-icons/tb';
 import { useAppSelector } from '../../Redux/hooks';
+import { deletePersonalDataFromLocalStorage } from '../../helpers/utils';
 
 const Menu = () => {
   const [displayMenu, setDisplayMenu] = useState(false);
@@ -34,6 +35,7 @@ const Menu = () => {
   const handleLogOut = async () => {
     console.log('logging out');
     await logOutUser();
+    deletePersonalDataFromLocalStorage();
     setShowMenu(false);
   };
 
