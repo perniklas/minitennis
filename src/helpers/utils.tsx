@@ -79,26 +79,30 @@ function getK(gamesPlayed: number) {
 }
 
 export const saveDataToLocalStorage = (category: string, data: Object) => {
-    localStorage.setItem(category, JSON.stringify(data));
+    try {
+        localStorage.setItem(category, JSON.stringify(data));
+    } catch (e) {
+        console.error(e);
+    }
 };
 
-function loadDataFromLocalStorage(category: string) {
-    const data = localStorage.getItem(category);
-    return data;
+export const deletePersonalDataFromLocalStorage = () => {
+    localStorage.removeItem('matches-my-finished');
+    localStorage.removeItem('ratinghistory');
 };
 
 export const loadFinishedMatchesFromLocalStorage = () => {
-    const matchesString = loadDataFromLocalStorage('matches-finished');
+    const matchesString = localStorage.getItem('matches-finished');
     return JSON.parse(matchesString) ?? [];
 };
 
 export const loadMyFinishedMatchesFromLocalStorage = () => {
-    const matchesString = loadDataFromLocalStorage('matches-my-finished');
+    const matchesString = localStorage.getItem('matches-my-finished');
     return JSON.parse(matchesString) ?? [];
 };
 
 export const loadMyRatingHistoryFromLocalStorage = () => {
-    const matchesString = loadDataFromLocalStorage('ratinghistory');
+    const matchesString = localStorage.getItem('ratinghistory');
     return JSON.parse(matchesString) ?? [];
 };
 
