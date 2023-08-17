@@ -15,7 +15,7 @@
   height: 80vh;
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: center;
 }
 
 .login__container__buttons {

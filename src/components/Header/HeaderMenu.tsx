@@ -9,6 +9,7 @@ const Menu = () => {
   const [displayMenu, setDisplayMenu] = useState(false);
   const users = useAppSelector(state => state.users);
   const loggedIn = useAppSelector((state) => state.loggedIn);
+  const [listening, setListening] = useState(false);
   const navigate = useNavigate();
 
   const setShowMenu = (show: boolean) => {
@@ -18,6 +19,20 @@ const Menu = () => {
   useEffect(() => {
     console.log('logged ' + (loggedIn ? "in" : "out"));
     setDisplayMenu(false);
+
+    if (!listening) {
+      const sidebar = document.querySelector('#header_menu_content');
+
+      if (sidebar instanceof HTMLElement) {
+        const updateHeight = () => {
+          const height: number = window.innerHeight;
+          sidebar.style.height = `calc(${height}px - 1.5rem)`;
+        }
+
+        updateHeight();
+        window.addEventListener('resize', updateHeight);
+      }
+    }
   }, [loggedIn]);
 
   const handleMenuToggle = () => {
@@ -53,7 +68,7 @@ const Menu = () => {
     <button className="button" id="button__login" onClick={(e) => handleLogOut()}>
       Log out
     </button>
-  )
+  );
 
   return (
     <div id="header_menu">

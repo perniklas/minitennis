@@ -89,7 +89,7 @@ const logInWithEmailAndPassword = async (email: string, password: string) => {
         alert('No user found for ' + email);
       else if (err.message.indexOf('auth/wrong-password') > -1)
         alert('Wrong email or password.');
-      else 
+      else
         alert("Something went wrong, we'll look into it");
     }
   }

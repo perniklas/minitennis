@@ -28,8 +28,9 @@
 }
 
 .latestMatches {
-  max-height: 350px;
-  overflow-y: scroll;
+  /* max-height: 350px;
+  overflow-y: scroll; */
+  height: fit-content;
 }
 
 /* Firefox */
@@ -50,9 +51,9 @@
   background: #c1c6d8;
   border-radius: 5px;
 }
-
+/* 
 @media screen and (min-width: 600px) {
   .latestMatches {
     max-height: 425px;
   }
-}
+} */

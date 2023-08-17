@@ -3,8 +3,9 @@
 }
 
 .leaderboard-wrapper {
-    max-height: 50vh;
-    overflow-y: scroll;
+    /* max-height: 50vh;
+    overflow-y: scroll; */
+    height: fit-content;
 }
 
 .leaderboard___tbl_header {

@@ -17,7 +17,7 @@
   height: 80vh;
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: center;
 }
 
 .register__container__buttons {

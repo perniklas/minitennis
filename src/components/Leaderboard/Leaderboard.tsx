@@ -3,7 +3,6 @@ import { truncateName } from '../../helpers/utils';
 import { TbCrown } from "react-icons/tb";
 import { useAppSelector } from '../../Redux/hooks';
 import { User } from '../../interfaces/User';
-import { useEffect } from 'react';
 
 const Leaderboard = () => {
     const users = useAppSelector(state => state.users.filter(u => u.losses > 0 || u.wins > 0));
@@ -20,37 +19,35 @@ const Leaderboard = () => {
         : (a.rating > b.rating ? -1 : 1));
 
     return (
-        <div className="leaderboard-wrapper">
-            <table className="leaderboard_users scrollbar_inside_box">
-                <thead className="leaderboard___tbl_header">
-                    <tr>
-                        <th title="Come on, you know what this is">Name</th>
-                        <th className="centered" title="Wins">W</th>
-                        <th className="centered" title="Losses">L</th>
-                        <th className="centered" title="Rating">R</th>
+        <table className="leaderboard_users">
+            <thead className="leaderboard___tbl_header">
+                <tr>
+                    <th title="Come on, you know what this is">Name</th>
+                    <th className="centered" title="Wins">W</th>
+                    <th className="centered" title="Losses">L</th>
+                    <th className="centered" title="Rating">R</th>
+                </tr>
+            </thead>
+            <tbody className="leaderboard___tbl_content">
+                {leaderboardUsers.map((user, index) => (
+                    <tr key={user.name + "-" + user.wins + "-" + user.losses}>
+                        <td title={(user.name === 'Per-Niklas Longberg' ? 'Legenden Per' : user.name)}>
+                            {index == 0 ? <TbCrown style={{ marginRight: '8px', color: 'gold' }} /> : <></>}
+                            {truncateName(user.name)}
+                        </td>
+                        <td className="centered">
+                            {user.wins ?? "0"}
+                        </td>
+                        <td className="centered">
+                            {user.losses ?? "0"}
+                        </td>
+                        <td className="centered" title={`${user.rating.toFixed(3)}`}>
+                            {user.rating?.toFixed(0) ?? "1000"}
+                        </td>
                     </tr>
-                </thead>
-                <tbody className="leaderboard___tbl_content">
-                    {leaderboardUsers.map((user, index) => (
-                        <tr key={user.name + "-" + user.wins + "-" + user.losses}>
-                            <td title={(user.name === 'Per-Niklas Longberg' ? 'Legenden Per' : user.name)}>
-                                {index == 0 ? <TbCrown style={{ marginRight: '8px', color: 'gold' }} /> : <></>}
-                                {truncateName(user.name)}
-                            </td>
-                            <td className="centered">
-                                {user.wins ?? "0"}
-                            </td>
-                            <td className="centered">
-                                {user.losses ?? "0"}
-                            </td>
-                            <td className="centered" title={`${user.rating.toFixed(3)}`}>
-                                {user.rating?.toFixed(0) ?? "1000"}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+                ))}
+            </tbody>
+        </table>
     );
 };
 
